@@ -1,7 +1,9 @@
+"use client";
+
 import React, { ReactNode } from "react";
-import { Button } from "../ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface SidebarButtonProps {
   label: string;
@@ -18,20 +20,52 @@ export const ButtonSidebar = ({
   expand,
   active,
 }: SidebarButtonProps) => {
+  // button width variant
+  const buttonWidthVariant = {
+    isExpand: { width: "100%" },
+    isShrink: { width: 40 },
+  };
+  // button opacity variant
+  const buttonOpacityVariant = {
+    isExpand: { display: "flex" },
+    isShrink: { display: "none" },
+  };
   return (
-    <Link href={href} className="relative flex justify-center group">
+    <Link href={href} className="relative flex justify-center w-full group">
       {active && (
-        <span className="absolute -top-[3px] w-4 h-[6px] bg-green-400 rounded-[3px] group-hover:w-[6px] transition-all" />
+        <span
+          className={cn(
+            "absolute bg-green-400 rounded-[3px] group-hover:w-[6px] transition-all",
+            expand ? "top-3 h-4 w-[6px] -left-[3px]" : "-top-[3px] w-4 h-[6px]"
+          )}
+        />
       )}
-      <Button
+      <motion.button
+        type="button"
         className={cn(
-          "flex items-center leading-none w-10 h-10 bg-transparent hover:bg-gray-100 group-hover:rounded-[20px] transition-all",
-          active && "bg-gray-100 group-hover:bg-gray-200"
+          "flex items-center leading-none h-10 bg-transparent hover:bg-gray-100  transition-all text-xs rounded-md",
+          active && "bg-gray-100 group-hover:bg-gray-200",
+          expand
+            ? "justify-start px-4 gap-4"
+            : "justify-center group-hover:rounded-[20px]"
         )}
+        initial="isShrink"
+        animate={expand ? "isExpand" : "isShrink"}
+        variants={buttonWidthVariant}
+        transition={{ duration: 0.5 }}
       >
         <span className="w-5 h-5 stroke-gray-900">{icon}</span>
-        {expand && label}
-      </Button>
+        <motion.p
+          initial="isShrink"
+          animate={expand ? "isExpand" : "isShrink"}
+          variants={buttonOpacityVariant}
+          transition={
+            expand ? { delay: 0.5, duration: 0.5 } : { delay: 0, duration: 0.5 }
+          }
+        >
+          {label}
+        </motion.p>
+      </motion.button>
     </Link>
   );
 };
