@@ -43,8 +43,9 @@ export const ButtonSidebar = ({
       <motion.button
         type="button"
         className={cn(
-          "flex items-center leading-none h-10 bg-transparent hover:bg-gray-100  transition-all text-xs rounded-md",
-          active && "bg-gray-100 group-hover:bg-gray-200",
+          "flex items-center leading-none h-10 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700  transition-all text-sm font-medium rounded-md",
+          active &&
+            "bg-gray-100 group-hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600",
           expand
             ? "justify-start px-4 gap-4"
             : "justify-center group-hover:rounded-[20px]"
@@ -54,7 +55,9 @@ export const ButtonSidebar = ({
         variants={buttonWidthVariant}
         transition={{ duration: 0.5 }}
       >
-        <span className="w-5 h-5 stroke-gray-900">{icon}</span>
+        <span className="w-5 h-5 stroke-gray-900 dark:stroke-white">
+          {icon}
+        </span>
         <motion.p
           initial="isShrink"
           animate={expand ? "isExpand" : "isShrink"}

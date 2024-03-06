@@ -34,8 +34,10 @@ const MenuAtas = ({ isExpand }: MenuAtasProps) => {
       <motion.button
         type="button"
         className={cn(
-          "flex items-center leading-none h-10 bg-gray-100 hover:bg-gray-200  transition-all rounded-md justify-center",
-          isExpand ? "px-4 gap-4" : "group-hover:rounded-[20px]"
+          "flex items-center leading-none h-10 transition-all rounded-md justify-center",
+          isExpand
+            ? "px-4 gap-4"
+            : "hover:rounded-[20px] border border-gray-900 dark:border-gray-300"
         )}
         initial="isShrink"
         animate={isExpand ? "isExpand" : "isShrink"}
@@ -64,16 +66,16 @@ const MenuAtas = ({ isExpand }: MenuAtasProps) => {
               ? { duration: 0.5, delay: 0.5 }
               : { duration: 0.5, delay: 0 }
           }
-          className="h-5 stroke-gray-900"
+          className="h-6 stroke-gray-900"
         >
-          <LogoExpandIcon className="h-5 stroke-none" />
+          <LogoExpandIcon className="h-6 stroke-none" />
         </motion.span>
       </motion.button>
       <motion.button
         type="button"
         className={cn(
-          "flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium",
-          isExpand ? "px-4 gap-4" : "group-hover:rounded-[20px]"
+          "flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium dark:text-gray-900",
+          isExpand ? "px-4 gap-4" : "hover:rounded-[20px]"
         )}
         initial="isShrink"
         animate={isExpand ? "isExpand" : "isShrink"}
