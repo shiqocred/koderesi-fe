@@ -4,9 +4,9 @@ import React, { ReactNode } from "react";
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
     <main className="w-full bg-white flex h-full">
-      <main className="w-full bg-white h-full hidden lg:flex">
+      <main className="w-full bg-white h-full hidden lg:flex text-gray-900 dark:text-white">
         <Sidebar />
-        <div>{children}</div>
+        <div className="w-full bg-gray-50 dark:bg-gray-800">{children}</div>
       </main>
       <main className="w-full bg-white flex h-full justify-center gap-4 items-center flex-col lg:hidden">
         <div>
