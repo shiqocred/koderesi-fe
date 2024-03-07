@@ -92,12 +92,12 @@ const TracksPage = () => {
         >
           {filter === "semua"
             ? data.map((item) => (
-                <ResiCard key={item.kode_resi} {...item} layout={layout} />
+                <ResiCard key={item.id} {...item} layout={layout} />
               ))
             : data
                 .filter((item) => item.status === filter)
                 .map((item) => (
-                  <ResiCard key={item.kode_resi} {...item} layout={layout} />
+                  <ResiCard key={item.id} {...item} layout={layout} />
                 ))}
         </div>
       </Card>

@@ -7,6 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const data = [
   {
+    id: 1,
     kode_resi: "SPX010001020102",
     keterangan: "resi sepatu",
     kode_kurir: "JNE Cargo",
@@ -21,6 +22,7 @@ export const data = [
     },
   },
   {
+    id: 2,
     kode_resi: "SPX3200202323",
     keterangan: "resi televisi",
     kode_kurir: "shopee express",
@@ -35,6 +37,7 @@ export const data = [
     },
   },
   {
+    id: 3,
     kode_resi: "JT02291201219",
     keterangan: "resi pakaian",
     kode_kurir: "J&T",
@@ -49,6 +52,7 @@ export const data = [
     },
   },
   {
+    id: 4,
     kode_resi: "SPX3200202323",
     keterangan: "resi televisi",
     kode_kurir: "shopee express",
@@ -63,6 +67,7 @@ export const data = [
     },
   },
   {
+    id: 5,
     kode_resi: "JT02291201219",
     keterangan: "resi pakaian",
     kode_kurir: "J&T",
