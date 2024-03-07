@@ -2,82 +2,10 @@ import { ResiCard } from "@/components/resi-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { data } from "@/lib/utils";
 import { Plus, Rocket } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-
-export const data = [
-  {
-    kode_resi: "SPX010001020102",
-    keterangan: "resi sepatu",
-    kode_kurir: "JNE Cargo",
-    status: "on progress",
-    shipper: { nama: "ahmad fulan", origin: "jakarta" },
-    receiver: { nama: "azizi", destination: "surabaya" },
-    last_manifest: {
-      manifest: "on transit",
-      city: "solo",
-      date: "3 feb",
-      waktu: "13.00",
-    },
-  },
-  {
-    kode_resi: "SPX3200202323",
-    keterangan: "resi televisi",
-    kode_kurir: "shopee express",
-    status: "on progress",
-    shipper: { nama: "ahmad fulan", origin: "jakarta" },
-    receiver: { nama: "azizi", destination: "surabaya" },
-    last_manifest: {
-      manifest: "on transit",
-      city: "solo",
-      date: "3 feb",
-      waktu: "13.00",
-    },
-  },
-  {
-    kode_resi: "JT02291201219",
-    keterangan: "resi pakaian",
-    kode_kurir: "J&T",
-    status: "on progress",
-    shipper: { nama: "ahmad fulan", origin: "jakarta" },
-    receiver: { nama: "azizi", destination: "surabaya" },
-    last_manifest: {
-      manifest: "on transit",
-      city: "solo",
-      date: "3 feb",
-      waktu: "13.00",
-    },
-  },
-  {
-    kode_resi: "SPX3200202323",
-    keterangan: "resi televisi",
-    kode_kurir: "shopee express",
-    status: "delivered",
-    shipper: { nama: "ahmad fulan", origin: "jakarta" },
-    receiver: { nama: "azizi", destination: "surabaya" },
-    last_manifest: {
-      manifest: "on transit",
-      city: "solo",
-      date: "3 feb",
-      waktu: "13.00",
-    },
-  },
-  {
-    kode_resi: "JT02291201219",
-    keterangan: "resi pakaian",
-    kode_kurir: "J&T",
-    status: "delivered",
-    shipper: { nama: "ahmad fulan", origin: "jakarta" },
-    receiver: { nama: "azizi", destination: "surabaya" },
-    last_manifest: {
-      manifest: "on transit",
-      city: "solo",
-      date: "3 feb",
-      waktu: "13.00",
-    },
-  },
-];
 
 const DashboardPage = () => {
   return (

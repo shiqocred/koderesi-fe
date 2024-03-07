@@ -4,10 +4,9 @@ import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, data } from "@/lib/utils";
 import { LayoutGrid, LayoutList, Search } from "lucide-react";
 import React, { useState } from "react";
-import { data } from "../dashboard/page";
 import { ResiCard } from "@/components/resi-card";
 
 const TracksPage = () => {
