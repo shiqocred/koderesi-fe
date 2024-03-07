@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/sidebar/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import React, { ReactNode } from "react";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
@@ -6,7 +7,9 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
     <main className="w-full bg-white flex h-full">
       <main className="w-full bg-white h-full hidden lg:flex text-gray-900 dark:text-white">
         <Sidebar />
-        <div className="w-full bg-gray-50 dark:bg-gray-800">{children}</div>
+        <ScrollArea className="w-full bg-gray-50 dark:bg-gray-800">
+          {children}
+        </ScrollArea>
       </main>
       <main className="w-full bg-white flex h-full justify-center gap-4 items-center flex-col lg:hidden">
         <div>
