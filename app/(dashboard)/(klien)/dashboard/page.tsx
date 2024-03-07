@@ -68,7 +68,7 @@ const DashboardPage = () => {
         </div>
         <Card className="w-9/12 p-4 rounded-md flex flex-col gap-y-4">
           {data.map((item) => (
-            <ResiCard key={item.kode_resi} {...item} isDashboard></ResiCard>
+            <ResiCard key={item.id} {...item} isDashboard></ResiCard>
           ))}
           <Link href="/tracks">
             <Button className="bg-green-400 hover:bg-green-500 text-gray-900 text-xs">
