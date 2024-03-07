@@ -6,7 +6,7 @@ import { Plus, Rocket } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const data = [
+export const data = [
   {
     kode_resi: "SPX010001020102",
     keterangan: "resi sepatu",
@@ -17,7 +17,7 @@ const data = [
     last_manifest: {
       manifest: "on transit",
       city: "solo",
-      date: "3 februari",
+      date: "3 feb",
       waktu: "13.00",
     },
   },
@@ -31,7 +31,7 @@ const data = [
     last_manifest: {
       manifest: "on transit",
       city: "solo",
-      date: "3 februari",
+      date: "3 feb",
       waktu: "13.00",
     },
   },
@@ -45,7 +45,7 @@ const data = [
     last_manifest: {
       manifest: "on transit",
       city: "solo",
-      date: "3 februari",
+      date: "3 feb",
       waktu: "13.00",
     },
   },
@@ -59,7 +59,7 @@ const data = [
     last_manifest: {
       manifest: "on transit",
       city: "solo",
-      date: "3 februari",
+      date: "3 feb",
       waktu: "13.00",
     },
   },
@@ -73,7 +73,7 @@ const data = [
     last_manifest: {
       manifest: "on transit",
       city: "solo",
-      date: "3 februari",
+      date: "3 feb",
       waktu: "13.00",
     },
   },
@@ -106,10 +106,10 @@ const DashboardPage = () => {
           </div>
           <div className="flex items-center">
             <div className="px-6 flex flex-col items-center bg-green-400 h-[50px] justify-center rounded-l-md">
-              <h3 className="font-bold text-sm dark:text-gray-900">
+              <h3 className="font-bold text-lg leading-none dark:text-gray-900">
                 3500 kredit
               </h3>
-              <p className="text-xs text-white">Total kredit anda</p>
+              <p className="text-xs text-gray-900">Total kredit anda</p>
             </div>
             <Link href={"/top-up"}>
               <Button

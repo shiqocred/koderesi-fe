@@ -21,12 +21,10 @@ const MenuAkun = ({ isExpand }: { isExpand: boolean }) => {
   };
 
   const onChangeTheme = () => {
-    if (theme === "system") {
-      setTheme("light");
-    } else if (theme === "light") {
+    if (theme === "light") {
       setTheme("dark");
     } else if (theme === "dark") {
-      setTheme("system");
+      setTheme("light");
     }
   };
 
@@ -54,7 +52,6 @@ const MenuAkun = ({ isExpand }: { isExpand: boolean }) => {
         onClick={onChangeTheme}
       >
         <span className="w-5 h-5">
-          {theme === "system" && <Monitor className="w-5 h-5" />}
           {theme === "light" && <Sun className="w-5 h-5" />}
           {theme === "dark" && <Moon className="w-5 h-5" />}
         </span>
