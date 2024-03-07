@@ -75,7 +75,7 @@ const MenuAtas = ({ isExpand }: MenuAtasProps) => {
         type="button"
         className={cn(
           "flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium dark:text-gray-900",
-          isExpand ? "px-4 gap-4" : "hover:rounded-[20px]"
+          isExpand ? "px-4 gap-2" : "hover:rounded-[20px]"
         )}
         initial="isShrink"
         animate={isExpand ? "isExpand" : "isShrink"}
@@ -94,6 +94,7 @@ const MenuAtas = ({ isExpand }: MenuAtasProps) => {
               ? { delay: 0.5, duration: 0.5 }
               : { delay: 0, duration: 0.5 }
           }
+          className="pr-3"
         >
           Tambah Resi
         </motion.p>
