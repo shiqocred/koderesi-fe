@@ -38,7 +38,7 @@ export const Sidebar = () => {
       >
         <motion.button
           type="button"
-          className="bg-green-400 w-6 h-6 flex items-center justify-center rounded-full outline-2 outline outline-white dark:outline-gray-900 absolute -right-3 top-[116px]"
+          className="bg-green-400 w-6 h-6 flex items-center  z-50 justify-center rounded-full outline-2 outline outline-white dark:outline-gray-900 absolute -right-3 top-[116px]"
           initial="isShrink"
           animate={isExpand ? "isExpand" : "isShrink"}
           variants={sidebarToggleVariant}
