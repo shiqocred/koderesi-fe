@@ -15,19 +15,36 @@ export const PricingTable = () => {
   return (
     <div className="rounded-md border dark:border-gray-300/40">
       <Table>
-        <TableHeader>
-          <TableRow className="bg-gray-300 hover:bg-gray-400/70 dark:bg-gray-700 dark:hover:bg-gray-600/70">
-            <TableHead className="text-gray-900 dark:text-white  text-center pl-10">
+        <TableHeader className="group">
+          <TableRow className="bg-gray-300 group-hover:bg-gray-400/70 dark:bg-gray-700 dark:group-hover:bg-gray-600/70">
+            <TableHead
+              rowSpan={2}
+              className="text-gray-900 dark:text-white pl-10"
+            >
               Kredit
             </TableHead>
-            <TableHead className="text-gray-900 dark:text-white  text-center">
+            <TableHead
+              rowSpan={2}
+              className="text-gray-900 dark:text-white  text-center border-l border-gray-200"
+            >
               Perincian
             </TableHead>
             <TableHead
               colSpan={3}
-              className="text-gray-900 dark:text-white text-center"
+              className="text-gray-900 dark:text-white text-center border-b border-l border-l-gray-200 border-b-gray-200"
             >
               Harga
+            </TableHead>
+          </TableRow>
+          <TableRow className="bg-gray-300 group-hover:bg-gray-400/70 dark:bg-gray-700 dark:group-hover:bg-gray-600/70 ">
+            <TableHead className="text-gray-900 dark:text-white  text-center border-gray-200 border-l">
+              Sekali Beli
+            </TableHead>
+            <TableHead className="text-gray-900 dark:text-white  text-center border-gray-200 border-x">
+              Bulanan
+            </TableHead>
+            <TableHead className="text-gray-900 dark:text-white  text-center border-gray-200">
+              Tahunan
             </TableHead>
           </TableRow>
         </TableHeader>
