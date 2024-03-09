@@ -15,9 +15,11 @@ const TopUpPage = () => {
           <div className="flex w-full flex-col max-w-4xl  gap-4">
             <h2 className="text-5xl font-bold uppercase text-green-400">
               Pilih Paket Kredit Yang Paling{" "}
-              <span className="text-gray-900">Tepat Untuk Anda</span>
+              <span className="text-gray-900 dark:text-white">
+                Tepat Untuk Anda
+              </span>
             </h2>
-            <p className="font-medium text-xl">
+            <p className="font-medium text-xl text-gray-500 dark:text-gray-300">
               Pilihlah dengan fokus pada kebutuhan dan preferensi anda.
             </p>
           </div>
