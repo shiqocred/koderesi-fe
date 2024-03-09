@@ -66,7 +66,7 @@ export const columns: ColumnDef<ArchiveDataProps>[] = [
     cell: ({ row }) => (
       <span
         className={cn(
-          "rounded px-3 py-0.5",
+          "rounded px-3 py-0.5 dark:text-gray-900",
           row.original.status === "delivered" ? "bg-green-400" : "bg-red-300"
         )}
       >
@@ -81,7 +81,7 @@ export const columns: ColumnDef<ArchiveDataProps>[] = [
       <button
         type="button"
         aria-label="more"
-        className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center border-gray-500 text-gray-500"
+        className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center border-gray-500 text-gray-500 dark:bg-gray-700 dark:text-gray-200"
       >
         <MoreHorizontal className="w-4 h-4" />
       </button>
