@@ -59,7 +59,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex gap-4 items-center py-4 w-full">
+      <div className="flex gap-4 items-center pb-4 w-full">
         <div className="flex items-center relative w-full">
           <Input
             placeholder="Cari Kode Resi...."
@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
                 .getColumn("kode_resi".toLocaleLowerCase())
                 ?.setFilterValue(event.target.value.toLocaleLowerCase());
             }}
-            className="max-w-sm pl-10 w-full"
+            className="pl-10 w-full focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
           />
           <Search className="w-5 h-5 text-gray-500 absolute left-3" />
         </div>

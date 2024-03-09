@@ -38,24 +38,22 @@ export function DataTableFilter<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-10 border-green-200 hover:bg-green-100 hover:border-green-400 group"
+        >
           <PlusCircle className="mr-2 h-4 w-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
-              >
+              <Badge className="rounded-sm px-1 bg-green-200 group-hover:bg-green-300 text-gray-900 font-normal lg:hidden">
                 {selectedValues.size}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
                 {selectedValues.size > 2 ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
+                  <Badge className="rounded-sm px-1 bg-green-200 group-hover:bg-green-300 text-gray-900 font-normal">
                     {selectedValues.size} selected
                   </Badge>
                 ) : (
@@ -63,9 +61,8 @@ export function DataTableFilter<TData, TValue>({
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
                       <Badge
-                        variant="secondary"
                         key={option.value}
-                        className="rounded-sm px-1 font-normal"
+                        className="rounded-sm px-1 bg-green-200 group-hover:bg-green-300 text-gray-900 font-normal"
                       >
                         {option.label}
                       </Badge>
@@ -98,6 +95,7 @@ export function DataTableFilter<TData, TValue>({
                         filterValues.length ? filterValues : undefined
                       );
                     }}
+                    className="aria-selected:bg-green-100 aria-selected:text-accent-foreground"
                   >
                     <div
                       className={cn(
