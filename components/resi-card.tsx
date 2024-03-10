@@ -33,28 +33,37 @@ export const ResiCard = ({
   layout = "list",
 }: ResiCardProps) => {
   return (
-    <Card className="border border-green-200 dark:border-green-200/40 p-4 space-y-4 text-sm font-light">
-      <span className="px-2 py-1 bg-green-200 dark:bg-green-300 rounded-sm text-gray-900">
+    <Card className="border border-green-200 dark:border-green-200/40 p-4 space-y-4 text-xs xl:text-sm font-light">
+      <span className="px-2 py-1 bg-green-200 dark:bg-green-300 rounded-sm xl:text-sm text-xs text-gray-900">
         {receiver.nama} / {keterangan}
       </span>
       <div
         className={cn(
-          "flex",
-          layout === "list" ? "justify-between flex-row" : "flex-col gap-4"
+          "flex items-center",
+          layout === "list"
+            ? "justify-between md:flex-row flex-col items-start gap-4 md:gap-0"
+            : "flex-col gap-4"
         )}
       >
         <div
           className={cn(
-            "flex",
-            layout === "list" ? "gap-16 flex-row" : "gap-4 flex-col"
+            "flex items-center",
+            layout === "list"
+              ? "lg:gap-10 xl:gap-16 md:flex-row flex-col items-start gap-4 md:gap-0"
+              : "gap-4 flex-col"
           )}
         >
-          <div className="w-52">
-            <h3 className="text-lg font-bold">{kode_resi}</h3>
+          <div className="w-40 md:w-32 xl:w-52">
+            <h3 className="xl:text-lg text-base font-bold">{kode_resi}</h3>
             <p className="text-gray-500 dark:text-gray-300">{kode_kurir}</p>
           </div>
-          <div className={cn("flex", layout === "list" ? "gap-16" : "gap-8")}>
-            <div className="relative flex flex-col justify-center w-52">
+          <div
+            className={cn(
+              "flex md:flex-row flex-col",
+              layout === "list" ? "md:gap-10 xl:gap-16 gap-4" : "gap-4 md:gap-8"
+            )}
+          >
+            <div className="relative flex flex-col justify-center w-40 md:w-32 xl:w-52">
               <p className="pr-1 capitalize py-1 px-2">
                 {shipper.nama.split(" ")[0] + " (" + shipper.origin + ")"}
               </p>
@@ -70,7 +79,7 @@ export const ResiCard = ({
               </div>
             </div>
             {!isDashboard && (
-              <div className="w-52">
+              <div className="w-40 md:w-32 xl:w-52">
                 <div className="capitalize py-1 px-2">
                   {last_manifest?.manifest + " " + last_manifest?.city}
                 </div>
@@ -82,10 +91,10 @@ export const ResiCard = ({
             )}
           </div>
         </div>
-        <div className="flex gap-x-4">
+        <div className="flex md:w-auto w-full gap-x-4">
           <div
             className={cn(
-              "w-28 h-8 flex items-center justify-center rounded capitalize text-sm text-gray-900",
+              "md:w-28 h-8 flex items-center justify-center rounded capitalize text-sm text-gray-900 w-full",
               status === "on progress" && "bg-yellow-300",
               status === "delivered" && "bg-green-300",
               layout === "grid" && "w-full"
@@ -93,7 +102,7 @@ export const ResiCard = ({
           >
             {status}
           </div>
-          <div className="h-8 w-8 rounded-full border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 text-gray-500 flex items-center justify-center">
+          <div className="h-8 w-8 rounded-full flex-none border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 text-gray-500 flex items-center justify-center">
             <MoreHorizontal className="h-4 w-4" />
           </div>
         </div>

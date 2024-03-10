@@ -16,13 +16,13 @@ const TracksPage = () => {
     <div className="px-6 py-8 gap-6 flex flex-col">
       <Header title="List Resi" description="List semua resi list punyamu" />
       <Card className="flex flex-col p-4 gap-4">
-        <div className="flex gap-4 w-full">
+        <div className="flex gap-4 w-full  flex-col md:flex-row">
           <div className="w-full relative flex items-center">
+            <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
             <Input
-              className="pl-10 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+              className="pl-10 peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
               placeholder="Search resi code..."
             />
-            <Search className="w-5 h-5 absolute left-3 text-gray-500" />
           </div>
           <div className="flex border-green-200 dark:border-green-200/40 border rounded-md hover:border-green-400 dark:hover:border-green-400">
             <Button
@@ -59,7 +59,7 @@ const TracksPage = () => {
               Delivered
             </Button>
           </div>
-          <div className="flex border-green-200 border rounded-md hover:border-green-400">
+          <div className="md:flex hidden border-green-200 border rounded-md hover:border-green-400">
             <Button
               onClick={() => setLayout("list")}
               className={cn(

@@ -3,7 +3,7 @@
 import { Column } from "@tanstack/react-table";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
-import { Check, PlusCircle } from "lucide-react";
+import { Check, ListFilter } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
 import {
@@ -40,9 +40,9 @@ export function DataTableFilter<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          className="h-10 border-green-200 hover:bg-green-100 hover:border-green-400 dark:border-green-200/40 group dark:hover:bg-gray-800"
+          className="h-10 border-green-200 hover:bg-green-100 hover:border-green-400 dark:border-green-200/40 group dark:hover:bg-gray-800 dark:hover:border-green-400"
         >
-          <PlusCircle className="mr-2 h-4 w-4" />
+          <ListFilter className="mr-2 h-4 w-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
