@@ -1,17 +1,50 @@
+import { FloatNavbar } from "@/components/navbar/float-navbar";
+import { Navbar } from "@/components/navbar/navbar";
 import { Sidebar } from "@/components/sidebar/sidebar";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { Home, MessageCircle, User } from "lucide-react";
+import { DM_Sans } from "next/font/google";
 import React, { ReactNode } from "react";
+
+const font = DM_Sans({ subsets: ["latin"] });
+
+const navItems = [
+  {
+    name: "Home",
+    link: "/",
+    icon: <Home className="h-4 w-4 text-neutral-500 dark:text-white" />,
+  },
+  {
+    name: "About",
+    link: "/about",
+    icon: <User className="h-4 w-4 text-neutral-500 dark:text-white" />,
+  },
+  {
+    name: "Contact",
+    link: "/contact",
+    icon: (
+      <MessageCircle className="h-4 w-4 text-neutral-500 dark:text-white" />
+    ),
+  },
+];
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="w-full bg-white flex h-full">
-      <main className="w-full bg-white h-full hidden lg:flex text-gray-900 dark:text-white">
+    <main className="w-full bg-white flex h-full relative">
+      <main
+        className={cn(
+          "w-full bg-white h-full flex flex-col text-gray-900 dark:text-white ",
+          font.className
+        )}
+      >
         <Sidebar />
-        <ScrollArea className="w-full bg-gray-50 dark:bg-gray-800">
+        <FloatNavbar navItems={[{ name: "menu", link: "/" }]} />
+        <div className="w-full xl:overflow-x-hidden xl:overflow-y-scroll bg-gray-50">
+          <Navbar />
           {children}
-        </ScrollArea>
+        </div>
       </main>
-      <main className="w-full bg-white flex h-full justify-center gap-4 items-center flex-col lg:hidden">
+      {/* <main className="w-full bg-white flex h-full justify-center gap-4 items-center flex-col lg:hidden">
         <div>
           <svg
             width="204"
@@ -343,7 +376,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
           </p>
           <p>Silahkan menggunakan desktop</p>
         </div>
-      </main>
+      </main> */}
     </main>
   );
 };

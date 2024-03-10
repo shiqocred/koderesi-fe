@@ -29,7 +29,7 @@ export const Sidebar = () => {
     <MotionConfig transition={{ duration: 0.5 }}>
       <motion.div
         className={cn(
-          "h-full flex flex-col justify-between items-center bg-white dark:bg-gray-900 border-gray-500 border-r py-4  relative",
+          "h-full md:flex flex-col justify-between items-center bg-white dark:bg-gray-900 border-gray-500 border-r py-4 hidden relative",
           isExpand ? "px-4" : "px-2"
         )}
         initial="isShrink"

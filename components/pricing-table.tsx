@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 
 export const PricingTable = () => {
   return (
-    <div className="rounded-md border dark:border-gray-300/40">
+    <div className="rounded-md border dark:border-gray-300/40 w-full">
       <Table>
         <TableHeader className="group">
           <TableRow className="bg-gray-300 group-hover:bg-gray-400/70 dark:bg-gray-700 dark:group-hover:bg-gray-600/70">
