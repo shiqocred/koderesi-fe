@@ -40,7 +40,7 @@ export function DataTableFilter<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          className="h-10 border-green-200 hover:bg-green-100 hover:border-green-400 dark:border-green-200/40 group dark:hover:bg-gray-800 dark:hover:border-green-400"
+          className="h-10 border-green-200 hover:bg-green-100 hover:border-green-400 dark:border-green-200/40 group dark:hover:bg-gray-800 dark:bg-gray-900 dark:hover:border-green-400"
         >
           <ListFilter className="mr-2 h-4 w-4" />
           {title}

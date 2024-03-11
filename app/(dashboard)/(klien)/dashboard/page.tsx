@@ -33,12 +33,12 @@ const DashboardPage = () => {
             </p>
           </div>
           <div className="flex items-center">
-            {/* <div className="px-6 flex flex-col items-center bg-green-400 h-[50px] justify-center rounded-l-md">
+            <div className="px-6 lg:flex hidden flex-col items-center bg-green-400 h-[50px] justify-center rounded-l-md">
               <h3 className="font-bold text-lg leading-none dark:text-gray-900">
                 3500 kredit
               </h3>
               <p className="text-xs text-gray-900">Total kredit anda</p>
-            </div> */}
+            </div>
             <Link href={"/top-up"}>
               <Button
                 className="w-16 h-16 border border-green-400 rounded-md text-green-400 hover:text-green-400 hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800"
@@ -50,23 +50,29 @@ const DashboardPage = () => {
           </div>
         </Card>
       </div>
+      <div className="px-6 w-full md:w-auto flex lg:hidden flex-row items-center justify-between lg:flex-col lg:items-start bg-green-400 h-10 lg:justify-center rounded-md">
+        <p className="text-xs lg:text-sm text-gray-900">Kredit anda</p>
+        <h3 className="font-bold text-xs lg:text-sm leading-none dark:text-gray-900">
+          3500 kredit
+        </h3>
+      </div>
       <Separator className="dark:bg-white bg-gray-500" />
       <div className="w-full transition-all flex flex-col md:flex-row gap-4">
-        <div className="lg:w-4/12 xl:w-3/12 gap-4 flex md:flex-col flex-wrap">
+        <div className="md:w-4/12 xl:w-3/12 gap-4 flex md:flex-col flex-wrap">
           <Card className="w-full text-sm h-16 items-center flex px-6 justify-between">
             <p>Total Resi</p>
             <p className="font-bold">5</p>
           </Card>
-          <Card className="w-full text-sm h-16 flex-1 items-center flex px-6 justify-between">
+          <Card className="w-full text-sm h-16 flex-1 md:flex-none items-center flex px-6 justify-between">
             <p>On Progress</p>
             <p className="font-bold">5</p>
           </Card>
-          <Card className="w-full text-sm h-16 flex-1 items-center flex px-6 justify-between">
+          <Card className="w-full text-sm h-16 flex-1 md:flex-none items-center flex px-6 justify-between">
             <p>Delivered</p>
             <p className="font-bold">5</p>
           </Card>
         </div>
-        <Card className="lg:w-8/12 xl:w-9/12 p-4 rounded-md flex flex-col gap-y-4">
+        <Card className="md:w-8/12 xl:w-9/12 p-4 rounded-md flex flex-col gap-y-4">
           {data.map((item) => (
             <ResiCard key={item.id} {...item} isDashboard></ResiCard>
           ))}

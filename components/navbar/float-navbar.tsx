@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -11,14 +11,12 @@ import { cn } from "@/lib/utils";
 import { IsiNavbar } from "./isi-navbar";
 
 export const FloatNavbar = ({
-  navItems,
   className,
+  open,
+  onOpenChange,
 }: {
-  navItems: {
-    name: string;
-    link: string;
-    icon?: JSX.Element;
-  }[];
+  open: boolean;
+  onOpenChange: Dispatch<SetStateAction<boolean>>;
   className?: string;
 }) => {
   const { scrollYProgress } = useScroll();
@@ -62,7 +60,7 @@ export const FloatNavbar = ({
         )}
       >
         <div className="flex w-full justify-between items-center">
-          <IsiNavbar />
+          <IsiNavbar open={open} onOpenChange={onOpenChange} />
         </div>
       </motion.div>
     </AnimatePresence>
