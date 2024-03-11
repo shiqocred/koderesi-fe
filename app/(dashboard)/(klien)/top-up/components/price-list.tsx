@@ -7,7 +7,7 @@ export const PriceList = () => {
   return (
     <Tabs
       defaultValue="sekali"
-      className="w-full space-y-8 md:space-y-16 pb-8 px-8"
+      className="w-full space-y-8 md:space-y-16 pb-8 px-2 sm:px-4 md:px-8"
     >
       <TabsList>
         <TabsTrigger value="sekali">Sekali Beli</TabsTrigger>

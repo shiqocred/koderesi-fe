@@ -13,8 +13,8 @@ export const Header = ({ title, description }: HeaderProps) => {
         <p className="font-light text-sm lg:text-base">{description}</p>
       </div>
       <div className="px-6 w-full md:w-auto flex flex-row items-center justify-between md:flex-col md:items-start bg-green-400 h-10 md:h-[50px] md:justify-center rounded-md">
-        <p className="text-sm lg:text-xs text-gray-900">Kredit anda</p>
-        <h3 className="font-bold text-base lg:text-lg leading-none dark:text-gray-900">
+        <p className="text-sm text-gray-900 leading-none">Kredit anda</p>
+        <h3 className="font-bold text-sm lg:text-lg leading-none dark:text-gray-900">
           3500 kredit
         </h3>
       </div>
