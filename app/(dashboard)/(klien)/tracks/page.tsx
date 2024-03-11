@@ -1,13 +1,5 @@
 import { Header } from "@/components/header";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { cn, data } from "@/lib/utils";
-import { LayoutGrid, LayoutList, Search } from "lucide-react";
-import React, { Suspense, useCallback, useState } from "react";
-import { ResiCard } from "@/components/resi-card";
-import { useRouter, useSearchParams } from "next/navigation";
-import qs from "query-string";
+import React, { Suspense } from "react";
 import TracksClient from "./components/client";
 
 const TracksPage = () => {
