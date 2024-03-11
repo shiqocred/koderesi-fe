@@ -100,22 +100,20 @@ const TracksPage = () => {
   return (
     <div className="px-6 py-8 gap-6 flex flex-col">
       <Header title="List Resi" description="List semua resi list punyamu" />
-      <Card className="flex flex-col p-4 gap-4">
-        <div className="flex gap-4 w-full flex-col lg:flex-row">
-          <div className="w-full relative flex items-center">
-            <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
-            <Suspense>
+      <Suspense fallback={null}>
+        <Card className="flex flex-col p-4 gap-4">
+          <div className="flex gap-4 w-full flex-col lg:flex-row">
+            <div className="w-full relative flex items-center">
+              <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
               <Input
                 value={search}
                 onChange={(e) => handleChange(e.target.value)}
                 className="pl-10 peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
                 placeholder="Search resi code..."
               />
-            </Suspense>
-          </div>
-          <div className="flex lg:w-auto w-full gap-4">
-            <div className="flex w-full lg:w-auto border-green-200 dark:border-green-200/40 border rounded-md hover:border-green-400 dark:hover:border-green-400">
-              <Suspense>
+            </div>
+            <div className="flex lg:w-auto w-full gap-4">
+              <div className="flex w-full lg:w-auto border-green-200 dark:border-green-200/40 border rounded-md hover:border-green-400 dark:hover:border-green-400">
                 <Button
                   onClick={() => handleClickSort("semua")}
                   className={cn(
@@ -149,10 +147,8 @@ const TracksPage = () => {
                 >
                   Delivered
                 </Button>
-              </Suspense>
-            </div>
-            <div className="md:flex hidden border-green-200 border rounded-md hover:border-green-400">
-              <Suspense>
+              </div>
+              <div className="md:flex hidden border-green-200 border rounded-md hover:border-green-400">
                 <Button
                   onClick={() => handleClickLayout("list")}
                   className={cn(
@@ -175,50 +171,50 @@ const TracksPage = () => {
                 >
                   <LayoutGrid className="w-4 h-4 text-gray-900 dark:text-white" />
                 </Button>
-              </Suspense>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          className={cn(
-            "gap-4",
-            layout === "list"
-              ? "flex flex-col"
-              : "md:grid lg:grid-cols-3 md:grid-cols-2 flex flex-col"
-          )}
-        >
-          {filter === "semua"
-            ? search === ""
-              ? data.map((item) => (
-                  <ResiCard key={item.id} {...item} layout={layout} />
-                ))
+          <div
+            className={cn(
+              "gap-4",
+              layout === "list"
+                ? "flex flex-col"
+                : "md:grid lg:grid-cols-3 md:grid-cols-2 flex flex-col"
+            )}
+          >
+            {filter === "semua"
+              ? search === ""
+                ? data.map((item) => (
+                    <ResiCard key={item.id} {...item} layout={layout} />
+                  ))
+                : data
+                    .filter((item) =>
+                      item.kode_resi
+                        .toLowerCase()
+                        .includes(params.get("search")?.toLowerCase() ?? "")
+                    )
+                    .map((item) => (
+                      <ResiCard key={item.id} {...item} layout={layout} />
+                    ))
+              : search === ""
+              ? data
+                  .filter((item) => item.status === filter)
+                  .map((item) => (
+                    <ResiCard key={item.id} {...item} layout={layout} />
+                  ))
               : data
                   .filter((item) =>
                     item.kode_resi
                       .toLowerCase()
                       .includes(params.get("search")?.toLowerCase() ?? "")
                   )
+                  .filter((item) => item.status === filter)
                   .map((item) => (
                     <ResiCard key={item.id} {...item} layout={layout} />
-                  ))
-            : search === ""
-            ? data
-                .filter((item) => item.status === filter)
-                .map((item) => (
-                  <ResiCard key={item.id} {...item} layout={layout} />
-                ))
-            : data
-                .filter((item) =>
-                  item.kode_resi
-                    .toLowerCase()
-                    .includes(params.get("search")?.toLowerCase() ?? "")
-                )
-                .filter((item) => item.status === filter)
-                .map((item) => (
-                  <ResiCard key={item.id} {...item} layout={layout} />
-                ))}
-        </div>
-      </Card>
+                  ))}
+          </div>
+        </Card>
+      </Suspense>
     </div>
   );
 };
