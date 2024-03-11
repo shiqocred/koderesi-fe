@@ -1,14 +1,23 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { HeartHandshake, HomeIcon, Menu, Rocket, Truck } from "lucide-react";
+import {
+  HeartHandshake,
+  HomeIcon,
+  Menu,
+  Moon,
+  Rocket,
+  Sun,
+  Truck,
+} from "lucide-react";
 import { ArchiveIcon, LogoExpandIcon } from "../svg";
 import Image from "next/image";
 import { Separator } from "../ui/separator";
 import { usePathname } from "next/navigation";
 import { ButtonSidebar } from "../sidebar/button-sidebar";
+import { useTheme } from "next-themes";
 
 export const IsiNavbar = ({
   open,
@@ -18,6 +27,24 @@ export const IsiNavbar = ({
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) => {
   const pathname = usePathname();
+  const { setTheme, theme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
+
+  const onChangeTheme = () => {
+    if (theme === "light") {
+      setTheme("dark");
+    } else if (theme === "dark") {
+      setTheme("light");
+    }
+  };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
@@ -74,6 +101,17 @@ export const IsiNavbar = ({
               onClick={() => onOpenChange(false)}
             />
           </div>
+          <button
+            type="button"
+            className="flex items-center leading-none h-10 bg-transparent hover:bg-gray-100 border dark:hover:bg-gray-700 border-gray-900 dark:border-white transition-all rounded-md text-xs font-medium px-4 gap-4 justify-start"
+            onClick={onChangeTheme}
+          >
+            <span className="w-5 h-5">
+              {theme === "light" && <Sun className="w-5 h-5" />}
+              {theme === "dark" && <Moon className="w-5 h-5" />}
+            </span>
+            <p className="capitalize">{theme}</p>
+          </button>
         </SheetContent>
       </Sheet>
       <LogoExpandIcon className="h-6" />
