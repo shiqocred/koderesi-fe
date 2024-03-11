@@ -33,23 +33,23 @@ export const ResiCard = ({
   layout = "list",
 }: ResiCardProps) => {
   return (
-    <Card className="border border-green-200 dark:border-green-200/40 p-4 space-y-4 text-xs xl:text-sm font-light">
+    <Card className="border w-full border-green-200 dark:border-green-200/40 p-4 space-y-4 text-xs xl:text-sm font-light">
       <span className="px-2 py-1 bg-green-200 dark:bg-green-300 rounded-sm xl:text-sm text-xs text-gray-900">
         {receiver.nama} / {keterangan}
       </span>
       <div
         className={cn(
-          "flex items-center",
+          "flex ",
           layout === "list"
-            ? "justify-between md:flex-row flex-col items-start gap-4 md:gap-0"
-            : "flex-col gap-4"
+            ? "justify-between lg:flex-row items-start lg:items-center flex-col gap-4 lg:gap-0"
+            : "flex-col gap-4 items-start"
         )}
       >
         <div
           className={cn(
-            "flex items-center",
+            "flex",
             layout === "list"
-              ? "lg:gap-10 xl:gap-16 md:flex-row flex-col items-start gap-4 md:gap-0"
+              ? "lg:gap-10 xl:gap-16 md:flex-row flex-col items-start md:items-center gap-4 md:gap-8"
               : "gap-4 flex-col"
           )}
         >
@@ -63,7 +63,12 @@ export const ResiCard = ({
               layout === "list" ? "md:gap-10 xl:gap-16 gap-4" : "gap-4 md:gap-8"
             )}
           >
-            <div className="relative flex flex-col justify-center w-40 md:w-32 xl:w-52">
+            <div
+              className={cn(
+                "relative flex flex-col justify-center ",
+                layout === "grid" ? "xl:w-40" : "w-40 md:w-32 xl:w-52"
+              )}
+            >
               <p className="pr-1 capitalize py-1 px-2">
                 {shipper.nama.split(" ")[0] + " (" + shipper.origin + ")"}
               </p>
@@ -79,7 +84,12 @@ export const ResiCard = ({
               </div>
             </div>
             {!isDashboard && (
-              <div className="w-40 md:w-32 xl:w-52">
+              <div
+                className={cn(
+                  "relative flex flex-col justify-center ",
+                  layout === "grid" ? "xl:w-40" : "w-40 md:w-32 xl:w-52"
+                )}
+              >
                 <div className="capitalize py-1 px-2">
                   {last_manifest?.manifest + " " + last_manifest?.city}
                 </div>
@@ -91,16 +101,16 @@ export const ResiCard = ({
             )}
           </div>
         </div>
-        <div className="flex md:w-auto w-full gap-x-4">
+        <div className="flex w-full gap-x-4 justify-end">
           <div
             className={cn(
-              "md:w-28 h-8 flex items-center justify-center rounded capitalize text-sm text-gray-900 w-full",
-              status === "on progress" && "bg-yellow-300",
+              "h-8 flex items-center justify-center rounded capitalize text-sm text-gray-900",
+              status === "on_progress" && "bg-yellow-300",
               status === "delivered" && "bg-green-300",
-              layout === "grid" && "w-full"
+              layout === "grid" ? "w-full" : "lg:w-28 w-full"
             )}
           >
-            {status}
+            {status === "on_progress" ? "on progress" : status}
           </div>
           <div className="h-8 w-8 rounded-full flex-none border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 text-gray-500 flex items-center justify-center">
             <MoreHorizontal className="h-4 w-4" />

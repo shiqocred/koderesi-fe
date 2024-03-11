@@ -11,6 +11,7 @@ interface SidebarButtonProps {
   icon: ReactNode;
   expand?: boolean;
   active?: boolean;
+  onClick?: () => void;
 }
 
 export const ButtonSidebar = ({
@@ -19,6 +20,7 @@ export const ButtonSidebar = ({
   icon,
   expand,
   active,
+  onClick,
 }: SidebarButtonProps) => {
   // button width variant
   const buttonWidthVariant = {
@@ -50,6 +52,7 @@ export const ButtonSidebar = ({
             ? "justify-start px-4 gap-4"
             : "justify-center group-hover:rounded-[20px]"
         )}
+        onClick={onClick}
         initial="isShrink"
         animate={expand ? "isExpand" : "isShrink"}
         variants={buttonWidthVariant}

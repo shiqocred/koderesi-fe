@@ -1,46 +1,26 @@
 import { FloatNavbar } from "@/components/navbar/float-navbar";
 import { Navbar } from "@/components/navbar/navbar";
+import { Navigation } from "@/components/navigation";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import { cn } from "@/lib/utils";
-import { Home, MessageCircle, User } from "lucide-react";
 import { DM_Sans } from "next/font/google";
 import React, { ReactNode } from "react";
 
 const font = DM_Sans({ subsets: ["latin"] });
 
-const navItems = [
-  {
-    name: "Home",
-    link: "/",
-    icon: <Home className="h-4 w-4 text-neutral-500 dark:text-white" />,
-  },
-  {
-    name: "About",
-    link: "/about",
-    icon: <User className="h-4 w-4 text-neutral-500 dark:text-white" />,
-  },
-  {
-    name: "Contact",
-    link: "/contact",
-    icon: (
-      <MessageCircle className="h-4 w-4 text-neutral-500 dark:text-white" />
-    ),
-  },
-];
-
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="w-full bg-white flex h-full relative">
+    <main className="w-full bg-white dark:bg-gray-900 flex h-full relative">
       <main
         className={cn(
-          "w-full bg-white h-full flex flex-col text-gray-900 dark:text-white ",
+          "w-full bg-white h-full flex md:flex-row flex-col text-gray-900 dark:text-white ",
           font.className
         )}
       >
         <Sidebar />
-        <FloatNavbar navItems={[{ name: "menu", link: "/" }]} />
-        <div className="w-full xl:overflow-x-hidden xl:overflow-y-scroll bg-gray-50">
-          <Navbar />
+        <Navigation isFloating />
+        <div className="w-full md:overflow-x-hidden md:overflow-y-scroll bg-gray-50 dark:bg-gray-950">
+          <Navigation isNavbar />
           {children}
         </div>
       </main>
