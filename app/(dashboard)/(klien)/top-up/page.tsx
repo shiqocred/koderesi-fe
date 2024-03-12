@@ -1,8 +1,12 @@
 import { Header } from "@/components/header";
-import { PricingTable } from "@/components/pricing-table";
 import { Card } from "@/components/ui/card";
 import React from "react";
 import { PriceList } from "./components/price-list";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Top-Up Kredit",
+};
 
 const TopUpPage = () => {
   return (

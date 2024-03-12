@@ -3,8 +3,10 @@ import { ArrowDown, MoreHorizontal } from "lucide-react";
 import { Card } from "./ui/card";
 import { Separator } from "./ui/separator";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface ResiCardProps {
+  id: string;
   kode_resi: string;
   keterangan: string;
   kode_kurir: string;
@@ -23,6 +25,7 @@ interface ResiCardProps {
 
 export const ResiCard = ({
   kode_resi,
+  id,
   keterangan,
   kode_kurir,
   shipper,
@@ -54,7 +57,11 @@ export const ResiCard = ({
           )}
         >
           <div className="w-40 md:w-32 xl:w-52">
-            <h3 className="xl:text-lg text-base font-bold">{kode_resi}</h3>
+            <Link href={`/tracks/${id}`}>
+              <h3 className="xl:text-lg text-base font-bold hover:underline">
+                {kode_resi}
+              </h3>
+            </Link>
             <p className="text-gray-500 dark:text-gray-300">{kode_kurir}</p>
           </div>
           <div

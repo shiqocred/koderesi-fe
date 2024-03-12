@@ -2,10 +2,18 @@ import { ResiCard } from "@/components/resi-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { data } from "@/lib/utils";
-import { Plus, Rocket } from "lucide-react";
+import { data, formatRupiah } from "@/lib/utils";
+import {
+  BadgeDollarSign,
+  Package,
+  PackageCheck,
+  Plus,
+  Rocket,
+  Truck,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { ChartClient } from "./components/chart-client";
 
 const DashboardPage = () => {
   return (
@@ -57,31 +65,65 @@ const DashboardPage = () => {
         </h3>
       </div>
       <Separator className="dark:bg-white bg-gray-500" />
-      <div className="w-full transition-all flex flex-col md:flex-row gap-4">
-        <div className="md:w-4/12 xl:w-3/12 gap-4 flex md:flex-col flex-wrap">
-          <Card className="w-full text-sm h-16 items-center flex px-6 justify-between">
-            <p>Total Resi</p>
-            <p className="font-bold">5</p>
+      <div className="w-full transition-all flex flex-col gap-4">
+        <div className="w-full gap-4 grid-cols-4 grid">
+          <Card className="w-full text-sm justify-center flex flex-col p-6 gap-4">
+            <div className="flex justify-between pb-2 border-b border-gray-500">
+              <h5>Total Resi</h5>
+              <Package className="w-5 h-5 stroke-1" />
+            </div>
+            <p className="font-bold text-xl">
+              5 <span className="font-semibold text-base">Resi</span>
+            </p>
           </Card>
-          <Card className="w-full text-sm h-16 flex-1 md:flex-none items-center flex px-6 justify-between">
-            <p>On Progress</p>
-            <p className="font-bold">5</p>
+          <Card className="w-full text-sm justify-center flex flex-col p-6 gap-4">
+            <div className="flex justify-between pb-2 border-b border-gray-500">
+              <h5>On Progress</h5>
+              <Truck className="w-5 h-5 stroke-1" />
+            </div>
+            <p className="font-bold text-xl">
+              5 <span className="font-semibold text-base">Resi</span>
+            </p>
           </Card>
-          <Card className="w-full text-sm h-16 flex-1 md:flex-none items-center flex px-6 justify-between">
-            <p>Delivered</p>
-            <p className="font-bold">5</p>
+          <Card className="w-full text-sm justify-center flex flex-col p-6 gap-4">
+            <div className="flex justify-between pb-2 border-b border-gray-500">
+              <h5>Delivered</h5>
+              <PackageCheck className="w-5 h-5 stroke-1" />
+            </div>
+            <p className="font-bold text-xl">
+              5 <span className="font-semibold text-base">Resi</span>
+            </p>
+          </Card>
+          <Card className="w-full text-sm justify-center flex flex-col p-6 gap-4">
+            <div className="flex justify-between pb-2 border-b border-gray-500">
+              <h5>Cash Flow</h5>
+              <BadgeDollarSign className="w-5 h-5 stroke-1" />
+            </div>
+            <p className="font-bold text-xl">- {formatRupiah(3000000)}</p>
           </Card>
         </div>
-        <Card className="md:w-8/12 xl:w-9/12 p-4 rounded-md flex flex-col gap-y-4">
-          {data.map((item) => (
-            <ResiCard key={item.id} {...item} isDashboard></ResiCard>
-          ))}
-          <Link href="/tracks">
-            <Button className="bg-green-400 hover:bg-green-500 text-gray-900 text-xs">
-              Lebih banyak...
-            </Button>
-          </Link>
-        </Card>
+        <div className="flex gap-4">
+          <Card className="md:w-8/12 xl:w-7/12 p-4 rounded-md flex flex-col gap-y-4">
+            <ChartClient />
+          </Card>
+          <Card className="md:w-4/12 xl:w-5/12 p-4 rounded-md flex flex-col gap-y-4">
+            <div>
+              <p className="text-xl font-semibold">Manifest Terbaru</p>
+              <p className="text-sm font-light text-gray-700">
+                Daftar Manifest Terbaru.
+              </p>
+              <ul>
+                <li className="flex text-sm flex-col">
+                  <div className="flex justify-between">
+                    <p>Manifest</p>
+                    <p>waktu</p>
+                  </div>
+                  <div>Resi</div>
+                </li>
+              </ul>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );

@@ -49,26 +49,26 @@ export const PriceList = () => {
             kredit={300}
             perKredit={350}
             price={11550}
-            keterangan="normal"
+            keterangan="lebih hemat 5%"
           />
           <CardPrice
             kredit={500}
             perKredit={330}
             price={54450}
-            keterangan="normal"
+            keterangan="lebih hemat 5%"
             isPopular
           />
           <CardPrice
             kredit={1000}
             perKredit={300}
             price={990000}
-            keterangan="normal"
+            keterangan="lebih hemat 5%"
           />
           <CardPrice
             kredit={5000}
             perKredit={290}
             price={478500}
-            keterangan="normal"
+            keterangan="lebih hemat 5%"
           />
         </div>
       </TabsContent>
@@ -78,26 +78,26 @@ export const PriceList = () => {
             kredit={300}
             perKredit={350}
             price={110880}
-            keterangan="normal"
+            keterangan="lebih hemat 20%"
           />
           <CardPrice
             kredit={500}
             perKredit={330}
             price={522720}
-            keterangan="normal"
+            keterangan="lebih hemat 20%"
             isPopular
           />
           <CardPrice
             kredit={1000}
             perKredit={300}
             price={950400}
-            keterangan="normal"
+            keterangan="lebih hemat 20%"
           />
           <CardPrice
             kredit={5000}
             perKredit={290}
             price={4593600}
-            keterangan="normal"
+            keterangan="lebih hemat 20%"
           />
         </div>
       </TabsContent>
