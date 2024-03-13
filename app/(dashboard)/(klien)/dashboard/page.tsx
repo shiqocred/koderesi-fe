@@ -66,63 +66,154 @@ const DashboardPage = () => {
       </div>
       <Separator className="dark:bg-white bg-gray-500" />
       <div className="w-full transition-all flex flex-col gap-4">
-        <div className="w-full gap-4 grid-cols-4 grid">
-          <Card className="w-full text-sm justify-center flex flex-col p-6 gap-4">
+        <div className="w-full gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-6 gap-4">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>Total Resi</h5>
-              <Package className="w-5 h-5 stroke-1" />
+              <Package className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
             </div>
-            <p className="font-bold text-xl">
-              5 <span className="font-semibold text-base">Resi</span>
+            <p className="font-bold text-sm sm:text-xl">
+              5 <span className="font-semibold text-xs sm:text-base">Resi</span>
             </p>
           </Card>
-          <Card className="w-full text-sm justify-center flex flex-col p-6 gap-4">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-6 gap-4">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>On Progress</h5>
-              <Truck className="w-5 h-5 stroke-1" />
+              <Truck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
             </div>
-            <p className="font-bold text-xl">
-              5 <span className="font-semibold text-base">Resi</span>
+            <p className="font-bold text-sm sm:text-xl">
+              5 <span className="font-semibold text-xs sm:text-base">Resi</span>
             </p>
           </Card>
-          <Card className="w-full text-sm justify-center flex flex-col p-6 gap-4">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-6 gap-4">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>Delivered</h5>
-              <PackageCheck className="w-5 h-5 stroke-1" />
+              <PackageCheck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
             </div>
-            <p className="font-bold text-xl">
-              5 <span className="font-semibold text-base">Resi</span>
+            <p className="font-bold text-sm sm:text-xl">
+              5 <span className="font-semibold text-xs sm:text-base">Resi</span>
             </p>
           </Card>
-          <Card className="w-full text-sm justify-center flex flex-col p-6 gap-4">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-6 gap-4 xl:col-span-1 lg:col-span-3 col-span-1">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>Cash Flow</h5>
-              <BadgeDollarSign className="w-5 h-5 stroke-1" />
+              <BadgeDollarSign className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
             </div>
-            <p className="font-bold text-xl">- {formatRupiah(3000000)}</p>
+            <p className="font-bold text-sm sm:text-xl">
+              - {formatRupiah(3000000)}
+            </p>
           </Card>
         </div>
-        <div className="flex gap-4">
-          <Card className="md:w-8/12 xl:w-7/12 p-4 rounded-md flex flex-col gap-y-4">
-            <ChartClient />
-          </Card>
-          <Card className="md:w-4/12 xl:w-5/12 p-4 rounded-md flex flex-col gap-y-4">
-            <div>
-              <p className="text-xl font-semibold">Manifest Terbaru</p>
-              <p className="text-sm font-light text-gray-700">
-                Daftar Manifest Terbaru.
-              </p>
-              <ul>
-                <li className="flex text-sm flex-col">
-                  <div className="flex justify-between">
-                    <p>Manifest</p>
-                    <p>waktu</p>
-                  </div>
-                  <div>Resi</div>
-                </li>
-              </ul>
-            </div>
-          </Card>
+        <div className="flex xl:flex-row flex-col gap-4">
+          <div className="w-full xl:w-7/12 ">
+            <Card className="p-4 rounded-md flex flex-col gap-y-4 h-[200px] sm:h-[250px] lg:h-[350px] md:h-[300px]">
+              <ChartClient />
+            </Card>
+          </div>
+          <div className="w-full xl:w-5/12 ">
+            <Card className="p-4 rounded-md flex flex-col gap-y-4 h-auto">
+              <div>
+                <p className="sm:text-xl text-lg font-semibold">
+                  Manifest Terbaru
+                </p>
+                <p className="sm:text-sm text-xs font-light text-gray-700">
+                  Daftar Manifest Terbaru.
+                </p>
+                <ul className="pt-4 space-y-4">
+                  <li className="flex text-sm justify-between items-center py-2">
+                    <div className="flex gap-4 items-center">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                        <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
+                      </div>
+                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
+                        SPX10001010111
+                      </h5>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <p className="sm:text-sm text-xs font-medium lg:text-base">
+                        On Transit Solo
+                      </p>
+                      <p className="lg:text-sm text-xs font-light">
+                        13 Feb - 13.00
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex text-sm justify-between items-center py-2">
+                    <div className="flex gap-4 items-center">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                        <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
+                      </div>
+                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
+                        SPX10001010111
+                      </h5>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <p className="sm:text-sm text-xs font-medium lg:text-base">
+                        On Transit Solo
+                      </p>
+                      <p className="lg:text-sm text-xs font-light">
+                        13 Feb - 13.00
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex text-sm justify-between items-center py-2">
+                    <div className="flex gap-4 items-center">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                        <PackageCheck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
+                      </div>
+                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
+                        SPX10001010111
+                      </h5>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <p className="sm:text-sm text-xs font-medium lg:text-base">
+                        On Transit Solo
+                      </p>
+                      <p className="lg:text-sm text-xs font-light">
+                        13 Feb - 13.00
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex text-sm justify-between items-center py-2">
+                    <div className="flex gap-4 items-center">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                        <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
+                      </div>
+                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
+                        SPX10001010111
+                      </h5>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <p className="sm:text-sm text-xs font-medium lg:text-base">
+                        On Transit Solo
+                      </p>
+                      <p className="lg:text-sm text-xs font-light">
+                        13 Feb - 13.00
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex text-sm justify-between items-center py-2">
+                    <div className="flex gap-4 items-center">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                        <PackageCheck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
+                      </div>
+                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
+                        SPX10001010111
+                      </h5>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <p className="sm:text-sm text-xs font-medium lg:text-base">
+                        Delivered
+                      </p>
+                      <p className="lg:text-sm text-xs font-light">
+                        13 Feb - 13.00
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

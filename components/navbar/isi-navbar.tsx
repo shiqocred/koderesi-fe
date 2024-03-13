@@ -108,9 +108,9 @@ export const IsiNavbar = ({
       </div>
       <div className="flex gap-2 items-center">
         <Button
-          className="p-0 h-9 w-9 rounded border-gray-500 border hover:border-gray-400 relative overflow-hidden"
+          className="p-0 h-9 w-9 rounded relative overflow-hidden"
           onClick={onChangeTheme}
-          variant={"outline"}
+          variant={"ghost"}
         >
           <span className="w-5 h-5">
             {theme === "light" && <Sun className="w-5 h-5" />}
