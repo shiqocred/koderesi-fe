@@ -4,12 +4,14 @@ import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { LogoExpandIcon, LogoShrinkIcon, PlusIcon } from "@/components/svg";
+import { useModal } from "@/hooks/use-modal";
 
 interface MenuAtasProps {
   isExpand: boolean;
 }
 
 const MenuAtas = ({ isExpand }: MenuAtasProps) => {
+  const { onOpen } = useModal();
   const buttonWidthVariant = {
     isExpand: { width: "100%" },
     isShrink: { width: 40 },
@@ -81,6 +83,7 @@ const MenuAtas = ({ isExpand }: MenuAtasProps) => {
         animate={isExpand ? "isExpand" : "isShrink"}
         variants={buttonWidthVariant}
         transition={{ duration: 0.5 }}
+        onClick={() => onOpen("add-resi")}
       >
         <span className="w-5 h-5 stroke-gray-900">
           <PlusIcon className="w-5 h-5" />
