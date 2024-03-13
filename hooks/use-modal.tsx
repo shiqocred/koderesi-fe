@@ -1,6 +1,6 @@
 import { StoreApi, UseBoundStore, create } from "zustand";
 
-export type ModalType = "add-resi" | "akun";
+export type ModalType = "add-resi";
 
 interface useModalProps {
   type: ModalType | null;
