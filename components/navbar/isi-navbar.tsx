@@ -8,6 +8,7 @@ import {
   HomeIcon,
   Menu,
   Moon,
+  Plus,
   Rocket,
   Sun,
   Truck,
@@ -18,6 +19,7 @@ import { Separator } from "../ui/separator";
 import { usePathname } from "next/navigation";
 import { ButtonSidebar } from "../sidebar/button-sidebar";
 import { useTheme } from "next-themes";
+import { useModal } from "@/hooks/use-modal";
 
 export const IsiNavbar = ({
   open,
@@ -26,6 +28,7 @@ export const IsiNavbar = ({
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { onOpen } = useModal();
   const pathname = usePathname();
   const { setTheme, theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
@@ -60,6 +63,16 @@ export const IsiNavbar = ({
           <SheetContent side={"left"}>
             <SheetTitle>Navigasi</SheetTitle>
             <div className="py-8 gap-4 flex flex-col">
+              <Button
+                className="flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium dark:text-gray-900"
+                onClick={() => {
+                  onOpen("add-resi");
+                  onOpenChange(false);
+                }}
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                <span className="pr-3">Tambah Resi</span>
+              </Button>
               <ButtonSidebar
                 label="Dashboard"
                 icon={<HomeIcon className="w-5 h-5" />}

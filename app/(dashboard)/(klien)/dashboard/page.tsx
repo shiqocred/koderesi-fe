@@ -1,4 +1,4 @@
-import { ResiCard } from "@/components/resi-card";
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -14,8 +14,10 @@ import {
 import Link from "next/link";
 import React from "react";
 import { ChartClient } from "./components/chart-client";
+import { useModal } from "@/hooks/use-modal";
 
 const DashboardPage = () => {
+  const { onOpen } = useModal();
   return (
     <div className="px-6 py-8 gap-6 flex flex-col">
       <div className="w-full transition-all flex flex-col md:flex-row gap-4 xl:gap-8">
@@ -29,6 +31,7 @@ const DashboardPage = () => {
           <Button
             className="w-16 h-16 border border-green-400 rounded-md text-green-400 hover:text-green-400 hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800"
             variant={"outline"}
+            onClick={() => onOpen("add-resi")}
           >
             <Plus className="w-4 h-4" />
           </Button>
@@ -67,7 +70,7 @@ const DashboardPage = () => {
       <Separator className="dark:bg-white bg-gray-500" />
       <div className="w-full transition-all flex flex-col gap-4">
         <div className="w-full gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid">
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-6 gap-4">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>Total Resi</h5>
               <Package className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
@@ -76,7 +79,7 @@ const DashboardPage = () => {
               5 <span className="font-semibold text-xs sm:text-base">Resi</span>
             </p>
           </Card>
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-6 gap-4">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>On Progress</h5>
               <Truck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
@@ -85,7 +88,7 @@ const DashboardPage = () => {
               5 <span className="font-semibold text-xs sm:text-base">Resi</span>
             </p>
           </Card>
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-6 gap-4">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>Delivered</h5>
               <PackageCheck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
@@ -94,7 +97,7 @@ const DashboardPage = () => {
               5 <span className="font-semibold text-xs sm:text-base">Resi</span>
             </p>
           </Card>
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-6 gap-4 xl:col-span-1 lg:col-span-3 col-span-1">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4 xl:col-span-1 lg:col-span-3 col-span-1">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>Cash Flow</h5>
               <BadgeDollarSign className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
@@ -106,7 +109,7 @@ const DashboardPage = () => {
         </div>
         <div className="flex xl:flex-row flex-col gap-4">
           <div className="w-full xl:w-7/12 ">
-            <Card className="p-4 rounded-md flex flex-col gap-y-4 h-[200px] sm:h-[250px] lg:h-[350px] md:h-[300px]">
+            <Card className="pr-2 pt-2 md:p-2 lg:p-4 rounded-md flex flex-col gap-y-4 h-[200px] sm:h-[250px] lg:h-[350px] md:h-[300px]">
               <ChartClient />
             </Card>
           </div>

@@ -75,7 +75,7 @@ export function ChartClient() {
           dataKey="total"
           fill="currentColor"
           radius={[4, 4, 0, 0]}
-          className="fill-primary"
+          className="fill-green-400"
         />
       </BarChart>
     </ResponsiveContainer>
