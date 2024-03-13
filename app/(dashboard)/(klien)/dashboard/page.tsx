@@ -116,13 +116,13 @@ const DashboardPage = () => {
                 <p className="sm:text-xl text-lg font-semibold">
                   Manifest Terbaru
                 </p>
-                <p className="sm:text-sm text-xs font-light text-gray-700">
+                <p className="sm:text-sm text-xs font-light text-gray-700 dark:text-gray-300">
                   Daftar Manifest Terbaru.
                 </p>
                 <ul className="pt-4 space-y-4">
                   <li className="flex text-sm justify-between items-center py-2">
                     <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
                         <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
                       </div>
                       <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
@@ -140,7 +140,7 @@ const DashboardPage = () => {
                   </li>
                   <li className="flex text-sm justify-between items-center py-2">
                     <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
                         <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
                       </div>
                       <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
@@ -158,7 +158,7 @@ const DashboardPage = () => {
                   </li>
                   <li className="flex text-sm justify-between items-center py-2">
                     <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
                         <PackageCheck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
                       </div>
                       <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
@@ -176,7 +176,7 @@ const DashboardPage = () => {
                   </li>
                   <li className="flex text-sm justify-between items-center py-2">
                     <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
                         <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
                       </div>
                       <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
@@ -194,7 +194,7 @@ const DashboardPage = () => {
                   </li>
                   <li className="flex text-sm justify-between items-center py-2">
                     <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500">
+                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
                         <PackageCheck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
                       </div>
                       <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
