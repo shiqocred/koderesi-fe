@@ -3,6 +3,11 @@ import { Header } from "@/components/header";
 import { Card } from "@/components/ui/card";
 import { archives } from "@/lib/utils";
 import { columns } from "./components/colums";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Arsip Resi",
+};
 
 const ArchivesPage = () => {
   return (

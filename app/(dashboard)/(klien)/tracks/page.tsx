@@ -1,6 +1,11 @@
 import { Header } from "@/components/header";
 import React, { Suspense } from "react";
 import TracksClient from "./components/client";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Lacak Resi",
+};
 
 const TracksPage = () => {
   return (

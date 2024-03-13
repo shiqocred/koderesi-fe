@@ -3,6 +3,7 @@
 import { ArchiveDataProps, cn, couriers } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -11,12 +12,17 @@ export const columns: ColumnDef<ArchiveDataProps>[] = [
   {
     accessorKey: "id",
     header: () => <div className="text-center">No</div>,
+    cell: ({ row }) => row.index + 1,
   },
   {
     accessorKey: "kode_resi",
     header: () => <div className="text-center">Kode Resi</div>,
     cell: ({ row }) => (
-      <div className="text-left">{row.original.kode_resi}</div>
+      <Link href={`/tracks/${row.original.id}`}>
+        <div className="text-left hover:underline">
+          {row.original.kode_resi}
+        </div>
+      </Link>
     ),
   },
   {
