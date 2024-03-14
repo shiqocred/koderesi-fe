@@ -1,3 +1,4 @@
+import { useOrigin } from "@/hooks/use-origin";
 import { DetailClient } from "./components/detail-client";
 
 import { Metadata, ResolvingMetadata } from "next";
@@ -14,8 +15,8 @@ export async function generateMetadata(
   const id = params.trackId;
 
   // fetch data
-  const resi = await fetch(`http://localhost:3000/api/resi/${id}`).then((res) =>
-    res.json()
+  const resi = await fetch(`https://koderesi.vercel.app/api/resi/${id}`).then(
+    (res) => res.json()
   );
 
   return {
