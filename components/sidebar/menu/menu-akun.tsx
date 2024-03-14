@@ -26,6 +26,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import Link from "next/link";
 
 const MenuAkun = ({ isExpand }: { isExpand: boolean }) => {
   const { setTheme, theme } = useTheme();
@@ -186,16 +187,20 @@ const MenuAkun = ({ isExpand }: { isExpand: boolean }) => {
                   </span>
                 </div>
                 <CommandSeparator className="bg-gray-500 dark:bg-gray-400" />
-                <CommandItem>
-                  <User className="w-4 h-4 mr-2" />
-                  Profile
-                </CommandItem>
-                <CommandItem>
-                  <Headset className="w-4 h-4 mr-2" />
-                  Contact Support
-                </CommandItem>
+                <Link href={"/accounts/profile"}>
+                  <CommandItem>
+                    <User className="w-4 h-4 mr-2" />
+                    Profile
+                  </CommandItem>
+                </Link>
+                <Link href={"/contacts"}>
+                  <CommandItem>
+                    <Headset className="w-4 h-4 mr-2" />
+                    Contact Support
+                  </CommandItem>
+                </Link>
                 <CommandSeparator className="bg-gray-500 dark:bg-gray-400" />
-                <CommandItem className="text-red-500">
+                <CommandItem className="text-red-500 aria-selected:text-red-500">
                   <LogOut className="w-4 h-4 mr-2" />
                   Log Out
                 </CommandItem>
