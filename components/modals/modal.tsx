@@ -23,6 +23,7 @@ interface ModalProps {
   children: ReactNode;
   isOpen: boolean;
   onClose: () => void;
+  className?: string;
 }
 
 export const Modal = ({
@@ -31,6 +32,7 @@ export const Modal = ({
   children,
   isOpen,
   onClose,
+  className,
 }: ModalProps) => {
   const onChange = (open: boolean) => {
     if (!open) {
@@ -42,7 +44,7 @@ export const Modal = ({
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={onChange}>
-        <DialogContent>
+        <DialogContent className={className}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
@@ -55,7 +57,7 @@ export const Modal = ({
 
   return (
     <Drawer open={isOpen} onOpenChange={onChange}>
-      <DrawerContent>
+      <DrawerContent className={className}>
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
