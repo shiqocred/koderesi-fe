@@ -9,12 +9,14 @@ const AccountsLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div
       className={cn(
-        "flex flex-col md:flex-row w-full h-full bg-white dark:bg-gray-900",
+        "flex flex-col md:flex-row w-full min-h-screen h-auto bg-white dark:bg-gray-900",
         font.className
       )}
     >
       <Navigation />
-      <div className="w-full bg-gray-50 dark:*:bg-black h-full">{children}</div>
+      <div className="w-full bg-gray-50 dark:bg-black min-h-screen h-auto">
+        {children}
+      </div>
     </div>
   );
 };
