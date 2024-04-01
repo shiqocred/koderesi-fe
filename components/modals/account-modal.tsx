@@ -13,13 +13,12 @@ import {
 } from "@/components/ui/command";
 import Link from "next/link";
 import Image from "next/image";
-import { Headset, LogOut, Rocket, User } from "lucide-react";
+import { Headset, LogOut, Rocket, User, MoreHorizontal } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { MoreHorizontal } from "lucide-react";
 
 const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);

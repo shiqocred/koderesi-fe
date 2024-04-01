@@ -5,23 +5,28 @@ import { AffiliateIcon, RocketIcon } from "@/components/svg";
 interface MenuBawahProps {
   isExpand: boolean;
   pathname: string;
+  isAdmin?: boolean;
 }
 
-const MenuBawah = ({ pathname, isExpand }: MenuBawahProps) => {
+const MenuBawah = ({ pathname, isExpand, isAdmin }: MenuBawahProps) => {
   return (
     <div className="flex flex-col gap-4 items-center w-full">
-      <ButtonSidebar
-        label="Top up"
-        icon={<RocketIcon className="w-5 h-5" />}
-        href="/top-up"
-        active={pathname.startsWith("/top-up")}
-        expand={isExpand}
-      />
+      {!isAdmin && (
+        <ButtonSidebar
+          label="Top up"
+          icon={<RocketIcon className="w-5 h-5" />}
+          href="/top-up"
+          active={pathname.startsWith("/top-up")}
+          expand={isExpand}
+        />
+      )}
       <ButtonSidebar
         label="Affiliate"
         icon={<AffiliateIcon className="w-5 h-5" />}
-        href="/affiliate"
-        active={pathname.startsWith("/affiliate")}
+        href={isAdmin ? "/admin/affiliate" : "/affiliate"}
+        active={pathname.startsWith(
+          !isAdmin ? "/affiliate" : "/admin/affiliate"
+        )}
         expand={isExpand}
       />
     </div>

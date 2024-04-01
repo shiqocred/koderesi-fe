@@ -10,7 +10,7 @@ import { ResiCard } from "@/components/resi-card";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 
-const TracksAdminClient = () => {
+const TracksClient = () => {
   const router = useRouter();
   const params = useSearchParams();
 
@@ -34,7 +34,7 @@ const TracksAdminClient = () => {
 
       const url = qs.stringifyUrl(
         {
-          url: "/tracks",
+          url: "/admin/tracks",
           query: updateQuery,
         },
         { skipNull: true }
@@ -60,7 +60,7 @@ const TracksAdminClient = () => {
 
       const url = qs.stringifyUrl(
         {
-          url: "/tracks",
+          url: "/admin/tracks",
           query: updateQuery,
         },
         { skipNull: true }
@@ -86,7 +86,7 @@ const TracksAdminClient = () => {
 
       const url = qs.stringifyUrl(
         {
-          url: "/tracks",
+          url: "/admin/tracks",
           query: updateQuery,
         },
         { skipNull: true }
@@ -181,7 +181,7 @@ const TracksAdminClient = () => {
         {filter === "semua"
           ? search === ""
             ? data.map((item) => (
-                <ResiCard key={item.id} {...item} layout={layout} />
+                <ResiCard key={item.id} {...item} layout={layout} isAdmin />
               ))
             : data
                 .filter((item) =>
@@ -190,13 +190,13 @@ const TracksAdminClient = () => {
                     .includes(params.get("search")?.toLowerCase() ?? "")
                 )
                 .map((item) => (
-                  <ResiCard key={item.id} {...item} layout={layout} />
+                  <ResiCard key={item.id} {...item} layout={layout} isAdmin />
                 ))
           : search === ""
           ? data
               .filter((item) => item.status === filter)
               .map((item) => (
-                <ResiCard key={item.id} {...item} layout={layout} />
+                <ResiCard key={item.id} {...item} layout={layout} isAdmin />
               ))
           : data
               .filter((item) =>
@@ -206,11 +206,11 @@ const TracksAdminClient = () => {
               )
               .filter((item) => item.status === filter)
               .map((item) => (
-                <ResiCard key={item.id} {...item} layout={layout} />
+                <ResiCard key={item.id} {...item} layout={layout} isAdmin />
               ))}
       </div>
     </Card>
   );
 };
 
-export default TracksAdminClient;
+export default TracksClient;

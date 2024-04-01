@@ -21,6 +21,7 @@ interface ResiCardProps {
   };
   isDashboard?: boolean;
   layout?: string;
+  isAdmin?: boolean;
 }
 
 export const ResiCard = ({
@@ -34,6 +35,7 @@ export const ResiCard = ({
   status,
   isDashboard,
   layout = "list",
+  isAdmin = false,
 }: ResiCardProps) => {
   return (
     <Card className="border w-full border-green-200 dark:border-green-200/40 p-4 space-y-4 text-xs xl:text-sm font-light">
@@ -57,7 +59,7 @@ export const ResiCard = ({
           )}
         >
           <div className="w-40 md:w-32 xl:w-52">
-            <Link href={`/tracks/${id}`}>
+            <Link href={isAdmin ? `/admin/tracks/${id}` : `/tracks/${id}`}>
               <h3 className="xl:text-lg text-base font-bold hover:underline">
                 {kode_resi}
               </h3>

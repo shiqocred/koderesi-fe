@@ -9,7 +9,11 @@ import { ChevronRightIcon } from "../svg";
 import { MotionConfig, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export const Sidebar = () => {
+interface SidebarProps {
+  isAdmin?: boolean;
+}
+
+export const Sidebar = ({ isAdmin = false }: SidebarProps) => {
   const pathname = usePathname();
   const [isExpand, setIsExpand] = useState<boolean>(false);
 
@@ -38,7 +42,10 @@ export const Sidebar = () => {
       >
         <motion.button
           type="button"
-          className="bg-green-400 w-6 h-6 flex items-center  z-50 justify-center rounded-full outline-2 outline outline-white dark:outline-gray-900 absolute -right-3 top-[116px]"
+          className={cn(
+            "bg-green-400 w-6 h-6 flex items-center  z-50 justify-center rounded-full outline-2 outline outline-white dark:outline-gray-900 absolute -right-3",
+            isAdmin ? "top-[60px]" : "top-[116px]"
+          )}
           initial="isShrink"
           animate={isExpand ? "isExpand" : "isShrink"}
           variants={sidebarToggleVariant}
@@ -47,11 +54,19 @@ export const Sidebar = () => {
           <ChevronRightIcon className="w-4 h-4 stroke-white dark:stroke-gray-900 stroke-2" />
         </motion.button>
         <div className="flex flex-col gap-4 items-center w-full">
-          <MenuAtas isExpand={isExpand} />
+          <MenuAtas isExpand={isExpand} isAdmin={isAdmin} />
           <Separator className="bg-gray-500 dark:bg-white" />
-          <MenuTengah pathname={pathname} isExpand={isExpand} />
+          <MenuTengah
+            pathname={pathname}
+            isExpand={isExpand}
+            isAdmin={isAdmin}
+          />
           <Separator className="bg-gray-500 dark:bg-white" />
-          <MenuBawah pathname={pathname} isExpand={isExpand} />
+          <MenuBawah
+            pathname={pathname}
+            isExpand={isExpand}
+            isAdmin={isAdmin}
+          />
         </div>
         <div className="w-full">
           <MenuAkun isExpand={isExpand} />
