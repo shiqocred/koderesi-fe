@@ -2,21 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  ArrowDown,
-  PackageCheck,
-  RefreshCcw,
-  Save,
-  Search,
-} from "lucide-react";
+import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { Suspense, useCallback, useEffect, useState } from "react";
-import qs from "query-string";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { archives, data } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
-import { useModal } from "@/hooks/use-modal";
+import React, { useState } from "react";
 
 export const CheckResiClient = () => {
   const router = useRouter();

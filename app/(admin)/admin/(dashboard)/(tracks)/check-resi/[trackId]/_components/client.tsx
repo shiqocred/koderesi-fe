@@ -7,13 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useModal } from "@/hooks/use-modal";
 import { ArchiveDataProps, archives, data } from "@/lib/utils";
-import {
-  ArrowDown,
-  PackageCheck,
-  RefreshCcw,
-  Save,
-  Search,
-} from "lucide-react";
+import { ArrowDown, PackageCheck, Save, Search } from "lucide-react";
 import { redirect, useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -40,7 +34,7 @@ export const CheckResiIdClient = () => {
     if (dataTrackMap !== undefined) setDataResi(dataTrackMap);
     const dataArchiveMap = archives.find((item) => item.kode_resi === trackId);
     if (dataArchiveMap !== undefined) setDataResi(dataArchiveMap);
-  }, [trackId]);
+  }, []);
   return (
     <Card className="p-4 flex flex-col w-full gap-6 h-full">
       <div className="flex flex-col gap-y-2">
