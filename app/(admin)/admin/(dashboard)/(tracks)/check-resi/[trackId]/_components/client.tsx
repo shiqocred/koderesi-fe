@@ -15,10 +15,7 @@ export const CheckResiIdClient = () => {
   const { trackId } = useParams();
   const router = useRouter();
   const { onOpen } = useModal();
-
-  if (!trackId) {
-    return redirect("/admin/check-resi");
-  }
+  const [isMounted, setIsMounted] = useState(false);
 
   const [resi, setResi] = useState(trackId);
   const [dataResi, setDataResi] = useState<ArchiveDataProps>();
@@ -28,11 +25,17 @@ export const CheckResiIdClient = () => {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     const dataTrackMap = data.find((item) => item.kode_resi === trackId);
     if (dataTrackMap !== undefined) setDataResi(dataTrackMap);
     const dataArchiveMap = archives.find((item) => item.kode_resi === trackId);
     if (dataArchiveMap !== undefined) setDataResi(dataArchiveMap);
-  }, []);
+  }, [trackId]);
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <Card className="p-4 flex flex-col w-full gap-6 h-full">
       <div className="flex flex-col gap-y-2">
