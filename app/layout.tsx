@@ -3,7 +3,6 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import ModalProvider from "@/providers/modal-provider";
-import { Suspense } from "react";
 
 const font = DM_Sans({ subsets: ["latin"] });
 
@@ -25,7 +24,7 @@ export default function RootLayout({
       <body className={font.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
           <ModalProvider />
-          <Suspense>{children}</Suspense>
+          {children}
         </ThemeProvider>
       </body>
     </html>

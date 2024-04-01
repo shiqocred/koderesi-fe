@@ -10,7 +10,7 @@ import {
   Search,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import qs from "query-string";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -97,7 +97,7 @@ export const CheckResiClient = () => {
     return;
   }
   return (
-    <>
+    <Suspense>
       {!params.get("q") ? (
         <div className="w-full h-full justify-center items-center max-w-2xl flex mx-auto">
           <div className="flex flex-col items-center w-full gap-y-4 -mt-10">
@@ -307,6 +307,6 @@ export const CheckResiClient = () => {
           )}
         </Card>
       )}
-    </>
+    </Suspense>
   );
 };
