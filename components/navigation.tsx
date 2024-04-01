@@ -7,9 +7,11 @@ import { Navbar } from "./navbar/navbar";
 export const Navigation = ({
   isFloating,
   isNavbar,
+  isAdmin,
 }: {
   isFloating?: boolean;
   isNavbar?: boolean;
+  isAdmin?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   if (isFloating) {

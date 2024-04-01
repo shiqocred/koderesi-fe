@@ -4,9 +4,16 @@ import { Button } from "@/components/ui/button";
 import { ArchiveDataProps, archives, cn, data } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { ArrowDown, PackageCheck, RefreshCcw, Trash2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  PackageCheck,
+  RefreshCcw,
+  Trash2,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export const DetailClient = () => {
   const { trackId } = useParams();
@@ -21,23 +28,30 @@ export const DetailClient = () => {
   return (
     <>
       <div className="flex justify-between pb-4 border-b items-end md:items-center">
-        <div>
-          <p className="text-sm md:text-base mb-4 md:mb-0">Detail Resi</p>
-          <div className="flex sm:gap-4 sm:items-center flex-col sm:flex-row items-start">
-            <h2 className="text-2xl md:text-4xl font-bold">
-              {dataDetail?.kode_resi}
-            </h2>
-            <span
-              className={cn(
-                "px-4 py-1 rounded-md text-gray-900 text-xs md:text-sm capitalize font-semibold",
-                dataDetail?.status === "on_progress" && "bg-yellow-300",
-                dataDetail?.status === "delivered" && "bg-green-300"
-              )}
-            >
-              {dataDetail?.status === "on_progress"
-                ? "on progress"
-                : dataDetail?.status}
-            </span>
+        <div className="flex items-center">
+          <Link href={"/tracks"}>
+            <Button size={"icon"} variant={"ghost"} className="mr-2">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+          <div>
+            <p className="text-sm md:text-base mb-4 md:mb-0">Detail Resi</p>
+            <div className="flex sm:gap-4 sm:items-center flex-col sm:flex-row items-start">
+              <h2 className="text-2xl md:text-4xl font-bold">
+                {dataDetail?.kode_resi}
+              </h2>
+              <span
+                className={cn(
+                  "px-4 py-1 rounded-md text-gray-900 text-xs md:text-sm capitalize font-semibold",
+                  dataDetail?.status === "on_progress" && "bg-yellow-300",
+                  dataDetail?.status === "delivered" && "bg-green-300"
+                )}
+              >
+                {dataDetail?.status === "on_progress"
+                  ? "on progress"
+                  : dataDetail?.status}
+              </span>
+            </div>
           </div>
         </div>
         <div>
