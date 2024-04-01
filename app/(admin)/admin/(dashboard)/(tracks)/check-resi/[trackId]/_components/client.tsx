@@ -20,16 +20,14 @@ export const CheckResiIdClient = () => {
     return redirect("/admin/check-resi");
   }
 
-  const [resi, setResi] = useState("");
+  const [resi, setResi] = useState(trackId);
   const [dataResi, setDataResi] = useState<ArchiveDataProps>();
 
-  const handleSearch = (resi: string) => {
+  const handleSearch = (resi: string | string[]) => {
     router.push(`/admin/check-resi/${resi}`);
   };
 
   useEffect(() => {
-    setResi(trackId[0]);
-
     const dataTrackMap = data.find((item) => item.kode_resi === trackId);
     if (dataTrackMap !== undefined) setDataResi(dataTrackMap);
     const dataArchiveMap = archives.find((item) => item.kode_resi === trackId);

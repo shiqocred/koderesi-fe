@@ -9,7 +9,7 @@ interface ManifestProps {
   waktu: string;
   tanggal: string;
   manifest: string;
-  resiKode: string;
+  resiKode: string | string[];
 }
 
 interface UseModalProps {
