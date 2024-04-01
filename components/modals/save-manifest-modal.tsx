@@ -26,7 +26,7 @@ export const SaveManifestModal = () => {
     if (params.get("q")) {
       setKode(params.get("q") ?? "");
     }
-  }, [isOpen]);
+  }, [params, isOpen]);
 
   return (
     <Modal

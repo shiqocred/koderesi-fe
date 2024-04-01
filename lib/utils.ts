@@ -201,3 +201,30 @@ export const couriers = [
     value: "jne cargo",
   },
 ];
+
+export const mapNewestTransaction = [
+  {
+    id: 4459076962,
+    tanggal: "feb 2, 13.00",
+    price: 694991,
+    status: "in",
+  },
+  {
+    id: 5122705183,
+    tanggal: "feb 2, 13.00",
+    price: 295304,
+    status: "in",
+  },
+  {
+    id: 3040271073,
+    tanggal: "feb 2, 13.00",
+    price: 551682,
+    status: "out",
+  },
+  {
+    id: 5438822853,
+    tanggal: "feb 2, 13.00",
+    price: 710425,
+    status: "in",
+  },
+];

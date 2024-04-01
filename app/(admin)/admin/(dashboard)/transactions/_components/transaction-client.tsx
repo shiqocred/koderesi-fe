@@ -15,8 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { formatRupiah } from "@/lib/utils";
-import { mapNewestTransaction } from "../../dashboard/page";
+import { formatRupiah, mapNewestTransaction } from "@/lib/utils";
 import { useModal } from "@/hooks/use-modal";
 
 const mapUsers = [

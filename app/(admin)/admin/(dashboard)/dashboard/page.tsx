@@ -16,37 +16,11 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { ChartAdmin } from "./_components/chart-admin";
-import { data, formatRupiah } from "@/lib/utils";
+import { data, formatRupiah, mapNewestTransaction } from "@/lib/utils";
 import { TransactionCurrentCard } from "./_components/transaction-current-card";
 import { ResiCurrentCard } from "./_components/resi-current-card";
 import { UserCurrentCard } from "./_components/user-current-card";
 
-export const mapNewestTransaction = [
-  {
-    id: 4459076962,
-    tanggal: "feb 2, 13.00",
-    price: 694991,
-    status: "in",
-  },
-  {
-    id: 5122705183,
-    tanggal: "feb 2, 13.00",
-    price: 295304,
-    status: "in",
-  },
-  {
-    id: 3040271073,
-    tanggal: "feb 2, 13.00",
-    price: 551682,
-    status: "out",
-  },
-  {
-    id: 5438822853,
-    tanggal: "feb 2, 13.00",
-    price: 710425,
-    status: "in",
-  },
-];
 const mapNewUser = [
   {
     id: 1839147239,

@@ -84,7 +84,7 @@ export const CheckResiClient = () => {
         setDataResi(null);
       }
     }
-  }, []);
+  }, [params]);
 
   if (!params.get("q")) {
     return (
