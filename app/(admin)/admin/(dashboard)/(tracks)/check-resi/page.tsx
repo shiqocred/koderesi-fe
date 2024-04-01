@@ -20,7 +20,7 @@ const CheckResiPage = () => {
           </p>
         </div>
       </div>
-      <Suspense fallback={null}>
+      <Suspense>
         <CheckResiClient />
       </Suspense>
     </div>

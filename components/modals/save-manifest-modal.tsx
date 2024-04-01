@@ -7,11 +7,9 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { data } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
 
 export const SaveManifestModal = () => {
   const { isOpen, onClose, type, dataManifest } = useModal();
-  const params = useSearchParams();
 
   const isModalOpen = isOpen && type === "save-manifest";
 
@@ -19,14 +17,14 @@ export const SaveManifestModal = () => {
   const [dataResi, setDataResi] = useState<any | null>(null);
 
   const handleSearch = () => {
-    setDataResi(data.find((item) => item.kode_resi === kode));
+    setDataResi(data.find((item) => item.kode_resi === dataManifest?.resiKode));
   };
 
   useEffect(() => {
-    if (params.get("q")) {
-      setKode(params.get("q") ?? "");
+    if (dataManifest) {
+      setKode(dataManifest?.resiKode);
     }
-  }, [params, isOpen]);
+  }, [dataManifest]);
 
   return (
     <Modal

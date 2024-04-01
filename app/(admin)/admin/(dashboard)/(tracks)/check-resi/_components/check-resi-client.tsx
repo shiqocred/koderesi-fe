@@ -225,6 +225,7 @@ export const CheckResiClient = () => {
                         waktu: "20.00",
                         tanggal: "13 Feb",
                         manifest: "Sedang transit di Solo",
+                        resiKode: params.get("q") || "",
                       })
                     }
                   >
@@ -250,6 +251,7 @@ export const CheckResiClient = () => {
                         waktu: "15.00",
                         tanggal: "13 Feb",
                         manifest: "Sedang Transit diJakarta",
+                        resiKode: params.get("q") || "",
                       })
                     }
                   >
@@ -275,6 +277,7 @@ export const CheckResiClient = () => {
                         waktu: "13.00",
                         tanggal: "13 Feb",
                         manifest: "Manifest dibuat",
+                        resiKode: params.get("q") || "",
                       })
                     }
                   >

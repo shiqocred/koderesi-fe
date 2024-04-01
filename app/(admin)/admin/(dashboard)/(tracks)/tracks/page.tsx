@@ -27,7 +27,7 @@ const TracksPage = () => {
           </Button>
         </Link>
       </div>
-      <Suspense fallback={null}>
+      <Suspense>
         <TracksClient />
       </Suspense>
     </div>
