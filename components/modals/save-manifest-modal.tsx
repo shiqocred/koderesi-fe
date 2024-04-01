@@ -13,7 +13,7 @@ export const SaveManifestModal = () => {
 
   const isModalOpen = isOpen && type === "save-manifest";
 
-  const [kode, setKode] = useState<string>("");
+  const [kode, setKode] = useState<string | string[]>("");
   const [dataResi, setDataResi] = useState<any | null>(null);
 
   const handleSearch = () => {
