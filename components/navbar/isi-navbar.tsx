@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import {
+  Coins,
   Headset,
   HeartHandshake,
   HomeIcon,
@@ -12,9 +13,11 @@ import {
   Moon,
   Plus,
   Rocket,
+  Sparkles,
   Sun,
   Truck,
   User,
+  Users,
 } from "lucide-react";
 import { ArchiveIcon, LogoExpandIcon } from "../svg";
 import Image from "next/image";
@@ -74,59 +77,113 @@ export const IsiNavbar = ({
           </SheetTrigger>
           <SheetContent side={"left"}>
             <SheetTitle>Navigasi</SheetTitle>
-            <div className="py-8 gap-4 flex flex-col">
-              <Button
-                className="flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium dark:text-gray-900"
-                onClick={() => {
-                  onOpen("add-resi");
-                  onOpenChange(false);
-                }}
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                <span className="pr-3">Tambah Resi</span>
-              </Button>
-              <ButtonSidebar
-                label="Dashboard"
-                icon={<HomeIcon className="w-5 h-5" />}
-                href="/dashboard"
-                active={pathname.startsWith("/dashboard")}
-                expand
-                onClick={() => onOpenChange(false)}
-              />
-              <ButtonSidebar
-                label="Lacak"
-                icon={<Truck className="w-5 h-5" />}
-                href="/tracks"
-                active={pathname.startsWith("/tracks")}
-                expand
-                onClick={() => onOpenChange(false)}
-              />
-              <ButtonSidebar
-                label="Arsip"
-                icon={<ArchiveIcon className="w-5 h-5" />}
-                href="/archives"
-                active={pathname.startsWith("/archives")}
-                expand
-                onClick={() => onOpenChange(false)}
-              />
-              <Separator className="bg-gray-500 dark:bg-white/50" />
-              <ButtonSidebar
-                label="Top up"
-                icon={<Rocket className="w-5 h-5" />}
-                href="/top-up"
-                active={pathname.startsWith("/top-up")}
-                expand
-                onClick={() => onOpenChange(false)}
-              />
-              <ButtonSidebar
-                label="Affiliate"
-                icon={<HeartHandshake className="w-5 h-5" />}
-                href="/affiliate"
-                active={pathname.startsWith("/affiliate")}
-                expand
-                onClick={() => onOpenChange(false)}
-              />
-            </div>
+            {pathname.startsWith("/admin") ? (
+              <div className="py-8 gap-4 flex flex-col">
+                <ButtonSidebar
+                  label="Dashboard"
+                  icon={<HomeIcon className="w-5 h-5" />}
+                  href="/admin/dashboard"
+                  active={pathname.startsWith("/admin/dashboard")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <ButtonSidebar
+                  label="Lacak"
+                  icon={<Truck className="w-5 h-5" />}
+                  href="/admin/tracks"
+                  active={pathname.startsWith("/admin/tracks")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <ButtonSidebar
+                  label="Pengguna"
+                  icon={<Users className="w-5 h-5" />}
+                  href="/admin/users"
+                  active={pathname.startsWith("/admin/users")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <ButtonSidebar
+                  label="Kredit"
+                  icon={<Sparkles className="w-5 h-5" />}
+                  href="/admin/credits"
+                  active={pathname.startsWith("/admin/credits")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <ButtonSidebar
+                  label="Transaksi"
+                  icon={<Coins className="w-5 h-5" />}
+                  href="/admin/transactions"
+                  active={pathname.startsWith("/admin/transactions")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <Separator className="bg-gray-500 dark:bg-white/50" />
+                <ButtonSidebar
+                  label="Affiliate"
+                  icon={<HeartHandshake className="w-5 h-5" />}
+                  href="/admin/affiliate"
+                  active={pathname.startsWith("/admin/affiliate")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+              </div>
+            ) : (
+              <div className="py-8 gap-4 flex flex-col">
+                <Button
+                  className="flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium dark:text-gray-900"
+                  onClick={() => {
+                    onOpen("add-resi");
+                    onOpenChange(false);
+                  }}
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  <span className="pr-3">Tambah Resi</span>
+                </Button>
+                <ButtonSidebar
+                  label="Dashboard"
+                  icon={<HomeIcon className="w-5 h-5" />}
+                  href="/dashboard"
+                  active={pathname.startsWith("/dashboard")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <ButtonSidebar
+                  label="Lacak"
+                  icon={<Truck className="w-5 h-5" />}
+                  href="/tracks"
+                  active={pathname.startsWith("/tracks")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <ButtonSidebar
+                  label="Arsip"
+                  icon={<ArchiveIcon className="w-5 h-5" />}
+                  href="/archives"
+                  active={pathname.startsWith("/archives")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <Separator className="bg-gray-500 dark:bg-white/50" />
+                <ButtonSidebar
+                  label="Top up"
+                  icon={<Rocket className="w-5 h-5" />}
+                  href="/top-up"
+                  active={pathname.startsWith("/top-up")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <ButtonSidebar
+                  label="Affiliate"
+                  icon={<HeartHandshake className="w-5 h-5" />}
+                  href="/affiliate"
+                  active={pathname.startsWith("/affiliate")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+              </div>
+            )}
           </SheetContent>
         </Sheet>
         <LogoExpandIcon className="h-6" />

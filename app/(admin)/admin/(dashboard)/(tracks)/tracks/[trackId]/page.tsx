@@ -26,7 +26,7 @@ export async function generateMetadata(
 
 const DetailPage = () => {
   return (
-    <div className="px-6 py-8 gap-6 flex flex-col">
+    <div className="p-4 sm:px-6 sm:py-8 gap-4 md:gap-6 flex flex-col">
       <DetailClient />
     </div>
   );

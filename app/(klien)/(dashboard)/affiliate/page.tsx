@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const AffiliatePage = () => {
   return (
-    <div className="px-6 py-8 gap-6 flex flex-col">
+    <div className="sm:px-6 sm:py-8 p-4 gap-6 flex flex-col h-full">
       <Header
         title="Affiliate Koderesi"
         description="Jadilah partner pemasaran kami!"

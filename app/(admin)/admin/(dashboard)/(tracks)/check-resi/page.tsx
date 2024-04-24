@@ -1,13 +1,14 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { CheckResiClient } from "./_components/check-resi-client";
+import { Card } from "@/components/ui/card";
 
 const CheckResiPage = () => {
   return (
-    <div className="px-6 py-8 gap-6 flex flex-col h-full">
-      <div className="flex w-full md:items-center border-b border-gray-500 pb-4 md:flex-row flex-col items-start gap-4">
+    <div className="p-4 sm:px-6 sm:py-8 gap-6 flex flex-col h-full bg-gray-50 dark:bg-black">
+      <div className="flex w-full items-center border-b border-gray-500 pb-4 gap-4">
         <Link href="/admin/tracks">
           <Button variant={"ghost"} size={"icon"}>
             <ArrowLeft className="w-4 h-4" />

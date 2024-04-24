@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const TopUpPage = () => {
   return (
-    <div className="px-6 py-8 gap-6 flex flex-col">
+    <div className="sm:px-6 sm:py-8 p-4 gap-6 flex flex-col">
       <Header
         title="Kredit Koderesi"
         description="Top up untuk menjadi advance"

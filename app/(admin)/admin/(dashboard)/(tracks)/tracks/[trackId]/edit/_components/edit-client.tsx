@@ -37,16 +37,26 @@ const EditClient = () => {
     if (dataResi !== undefined) setDataDetail(dataResi);
   }, [trackId]);
   return (
-    <>
+    <div>
       <div className="flex justify-between pb-4 border-b items-end md:items-center">
         <div className="flex items-center">
-          <Link href={`/admin/tracks/${trackId}`}>
+          <Link href={`/admin/tracks/${trackId}`} className="hidden md:flex">
             <Button size={"icon"} variant={"ghost"} className="mr-2">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <div>
-            <p className="text-sm md:text-base mb-4 md:mb-0">Edit Resi</p>
+            <div className="flex">
+              <Link
+                href={`/admin/tracks/${trackId}`}
+                className="md:hidden flex"
+              >
+                <Button variant={"ghost"} className="mr-2 p-0 h-auto">
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              </Link>
+              <p className="text-sm md:text-base">Edit Resi</p>
+            </div>
             <div className="flex sm:gap-4 sm:items-center flex-col sm:flex-row items-start">
               <h2 className="text-2xl md:text-4xl font-bold">
                 {dataDetail?.kode_resi}
@@ -65,33 +75,42 @@ const EditClient = () => {
         </div>
       </div>
       <Card className="p-4 flex flex-col w-full gap-6 h-full">
-        <div className="flex items-center bg-gray-200 w-full py-2 px-3 rounded-md gap-x-4">
+        <div className="flex items-center bg-gray-200 dark:bg-gray-800 w-full py-2 px-3 rounded-md gap-x-4">
           <div className="w-10 h-10 relative overflow-hidden rounded">
             <Image src={"/avatar.webp"} fill alt="" />
           </div>
-          <div className="font-semibold">
-            Ahmad Fulan / {dataDetail?.keterangan}
+          <div className="font-semibold flex flex-col md:flex-row md:gap-2">
+            <p className="text-xs font-normal md:text-base md:font-semibold">
+              Ahmad Fulan
+            </p>
+            <p className="hidden md:flex">/</p>
+            <p className="capitalize">{dataDetail?.keterangan}</p>
           </div>
         </div>
-        <div className="flex w-full h-full">
-          <div className="flex flex-col w-full border-r pr-6 mr-6 border-gray-900">
+        <div className="flex w-full h-full flex-col lg:flex-row">
+          <div className="flex flex-col w-full border-b pb-4 mb-4 lg:mb-0 lg:pb-0 lg:border-r lg:pr-6 mr-6 border-gray-900">
             <h3 className="font-semibold mb-2">Data Resi</h3>
-            <Accordion type="multiple" className="w-full gap-y-4 flex flex-col">
+            <Accordion
+              type="multiple"
+              className="w-full gap-2 md:gap-4 flex flex-col"
+            >
               <AccordionItem
                 value="pengirim"
                 className="border px-3 rounded-md"
               >
-                <AccordionTrigger className="px-2">Pengirim</AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-y-4">
-                  <div className="px-2 flex flex-col gap-y-2">
+                <AccordionTrigger className="px-1 md:px-2 py-3 md:py-4">
+                  Pengirim
+                </AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-2 md:gap-4 pt-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Nama</Label>
                     <Input />
                   </div>
-                  <div className="px-2 flex flex-col gap-y-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Alamat</Label>
                     <Input />
                   </div>
-                  <div className="px-2 flex flex-col gap-y-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Kota</Label>
                     <Input />
                   </div>
@@ -101,26 +120,30 @@ const EditClient = () => {
                 value="penerima"
                 className="border px-3 rounded-md"
               >
-                <AccordionTrigger className="px-2">Penerima</AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-y-4">
-                  <div className="px-2 flex flex-col gap-y-2">
+                <AccordionTrigger className="px-1 md:px-2 py-3 md:py-4">
+                  Penerima
+                </AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-2 md:gap-4 pt-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Nama</Label>
                     <Input />
                   </div>
-                  <div className="px-2 flex flex-col gap-y-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Alamat</Label>
                     <Input />
                   </div>
-                  <div className="px-2 flex flex-col gap-y-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Kota</Label>
                     <Input />
                   </div>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="status" className="border px-3 rounded-md">
-                <AccordionTrigger className="px-2">Status</AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-y-4">
-                  <div className="px-2 flex flex-col gap-y-2">
+                <AccordionTrigger className="px-1 md:px-2 py-3 md:py-4">
+                  Status
+                </AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-2 md:gap-4 pt-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Status resi</Label>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -143,16 +166,16 @@ const EditClient = () => {
                       </PopoverContent>
                     </Popover>
                   </div>
-                  <div className="px-2 flex flex-col gap-y-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Nama penerima</Label>
                     <Input />
                   </div>
-                  <div className="flex gap-x-4 w-full">
-                    <div className="px-2 flex flex-col gap-y-2 w-full">
+                  <div className="px-1 md:px-2 flex gap-2 md:gap-4 w-full">
+                    <div className="flex flex-col gap-y-2 w-full">
                       <Label>Tanggal</Label>
                       <Input />
                     </div>
-                    <div className="px-2 flex flex-col gap-y-2 w-full">
+                    <div className="flex flex-col gap-y-2 w-full">
                       <Label>Waktu</Label>
                       <Input />
                     </div>
@@ -171,35 +194,35 @@ const EditClient = () => {
             <Accordion
               type="single"
               collapsible
-              className="w-full gap-y-4 flex flex-col"
+              className="w-full gap-2 md:gap-4 flex flex-col"
             >
               <AccordionItem
                 value="manifest #1"
                 className="border px-3 rounded-md"
               >
-                <AccordionTrigger className="px-2">
+                <AccordionTrigger className="px-1 md:px-2 py-3 md:py-4">
                   Manifest #1
                 </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-y-4">
-                  <div className="px-2 flex flex-col gap-y-2">
+                <AccordionContent className="flex flex-col gap-2 md:gap-4 pt-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Manifest</Label>
                     <Input />
                   </div>
-                  <div className="px-2 flex flex-col gap-y-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Kota</Label>
                     <Input />
                   </div>
-                  <div className="flex gap-x-4 w-full">
-                    <div className="px-2 flex flex-col gap-y-2 w-full">
+                  <div className="px-1 md:px-2 flex gap-2 md:gap-4 w-full">
+                    <div className="flex flex-col gap-y-2 w-full">
                       <Label>Tanggal</Label>
                       <Input />
                     </div>
-                    <div className="px-2 flex flex-col gap-y-2 w-full">
+                    <div className="flex flex-col gap-y-2 w-full">
                       <Label>Waktu</Label>
                       <Input />
                     </div>
                   </div>
-                  <div className="flex justify-end gap-x-2">
+                  <div className="flex justify-end gap-2">
                     <Button variant={"destructive"}>Hapus</Button>
                     <Button className="bg-green-400 hover:bg-green-300 text-black">
                       Simpan
@@ -211,29 +234,29 @@ const EditClient = () => {
                 value="manifest #2"
                 className="border px-3 rounded-md"
               >
-                <AccordionTrigger className="px-2">
+                <AccordionTrigger className="px-1 md:px-2 py-3 md:py-4">
                   Manifest #2
                 </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-y-4">
-                  <div className="px-2 flex flex-col gap-y-2">
+                <AccordionContent className="flex flex-col gap-2 md:gap-4 pt-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Manifest</Label>
                     <Input />
                   </div>
-                  <div className="px-2 flex flex-col gap-y-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Kota</Label>
                     <Input />
                   </div>
-                  <div className="flex gap-x-4 w-full">
-                    <div className="px-2 flex flex-col gap-y-2 w-full">
+                  <div className="px-1 md:px-2 flex gap-2 md:gap-4 w-full">
+                    <div className="flex flex-col gap-y-2 w-full">
                       <Label>Tanggal</Label>
                       <Input />
                     </div>
-                    <div className="px-2 flex flex-col gap-y-2 w-full">
+                    <div className="flex flex-col gap-y-2 w-full">
                       <Label>Waktu</Label>
                       <Input />
                     </div>
                   </div>
-                  <div className="flex justify-end gap-x-2">
+                  <div className="flex justify-end gap-2">
                     <Button variant={"destructive"}>Hapus</Button>
                     <Button className="bg-green-400 hover:bg-green-300 text-black">
                       Simpan
@@ -245,29 +268,29 @@ const EditClient = () => {
                 value="manifest #3"
                 className="border px-3 rounded-md"
               >
-                <AccordionTrigger className="px-2">
+                <AccordionTrigger className="px-1 md:px-2 py-3 md:py-4">
                   Manifest #3
                 </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-y-4">
-                  <div className="px-2 flex flex-col gap-y-2">
+                <AccordionContent className="flex flex-col gap-2 md:gap-4 pt-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Manifest</Label>
                     <Input />
                   </div>
-                  <div className="px-2 flex flex-col gap-y-2">
+                  <div className="px-1 md:px-2 flex flex-col gap-y-2">
                     <Label>Kota</Label>
                     <Input />
                   </div>
-                  <div className="flex gap-x-4 w-full">
-                    <div className="px-2 flex flex-col gap-y-2 w-full">
+                  <div className="px-1 md:px-2 flex gap-2 md:gap-4 w-full">
+                    <div className="flex flex-col gap-y-2 w-full">
                       <Label>Tanggal</Label>
                       <Input />
                     </div>
-                    <div className="px-2 flex flex-col gap-y-2 w-full">
+                    <div className="flex flex-col gap-y-2 w-full">
                       <Label>Waktu</Label>
                       <Input />
                     </div>
                   </div>
-                  <div className="flex justify-end gap-x-2">
+                  <div className="flex justify-end gap-2">
                     <Button variant={"destructive"}>Hapus</Button>
                     <Button className="bg-green-400 hover:bg-green-300 text-black">
                       Simpan
@@ -279,7 +302,7 @@ const EditClient = () => {
           </div>
         </div>
       </Card>
-    </>
+    </div>
   );
 };
 

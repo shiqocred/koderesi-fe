@@ -17,12 +17,12 @@ export const TransactionCurrentCard = ({
     <CurrentCard label={label} href={href}>
       {data.map((item) => (
         <li className="capitalize" key={item.id}>
-          <Card className="p-4 rounded-sm text-sm flex justify-between items-center">
+          <Card className="p-4 rounded-sm text-xs font-light sm:text-sm flex justify-between items-center">
             <div className="flex items-center">
               {item.status === "in" ? (
-                <ArrowDownCircle className="h-7 w-7 stroke-[1.5] mr-2 text-green-500" />
+                <ArrowDownCircle className="sm:h-7 sm:w-7 h-5 w-5 stroke-1 sm:stroke-[1.5] mr-2 text-green-500" />
               ) : (
-                <ArrowUpCircle className="h-7 w-7 stroke-[1.5] mr-2 text-red-500" />
+                <ArrowUpCircle className="sm:h-7 sm:w-7 h-5 w-5 stroke-1 sm:stroke-[1.5] mr-2 text-red-500" />
               )}
               <div>
                 <div className="font-semibold">{item.id}</div>

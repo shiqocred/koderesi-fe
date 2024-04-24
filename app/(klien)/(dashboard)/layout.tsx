@@ -18,7 +18,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
     >
       <Sidebar />
       <Navigation isFloating />
-      <div className="w-full md:overflow-x-hidden md:overflow-y-scroll bg-gray-50 dark:bg-gray-950">
+      <div className="w-full md:overflow-x-hidden md:overflow-y-scroll h-full bg-gray-50 dark:bg-gray-950">
         <Navigation isNavbar />
         {children}
       </div>
