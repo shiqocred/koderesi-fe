@@ -170,8 +170,8 @@ export const CreditsClient = () => {
     return null;
   }
   return (
-    <div className="flex h-full gap-2 md:gap-6 flex-col lg:flex-row">
-      <div className="w-full lg:w-2/5">
+    <div className="flex h-full gap-2 md:gap-6 flex-col xl:flex-row">
+      <div className="w-full xl:w-2/5">
         <Card className="p-2 md:p-4">
           <div className="w-full relative flex items-center mb-4">
             <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
@@ -182,10 +182,10 @@ export const CreditsClient = () => {
           </div>
           <div className="w-full bg-gray-300 justify-center items-center py-2 rounded-sm px-5 hidden md:flex">
             <p className="text-sm font-semibold w-full">Pengguna</p>
-            <p className="text-sm font-semibold w-[150px] flex-none text-center hidden xl:block">
+            <p className="text-sm font-semibold w-[150px] flex-none text-center hidden lg:block">
               Kredit
             </p>
-            <p className="text-sm font-semibold w-[50px] flex-none hidden xl:block" />
+            <p className="text-sm font-semibold w-[50px] flex-none hidden lg:block" />
           </div>
           <ul className="md:pt-2 space-y-2 flex flex-col">
             {mapUsers.map((item) => (
@@ -209,11 +209,11 @@ export const CreditsClient = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex w-[80px] xl:w-auto justify-between items-center">
-                    <div className="w-auto xl:w-[150px] flex-none text-center">
+                  <div className="flex w-[80px] lg:w-auto justify-between items-center">
+                    <div className="w-auto lg:w-[150px] flex-none text-center">
                       {item.kredit}
                     </div>
-                    <div className="w-auto xl:w-[50px] flex-none flex justify-center">
+                    <div className="w-auto lg:w-[50px] flex-none flex justify-center">
                       <Button
                         size={"icon"}
                         className=" hover:bg-gray-200 h-6 w-6"
@@ -229,17 +229,17 @@ export const CreditsClient = () => {
           </ul>
         </Card>
       </div>
-      <div className="h-full w-full lg:w-3/5">
+      <div className="h-full w-full xl:w-3/5">
         {current.id !== 0 ? (
           <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
-            <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 justify-between items-center w-full">
+            <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex bg-gray-200 justify-between items-center w-full">
               <div className="w-full">
                 <div className="flex gap-x-4 items-center">
                   <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
                     <Image alt="" src={"/avatar.webp"} fill />
                   </div>
-                  <div className="flex flex-col md:flex-row md:items-center w-full gap-6 pr-4">
-                    <p className="text-base font-semibold flex-none">
+                  <div className="flex flex-col md:flex-row md:items-center w-full md:gap-6 pr-4">
+                    <p className="text-sm md:text-base font-semibold flex-none">
                       {current.nama}
                     </p>
                     {!editedKredit ? (
