@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const TracksPage = () => {
   return (
-    <div className="px-6 py-8 gap-6 flex flex-col">
+    <div className="sm:px-6 sm:py-8 p-4 gap-6 flex flex-col">
       <Header title="List Resi" description="List semua resi list punyamu" />
       <Suspense fallback={null}>
         <TracksClient />

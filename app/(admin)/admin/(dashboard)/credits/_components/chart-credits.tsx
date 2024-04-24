@@ -230,15 +230,13 @@ export function ChartCredit({ month }: { month: string }) {
           fontSize={12}
           interval={6}
           axisLine={false}
-          padding={{ left: 10, right: 10 }}
         />
         <YAxis
-          width={100}
+          width={30}
           stroke="#888888"
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${value} Kredit`}
         />
         <ChartTooltip
           cursor={false}

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const ArchivesPage = () => {
   return (
-    <div className="px-6 py-8 gap-6 flex flex-col">
+    <div className="sm:px-6 sm:py-8 p-4 gap-6 flex flex-col">
       <Header
         title="List Arsip Resi"
         description="Simpan resi yang tidak terpakai"

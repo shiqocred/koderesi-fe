@@ -30,7 +30,7 @@ export const CheckResiClient = () => {
             value={resi}
             onChange={(e) => setResi(e.target.value)}
           />
-          <Button type="submit" size={"icon"}>
+          <Button type="submit" size={"icon"} className="flex-none">
             <Search className="w-4 h-4" />
           </Button>
         </form>

@@ -1,7 +1,8 @@
 "use client";
 
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import {
   Command,
   CommandGroup,
@@ -9,28 +10,71 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { cn, formatRupiah } from "@/lib/utils";
 import { TooltipProviderPage } from "@/providers/tooltip-provider-page";
 import {
+  AlertTriangleIcon,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Facebook,
   Instagram,
   Link,
+  Loader2,
   PlusCircle,
   Twitter,
   Unlink,
+  X,
   Youtube,
 } from "lucide-react";
 import React, { MouseEvent, useState } from "react";
+import { ChartAffiliateClient } from "./chart-affiliate-client";
 
 interface FormFieldProps {
   label: string;
   value: string;
 }
+
+enum AffiliateProgress {
+  STEP1,
+  STEP2,
+  STEP3,
+  STEP4,
+}
+
+const affiliateMap = [
+  {
+    id: 1,
+    nama: "Ahmad Fulan",
+    tanggal: "13 Jan - 13.00",
+    phone: "0888-8888-8888",
+    cash: 30000,
+    status: "proses",
+  },
+  {
+    id: 2,
+    nama: "Ahmad Fulan",
+    tanggal: "13 Jan - 13.00",
+    phone: "0888-8888-8888",
+    cash: 50000,
+    status: "proses",
+  },
+  {
+    id: 3,
+    nama: "Ahmad Fulan",
+    tanggal: "13 Jan - 13.00",
+    phone: "0888-8888-8888",
+    cash: 50000,
+    status: "paid",
+  },
+];
 
 export const AffiliateClient = () => {
   const [formFields, setFormFields] = useState<FormFieldProps[]>([
@@ -41,6 +85,7 @@ export const AffiliateClient = () => {
   const [isTwitter, setIsTwitter] = useState<boolean>(false);
   const [isYoutube, setIsYoutube] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(0);
 
   const [dropdown, setDropdown] = useState<string>("Pilih opsi...");
   const [socialLink, setSocialLink] = useState({
@@ -70,6 +115,210 @@ export const AffiliateClient = () => {
     updatedFormFields[index].value = value;
     setFormFields(updatedFormFields);
   };
+
+  const onNextStep = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (step < 3 || step === 0) {
+      setStep((prev) => prev + 1);
+    } else if (step === 3) {
+      setStep(0);
+    }
+  };
+  const [mth, setMth] = useState<number>(0);
+
+  const month = [
+    {
+      label: "januari",
+      value: "jan",
+    },
+    {
+      label: "februari",
+      value: "feb",
+    },
+    {
+      label: "maret",
+      value: "mar",
+    },
+    {
+      label: "april",
+      value: "apr",
+    },
+    {
+      label: "mei",
+      value: "mei",
+    },
+    {
+      label: "juni",
+      value: "jun",
+    },
+    {
+      label: "juli",
+      value: "jul",
+    },
+    {
+      label: "agustus",
+      value: "agu",
+    },
+    {
+      label: "september",
+      value: "sep",
+    },
+    {
+      label: "oktober",
+      value: "okt",
+    },
+    {
+      label: "november",
+      value: "nov",
+    },
+    {
+      label: "desember",
+      value: "des",
+    },
+  ];
+  const onChangeMonth = (value: "prev" | "next") => {
+    if (value === "prev") {
+      setMth(mth !== 0 ? mth - 1 : 0);
+    } else if (value === "next") {
+      setMth(mth !== month.length - 1 ? mth + 1 : month.length - 1);
+    }
+  };
+
+  if (AffiliateProgress.STEP2 === step) {
+    return (
+      <div className="flex flex-col gap-y-2">
+        <Alert className="bg-yellow-300 text-black">
+          <Loader2 className="animate-spin w-4 h-4 dark:text-black" />
+          <AlertTitle className="m-0">
+            Pengajuan anda sedang kami tinjau
+          </AlertTitle>
+        </Alert>
+        <Button
+          onClick={onNextStep}
+          className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-56"
+        >
+          Ajukan Affiliate Partner
+        </Button>
+      </div>
+    );
+  }
+  if (AffiliateProgress.STEP3 === step) {
+    return (
+      <div className="flex flex-col gap-y-2">
+        <Alert>
+          <AlertTriangleIcon className="w-4 h-4" />
+          <AlertTitle className="m-0">
+            Anda telah melanggar ketentuan kami.
+          </AlertTitle>
+        </Alert>
+        <Alert className="bg-red-300 dark:bg-red-500 text-black">
+          <X className="w-4 h-4 dark:text-black" />
+          <AlertTitle className="m-0">Pengajuan anda ditolak</AlertTitle>
+        </Alert>
+        <Button
+          onClick={onNextStep}
+          className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-56"
+        >
+          Ajukan Affiliate Partner
+        </Button>
+      </div>
+    );
+  }
+  if (AffiliateProgress.STEP4 === step) {
+    return (
+      <div className="flex flex-col md:flex-row gap-y-2 md:gap-x-4 w-full">
+        <div className="w-full">
+          <Card className="flex flex-col text-sm text-center p-4 space-y-4 w-full">
+            <div className="flex flex-col gap-y-1 items-start">
+              <Label>Kode affiliasi</Label>
+              <div className="border p-2 rounded-md flex justify-center w-full items-center h-10 tracking-widest font-semibold">
+                AFFILIATEDEWE
+              </div>
+            </div>
+            <Separator className="bg-gray-500 dark:bg-gray-700" />
+            <div className="flex flex-col gap-y-1 text-start">
+              <div className="border p-2 rounded-md flex justify-between items-center w-full h-10 px-4 font-semibold">
+                <Label>Pendapatan:</Label>
+                <p>{formatRupiah(300000)}</p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                *Minimum withdraw {formatRupiah(300000)}
+              </p>
+            </div>
+            <Button
+              onClick={onNextStep}
+              className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-full"
+            >
+              Withdraw
+            </Button>
+          </Card>
+        </div>
+
+        <div className="border p-2 md:p-4 rounded-md space-y-2 md:space-y-4 w-full">
+          <Card className="flex justify-center h-10 items-center">Riwayat</Card>
+          <div className="border border-green-400 dark:border-green-400/50 rounded-md p-2 w-full">
+            <div className="flex justify-between sm:items-center px-5 mb-4 flex-col sm:flex-row items-start sm:gap-y-0 gap-y-2 w-full">
+              <CardTitle>Transaksi Flow</CardTitle>
+              <div className="flex border p-1.5 rounded-md text-sm font-semibold items-center gap-x-2">
+                <Button
+                  size={"icon"}
+                  className="h-5 w-5 rounded-sm"
+                  variant={"ghost"}
+                  onClick={() => onChangeMonth("prev")}
+                  disabled={mth === 0}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <span className="capitalize w-20 select-none flex items-center justify-center">
+                  {month[mth].label}
+                </span>
+                <Button
+                  size={"icon"}
+                  className="h-5 w-5 rounded-sm"
+                  variant={"ghost"}
+                  onClick={() => onChangeMonth("next")}
+                  disabled={mth === month.length - 1}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="h-[250px] sm:h-[300px] ">
+              <ChartAffiliateClient month={month[mth].value} />
+            </div>
+          </div>
+          <div className="mt-2 space-y-2 md:space-y-4">
+            {affiliateMap.map((item) => (
+              <Card
+                key={item.id}
+                className="flex justify-between text-sm p-2 md:p-4 items-center"
+              >
+                <div className="flex flex-col gap-y-1">
+                  <div>{item.nama}</div>
+                  <div className="text-xs flex flex-col sm:flex-row">
+                    {item.tanggal}
+                    <span className="hidden sm:flex px-2">|</span>
+                    <span>{item.phone}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col-reverse sm:flex-row justify-end sm:gap-x-4 gap-y-1 sm:gap-y-0">
+                  <div>{formatRupiah(item.cash)}</div>
+                  <div
+                    className={cn(
+                      "py-0.5 bg-yellow-300 w-full justify-center flex rounded sm:w-16 capitalize dark:text-black",
+                      item.status === "paid" && "bg-green-400"
+                    )}
+                  >
+                    {item.status}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <Card className="flex flex-col text-sm text-center p-4 space-y-6">
       <form className="flex flex-col space-y-8 py-4">
@@ -313,7 +562,10 @@ export const AffiliateClient = () => {
             )}
           </div>
         </div>
-        <Button className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-56">
+        <Button
+          onClick={onNextStep}
+          className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-56"
+        >
           Ajukan Affiliate Partner
         </Button>
       </form>

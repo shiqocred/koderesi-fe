@@ -35,8 +35,9 @@ export const SaveManifestModal = () => {
     >
       <div className="flex flex-col gap-2 w-full">
         <div className="flex w-full h-full bg-gray-100 rounded dark:bg-gray-800/40 dark:bg-gray-800 mt-2 text-sm">
-          <div className="w-20 md:w-36 flex justify-end pr-4 border-r py-4 border-gray-500 gap-x-1">
-            <div>{dataManifest?.tanggal}</div>-<div>{dataManifest?.waktu}</div>
+          <div className="md:w-32 flex flex-col justify-center items-end pr-4 border-r py-4 px-5 border-gray-500 flex-none">
+            <div>{dataManifest?.tanggal}</div>
+            <div>{dataManifest?.waktu}</div>
           </div>
           <div className="py-4 flex items-center px-4">
             {dataManifest?.manifest}
@@ -67,7 +68,7 @@ export const SaveManifestModal = () => {
         <div className="w-full min-h-16 border-dashed rounded-md flex items-center justify-center border-2 text-sm mt-4">
           {!dataResi ? "Data not found." : <div>{dataResi.kode_resi}</div>}
         </div>
-        <div className="flex w-full gap-x-2 mt-4">
+        <div className="flex w-full gap-2 mt-4 flex-col-reverse">
           <Button
             className="w-full"
             variant={"secondary"}

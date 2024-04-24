@@ -19,7 +19,7 @@ import { useModal } from "@/hooks/use-modal";
 const DashboardPage = () => {
   const { onOpen } = useModal();
   return (
-    <div className="px-6 py-8 gap-6 flex flex-col">
+    <div className="sm:px-6 sm:py-8 p-4 gap-6 flex flex-col">
       <div className="w-full transition-all flex flex-col md:flex-row gap-4 xl:gap-8">
         <Card className="w-full lg:w-2/5 xl:w-full px-4 py-2 xl:px-7 xl:py-4 flex justify-between items-center">
           <div>

@@ -2,13 +2,22 @@
 
 import { Card, CardTitle } from "@/components/ui/card";
 import { ChartCredit } from "./chart-credits";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Edit, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Edit, Save, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import qs from "query-string";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const mapUsers = [
+interface UsersProps {
+  id: number;
+  nama: string;
+  kredit: number;
+}
+
+const mapUsers: UsersProps[] = [
   {
     id: 58203384201,
     nama: "Amie Bechtelar",
@@ -42,8 +51,17 @@ const mapUsers = [
 ];
 
 export const CreditsClient = () => {
+  const [current, setCurrent] = useState<UsersProps>({
+    id: 0,
+    nama: "",
+    kredit: 0,
+  });
+  const [currentId, setCurrentId] = useState<number>(0);
+  const [editedKredit, setEditedKredit] = useState<boolean>(false);
   const [mth, setMth] = useState<number>(0);
   const [isMounted, setIsMounted] = useState<boolean>(false);
+  const params = useSearchParams();
+  const router = useRouter();
 
   const month = [
     {
@@ -104,6 +122,46 @@ export const CreditsClient = () => {
     }
   };
 
+  const handleCurrentId = useCallback(
+    (id: number) => {
+      setCurrentId(id);
+      let currentQuery = {};
+
+      if (params) {
+        currentQuery = qs.parse(params.toString());
+      }
+
+      const updateQuery: any = {
+        ...currentQuery,
+        currentId: id,
+      };
+
+      const url = qs.stringifyUrl(
+        {
+          url: "/admin/credits",
+          query: updateQuery,
+        },
+        { skipNull: true }
+      );
+
+      router.push(url);
+    },
+    [params, router]
+  );
+
+  useEffect(() => {
+    if (params.get("currentId")) {
+      const currentUser = mapUsers.find(
+        (item) => item.id === parseFloat(params.get("currentId") ?? "0")
+      );
+      setCurrent({
+        id: currentUser?.id ?? 0,
+        nama: currentUser?.nama ?? "",
+        kredit: currentUser?.kredit ?? 0,
+      });
+    }
+  }, [params]);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -112,9 +170,9 @@ export const CreditsClient = () => {
     return null;
   }
   return (
-    <div className="p-4 flex h-full gap-6">
-      <div className=" w-2/5">
-        <Card className="p-4">
+    <div className="flex h-full gap-2 md:gap-6 flex-col lg:flex-row">
+      <div className="w-full lg:w-2/5">
+        <Card className="p-2 md:p-4">
           <div className="w-full relative flex items-center mb-4">
             <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
             <Input
@@ -122,102 +180,142 @@ export const CreditsClient = () => {
               placeholder="Search user name..."
             />
           </div>
-          <div className="w-full bg-gray-300 flex justify-center items-center py-2 rounded-sm px-5">
+          <div className="w-full bg-gray-300 justify-center items-center py-2 rounded-sm px-5 hidden md:flex">
             <p className="text-sm font-semibold w-full">Pengguna</p>
-            <p className="text-sm font-semibold w-[150px] flex-none text-center">
+            <p className="text-sm font-semibold w-[150px] flex-none text-center hidden xl:block">
               Kredit
             </p>
-            <p className="text-sm font-semibold w-[50px] flex-none" />
+            <p className="text-sm font-semibold w-[50px] flex-none hidden xl:block" />
           </div>
-          <ul className="pt-2 space-y-2 flex flex-col">
+          <ul className="md:pt-2 space-y-2 flex flex-col">
             {mapUsers.map((item) => (
               <li className="capitalize" key={item.id}>
-                <Card className="py-2 px-5 rounded-sm text-sm flex bg-gray-100 justify-between items-center">
+                <Button
+                  className={cn(
+                    "md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex  gap-1 justify-between items-center w-full text-black",
+                    current.id === item.id
+                      ? "bg-gray-200 hover:bg-gray-300"
+                      : "bg-gray-100 hover:bg-gray-200"
+                  )}
+                  onClick={() => handleCurrentId(item.id)}
+                >
                   <div className="w-full">
                     <div className="flex gap-x-2 items-center">
                       <div className="w-8 h-8 overflow-hidden rounded relative flex-none">
                         <Image alt="" src={"/avatar.webp"} fill />
                       </div>
                       <div className="flex flex-col">
-                        <p className="text-sm">{item.nama}</p>
+                        <p>{item.nama}</p>
                       </div>
                     </div>
                   </div>
-                  <div className="w-[150px] flex-none text-center text-sm">
-                    {item.kredit}
+                  <div className="flex w-[80px] xl:w-auto justify-between items-center">
+                    <div className="w-auto xl:w-[150px] flex-none text-center">
+                      {item.kredit}
+                    </div>
+                    <div className="w-auto xl:w-[50px] flex-none flex justify-center">
+                      <Button
+                        size={"icon"}
+                        className=" hover:bg-gray-200 h-6 w-6"
+                        variant={"ghost"}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="w-[50px] flex-none flex justify-center">
-                    <Button
-                      size={"icon"}
-                      className=" hover:bg-gray-200 h-6 w-6"
-                      variant={"ghost"}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </Card>
+                </Button>
               </li>
             ))}
           </ul>
         </Card>
       </div>
-      <div className="h-full w-3/5">
-        <Card className="flex flex-col p-4 gap-4 h-full w-full">
-          <Card className="py-2 px-5 rounded-sm text-sm flex bg-gray-200 justify-between items-center">
-            <div className="w-full">
-              <div className="flex gap-x-4 items-center">
-                <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
-                  <Image alt="" src={"/avatar.webp"} fill />
-                </div>
-                <div className="flex flex-col">
-                  <p className="text-base font-semibold">{mapUsers[0].nama}</p>
+      <div className="h-full w-full lg:w-3/5">
+        {current.id !== 0 ? (
+          <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
+            <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 justify-between items-center w-full">
+              <div className="w-full">
+                <div className="flex gap-x-4 items-center">
+                  <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
+                    <Image alt="" src={"/avatar.webp"} fill />
+                  </div>
+                  <div className="flex flex-col md:flex-row md:items-center w-full gap-6 pr-4">
+                    <p className="text-base font-semibold flex-none">
+                      {current.nama}
+                    </p>
+                    {!editedKredit ? (
+                      <div className="w-auto md:w-[150px] flex-none ">
+                        {current.kredit} Kredit
+                      </div>
+                    ) : (
+                      <Input
+                        type="number"
+                        className="h-9 px-2"
+                        value={current.kredit}
+                        onChange={(e) =>
+                          setCurrent((prev) => ({
+                            ...prev,
+                            kredit: parseFloat(e.target.value),
+                          }))
+                        }
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="w-[150px] flex-none text-center">
-              {mapUsers[0].kredit} Kredit
-            </div>
-            <div className="w-[50px] flex-none flex justify-center">
-              <Button
-                size={"icon"}
-                className=" hover:bg-yellow-300 bg-yellow-400 text-black"
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
+              <div className="w-[50px] flex-none flex justify-center">
+                <Button
+                  size={"icon"}
+                  className={cn(
+                    "text-black",
+                    !editedKredit
+                      ? "hover:bg-yellow-300 bg-yellow-400"
+                      : "hover:bg-green-300 bg-green-400"
+                  )}
+                  onClick={() => setEditedKredit(!editedKredit)}
+                >
+                  {!editedKredit ? (
+                    <Edit className="h-4 w-4" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </Card>
+            <div className="h-full border rounded-md">
+              <div className="flex md:justify-between md:items-center px-4 pt-4 gap-2 md:gap-0 md:px-5 mb-4 flex-col md:flex-row items-start">
+                <CardTitle>Kredit Flow</CardTitle>
+                <div className="flex border p-1.5 rounded-md text-sm font-semibold items-center gap-x-2">
+                  <Button
+                    className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
+                    variant={"ghost"}
+                    onClick={() => onChangeMonth("prev")}
+                    disabled={mth === 0}
+                  >
+                    <ChevronLeft className="w-3 md:w-4 h-3 md:h-4" />
+                  </Button>
+                  <span className="capitalize md:w-20 w-14 select-none flex items-center justify-center text-xs md:text-sm">
+                    {month[mth].label}
+                  </span>
+                  <Button
+                    className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
+                    variant={"ghost"}
+                    onClick={() => onChangeMonth("next")}
+                    disabled={mth === month.length - 1}
+                  >
+                    <ChevronRight className="w-3 md:w-4 h-3 md:h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="xl:h-[350px] md:h-[300px] h-[200px]">
+                <ChartCredit month={month[mth].value} />
+              </div>
             </div>
           </Card>
-          <div className="h-full border rounded-md p-4">
-            <div className="flex justify-between items-center px-5 mb-4">
-              <CardTitle>Kredit Flow</CardTitle>
-              <div className="flex border p-1.5 rounded-md text-sm font-semibold items-center gap-x-2">
-                <Button
-                  size={"icon"}
-                  className="h-5 w-5 rounded-sm"
-                  variant={"ghost"}
-                  onClick={() => onChangeMonth("prev")}
-                  disabled={mth === 0}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                <span className="capitalize w-20 select-none flex items-center justify-center">
-                  {month[mth].label}
-                </span>
-                <Button
-                  size={"icon"}
-                  className="h-5 w-5 rounded-sm"
-                  variant={"ghost"}
-                  onClick={() => onChangeMonth("next")}
-                  disabled={mth === month.length - 1}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="h-[350px]">
-              <ChartCredit month={month[mth].value} />
-            </div>
-          </div>
-        </Card>
+        ) : (
+          <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 justify-between items-center w-full">
+            No data viewed
+          </Card>
+        )}
       </div>
     </div>
   );
