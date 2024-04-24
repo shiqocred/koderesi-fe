@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { CreditsClient } from "./_components/transaction-client";
 
 const CreditsPage = () => {
@@ -10,7 +10,9 @@ const CreditsPage = () => {
           Kelola transaksi pengguna
         </p>
       </div>
-      <CreditsClient />
+      <Suspense>
+        <CreditsClient />
+      </Suspense>
     </div>
   );
 };

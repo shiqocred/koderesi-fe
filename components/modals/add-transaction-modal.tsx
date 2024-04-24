@@ -73,14 +73,14 @@ export const AddTransactionModal = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 w-full"
+          className="flex flex-col gap-2 md:gap-4 w-full"
         >
-          <div className="flex gap-x-4 w-full">
+          <div className="flex gap-2 md:gap-4 w-full">
             <FormField
               control={form.control}
               name="metode"
               render={({ field }) => (
-                <FormItem className="w-full">
+                <FormItem className="w-full gap-1 flex flex-col space-y-0">
                   <FormLabel>Metode</FormLabel>
                   <FormControl>
                     <Input
@@ -97,7 +97,7 @@ export const AddTransactionModal = () => {
               control={form.control}
               name="kode"
               render={({ field }) => (
-                <FormItem className="w-full">
+                <FormItem className="w-full gap-1 flex flex-col space-y-0">
                   <FormLabel>Kode Transaksi</FormLabel>
                   <FormControl>
                     <Input
@@ -115,7 +115,7 @@ export const AddTransactionModal = () => {
             control={form.control}
             name="nominal"
             render={({ field }) => (
-              <FormItem className="w-full">
+              <FormItem className="w-full gap-1 flex flex-col space-y-0">
                 <FormLabel>Nominal</FormLabel>
                 <FormControl>
                   <Input
@@ -132,7 +132,7 @@ export const AddTransactionModal = () => {
             control={form.control}
             name="kredit"
             render={({ field }) => (
-              <FormItem className="w-full">
+              <FormItem className="w-full gap-1 flex flex-col space-y-0">
                 <FormLabel>Kredit</FormLabel>
                 <FormControl>
                   <Input
@@ -150,7 +150,7 @@ export const AddTransactionModal = () => {
               control={form.control}
               name="tanggal"
               render={({ field }) => (
-                <FormItem className="w-full">
+                <FormItem className="w-full gap-1 flex flex-col space-y-0">
                   <FormLabel>Tanggal</FormLabel>
                   <FormControl>
                     <Input
@@ -167,7 +167,7 @@ export const AddTransactionModal = () => {
               control={form.control}
               name="waktu"
               render={({ field }) => (
-                <FormItem className="w-full">
+                <FormItem className="w-full gap-1 md:gap-2 flex flex-col space-y-0">
                   <FormLabel>Waktu</FormLabel>
                   <FormControl>
                     <Input
@@ -187,7 +187,7 @@ export const AddTransactionModal = () => {
               type="submit"
               disabled={!isValid || isSubmitting}
             >
-              Lacak
+              Tambah
             </Button>
             <Button variant={"outline"} onClick={onClose} type="button">
               Batal
