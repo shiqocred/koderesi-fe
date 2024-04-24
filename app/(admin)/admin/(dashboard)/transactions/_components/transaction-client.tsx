@@ -2,7 +2,7 @@
 
 import { Card, CardTitle } from "@/components/ui/card";
 import { ChartCredit } from "./chart-credits";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,10 +15,19 @@ import {
   Search,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { formatRupiah, mapNewestTransaction } from "@/lib/utils";
+import { cn, formatRupiah, mapNewestTransaction } from "@/lib/utils";
 import { useModal } from "@/hooks/use-modal";
+import qs from "query-string";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const mapUsers = [
+interface UsersProps {
+  id: number;
+  nama: string;
+  kredit: number;
+  cash: number;
+}
+
+const mapUsers: UsersProps[] = [
   {
     id: 58203384201,
     nama: "Amie Bechtelar",
@@ -58,9 +67,17 @@ const mapUsers = [
 ];
 
 export const CreditsClient = () => {
+  const [current, setCurrent] = useState<UsersProps>({
+    id: 0,
+    nama: "",
+    kredit: 0,
+    cash: 0,
+  });
   const [mth, setMth] = useState<number>(0);
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const { onOpen } = useModal();
+  const params = useSearchParams();
+  const router = useRouter();
 
   const month = [
     {
@@ -121,6 +138,46 @@ export const CreditsClient = () => {
     }
   };
 
+  const handleCurrentId = useCallback(
+    (id: number) => {
+      let currentQuery = {};
+
+      if (params) {
+        currentQuery = qs.parse(params.toString());
+      }
+
+      const updateQuery: any = {
+        ...currentQuery,
+        currentId: id,
+      };
+
+      const url = qs.stringifyUrl(
+        {
+          url: "/admin/transactions",
+          query: updateQuery,
+        },
+        { skipNull: true }
+      );
+
+      router.push(url);
+    },
+    [params, router]
+  );
+
+  useEffect(() => {
+    if (params.get("currentId")) {
+      const currentUser = mapUsers.find(
+        (item) => item.id === parseFloat(params.get("currentId") ?? "0")
+      );
+      setCurrent({
+        id: currentUser?.id ?? 0,
+        nama: currentUser?.nama ?? "",
+        kredit: currentUser?.kredit ?? 0,
+        cash: currentUser?.cash ?? 0,
+      });
+    }
+  }, [params]);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -139,34 +196,42 @@ export const CreditsClient = () => {
               placeholder="Search user name..."
             />
           </div>
-          <div className="w-full bg-gray-300 lg:flex justify-center items-center py-2 rounded-sm px-5 hidden">
-            <p className="text-sm font-semibold w-full">Pengguna</p>
-            <p className="text-sm font-semibold w-[100px] flex-none text-center">
+          <div className="w-full bg-gray-300 dark:bg-gray-700 lg:flex justify-center items-center py-2 rounded-sm px-5 hidden">
+            <p className="text-sm font-semibold w-full flex-1">Pengguna</p>
+            <p className="text-sm font-semibold w-[80px] flex-none text-center">
               Kredit
             </p>
-            <p className="text-sm font-semibold w-[150px] flex-none text-center">
+            <p className="text-sm font-semibold w-[100px] flex-none text-center">
               Nominal
             </p>
-            <p className="text-sm font-semibold w-[50px] flex-none" />
+            <p className="text-sm font-semibold w-[30px] flex-none" />
           </div>
           <ul className="lg:pt-2 space-y-2 flex flex-col">
             {mapUsers.map((item) => (
               <li className="capitalize" key={item.id}>
-                <Card className="md:py-2 md:px-3 px-2 py-1.5 rounded-sm text-sm flex bg-gray-100 dark:border dark:border-gray-800 justify-between items-center">
+                <Button
+                  className={cn(
+                    "md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex h-auto gap-1 justify-between md:items-center w-full text-start text-black dark:text-white",
+                    current.id === item.id
+                      ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700/70 dark:border dark:border-gray-700/40 dark:hover:bg-gray-700/40"
+                      : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:border dark:border-gray-700/70 dark:hover:bg-gray-700/70"
+                  )}
+                  onClick={() => handleCurrentId(item.id)}
+                >
                   <div className="w-full">
                     <div className="flex gap-2 items-center w-full">
                       <div className="h-10 aspect-square overflow-hidden rounded relative flex-none">
                         <Image alt="" src={"/avatar.webp"} fill />
                       </div>
-                      <div className="flex flex-col lg:flex-row w-full gap-1">
-                        <p className="text-sm font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                      <div className="flex flex-col md:flex-row w-full gap-1">
+                        <p className="text-sm font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap flex-1">
                           {item.nama}
                         </p>
                         <div className="flex gap-4 items-center">
-                          <div className="w-[70px] md:w-[100px] flex-none lg:text-center text-xs lg:text-sm">
+                          <div className="w-[70px] md:w-[80px] flex-none lg:text-center text-xs lg:text-sm">
                             {item.kredit} Kredit
                           </div>
-                          <div className="lg:w-[150px] flex-none text-center text-xs lg:text-sm">
+                          <div className="md:w-[100px] flex-none text-center text-xs lg:text-sm">
                             {formatRupiah(item.cash)}
                           </div>
                         </div>
@@ -174,7 +239,7 @@ export const CreditsClient = () => {
                     </div>
                   </div>
 
-                  <div className="lg:w-[50px] flex-none flex justify-center">
+                  <div className="lg:w-[30px] flex-none flex justify-center">
                     <Button
                       size={"icon"}
                       className=" hover:bg-gray-200 h-6 w-6"
@@ -183,104 +248,107 @@ export const CreditsClient = () => {
                       <ChevronRight className="h-4 w-4" />
                     </Button>
                   </div>
-                </Card>
+                </Button>
               </li>
             ))}
           </ul>
         </Card>
       </div>
       <div className="h-full w-full xl:w-3/5">
-        <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
-          <Card className="md:py-2 md:px-3 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 dark:border dark:border-gray-800 justify-between items-center">
-            <div className="w-full">
-              <div className="flex gap-x-4 items-center">
-                <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
-                  <Image alt="" src={"/avatar.webp"} fill />
-                </div>
-                <div className="flex flex-col">
-                  <p className="text-sm md:text-base font-semibold">
-                    {mapUsers[0].nama}
-                  </p>
-                  <div className="md:w-[150px] flex-none md:text-center md:text-sm text-xs">
-                    {mapUsers[0].kredit} Kredit
+        {current.id !== 0 ? (
+          <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
+            <Card className="md:py-2 md:px-3 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 dark:border dark:border-gray-700/70 justify-between items-center">
+              <div className="w-full">
+                <div className="flex gap-x-4 items-center">
+                  <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
+                    <Image alt="" src={"/avatar.webp"} fill />
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-[50px] flex-none flex justify-center">
-              <Button
-                size={"icon"}
-                className=" hover:bg-yellow-300 bg-yellow-400 text-black"
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
-            </div>
-          </Card>
-          <Button
-            className="bg-green-400 hover:bg-green-300 text-black"
-            onClick={() => onOpen("add-transaction")}
-          >
-            <PlusCircle className="w-4 h-4 mr-2" />
-            Tambah Transaksi
-          </Button>
-          <div className="h-full border rounded-md p-0 md:p-4">
-            <div className="flex md:justify-between md:items-center px-4 pt-4 gap-2 md:gap-0 md:px-5 mb-4 flex-col md:flex-row items-start">
-              <CardTitle>Transaksi Flow</CardTitle>
-              <div className="flex border p-1.5 rounded-md text-sm font-semibold items-center gap-x-2">
-                <Button
-                  className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
-                  variant={"ghost"}
-                  onClick={() => onChangeMonth("prev")}
-                  disabled={mth === 0}
-                >
-                  <ChevronLeft className="w-3 md:w-4 h-3 md:h-4" />
-                </Button>
-                <span className="capitalize md:w-20 w-14 select-none flex items-center justify-center text-xs md:text-sm">
-                  {month[mth].label}
-                </span>
-                <Button
-                  className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
-                  variant={"ghost"}
-                  onClick={() => onChangeMonth("next")}
-                  disabled={mth === month.length - 1}
-                >
-                  <ChevronRight className="w-3 md:w-4 h-3 md:h-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="xl:h-[350px] md:h-[300px] h-[200px]">
-              <ChartCredit month={month[mth].value} />
-            </div>
-          </div>
-          <div className="h-full border rounded-md p-2 md:p-4 space-y-2">
-            <Card className="h-12 px-5 rounded-sm flex bg-gray-200 dark:bg-gray-700/70 justify-center font-semibold capitalize items-center">
-              Transaksi - {month[mth].label}
-            </Card>
-            {mapNewestTransaction
-              .filter((item) => item.status === "in")
-              .map((item) => (
-                <Card
-                  key={item.id}
-                  className="p-2 md:p-4 capitalize rounded-sm bg-gray-100 dark:bg-gray-700/40 text-xs md:text-sm flex justify-between items-center"
-                >
-                  <div className="flex items-center">
-                    {item.status === "in" ? (
-                      <ArrowDownCircle className="md:h-7 md:w-7 h-5 w-5 stroke-[1.5] mr-2 text-green-500" />
-                    ) : (
-                      <ArrowUpCircle className="md:h-7 md:w-7 h-5 w-5 stroke-[1.5] mr-2 text-red-500" />
-                    )}
-                    <div>
-                      <div className="font-semibold">{item.id}</div>
-                      <div className="text-xs">{item.tanggal}</div>
+                  <div className="flex flex-col md:flex-row md:justify-between w-full gap-1">
+                    <p className="text-sm md:text-base font-semibold">
+                      {current.nama}
+                    </p>
+                    <div className="flex items-center gap-4">
+                      <div className="lg:w-[150px] md:w-[80px] flex-none md:text-center md:text-sm text-xs">
+                        {current.kredit} Kredit
+                      </div>
+                      <div className="lg:w-[150px] md:w-[100px] flex-none md:text-center md:text-sm text-xs">
+                        {formatRupiah(current.cash)}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end font-semibold">
-                    {formatRupiah(item.price)}
-                  </div>
-                </Card>
-              ))}
-          </div>
-        </Card>
+                </div>
+              </div>
+            </Card>
+            <Button
+              className="bg-green-400 hover:bg-green-300 text-black"
+              onClick={() => onOpen("add-transaction")}
+            >
+              <PlusCircle className="w-4 h-4 mr-2" />
+              Tambah Transaksi
+            </Button>
+            <div className="h-full border dark:border-gray-700/70 rounded-md p-0 md:p-4">
+              <div className="flex md:justify-between md:items-center px-4 pt-4 gap-2 md:gap-0 md:px-5 mb-4 flex-col md:flex-row items-start">
+                <CardTitle>Transaksi Flow</CardTitle>
+                <div className="flex border p-1.5 rounded-md text-sm font-semibold items-center gap-x-2">
+                  <Button
+                    className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
+                    variant={"ghost"}
+                    onClick={() => onChangeMonth("prev")}
+                    disabled={mth === 0}
+                  >
+                    <ChevronLeft className="w-3 md:w-4 h-3 md:h-4" />
+                  </Button>
+                  <span className="capitalize md:w-20 w-14 select-none flex items-center justify-center text-xs md:text-sm">
+                    {month[mth].label}
+                  </span>
+                  <Button
+                    className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
+                    variant={"ghost"}
+                    onClick={() => onChangeMonth("next")}
+                    disabled={mth === month.length - 1}
+                  >
+                    <ChevronRight className="w-3 md:w-4 h-3 md:h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="xl:h-[350px] md:h-[300px] h-[200px]">
+                <ChartCredit month={month[mth].value} />
+              </div>
+            </div>
+            <div className="h-full border dark:border-gray-700/70 rounded-md p-2 md:p-4 space-y-2">
+              <Card className="h-12 px-5 rounded-sm flex bg-gray-200 dark:bg-gray-700/70 justify-center font-semibold capitalize items-center">
+                Transaksi - {month[mth].label}
+              </Card>
+              {mapNewestTransaction
+                .filter((item) => item.status === "in")
+                .map((item) => (
+                  <Card
+                    key={item.id}
+                    className="p-2 md:p-3 lg:p-4 capitalize rounded-sm bg-gray-100 dark:bg-gray-700/40 text-xs md:text-sm flex justify-between items-center"
+                  >
+                    <div className="flex items-center">
+                      {item.status === "in" ? (
+                        <ArrowDownCircle className="lg:h-7 lg:w-7 h-5 w-5 stroke-[1.5] mr-2 text-green-500" />
+                      ) : (
+                        <ArrowUpCircle className="lg:h-7 lg:w-7 h-5 w-5 stroke-[1.5] mr-2 text-red-500" />
+                      )}
+                      <div>
+                        <div className="font-semibold">{item.id}</div>
+                        <div className="text-xs">{item.tanggal}</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end font-semibold">
+                      {formatRupiah(item.price)}
+                    </div>
+                  </Card>
+                ))}
+            </div>
+          </Card>
+        ) : (
+          <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 justify-between items-center w-full">
+            No data viewed
+          </Card>
+        )}
       </div>
     </div>
   );

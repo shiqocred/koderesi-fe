@@ -56,7 +56,6 @@ export const CreditsClient = () => {
     nama: "",
     kredit: 0,
   });
-  const [currentId, setCurrentId] = useState<number>(0);
   const [editedKredit, setEditedKredit] = useState<boolean>(false);
   const [mth, setMth] = useState<number>(0);
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -124,7 +123,6 @@ export const CreditsClient = () => {
 
   const handleCurrentId = useCallback(
     (id: number) => {
-      setCurrentId(id);
       let currentQuery = {};
 
       if (params) {
@@ -180,7 +178,7 @@ export const CreditsClient = () => {
               placeholder="Search user name..."
             />
           </div>
-          <div className="w-full bg-gray-300 justify-center items-center py-2 rounded-sm px-5 hidden md:flex">
+          <div className="w-full bg-gray-300 dark:bg-gray-700 justify-center items-center py-2 rounded-sm px-5 hidden md:flex">
             <p className="text-sm font-semibold w-full">Pengguna</p>
             <p className="text-sm font-semibold w-[150px] flex-none text-center hidden lg:block">
               Kredit
@@ -192,10 +190,10 @@ export const CreditsClient = () => {
               <li className="capitalize" key={item.id}>
                 <Button
                   className={cn(
-                    "md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex  gap-1 justify-between items-center w-full text-black",
+                    "md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex  gap-1 justify-between items-center w-full text-black dark:text-white",
                     current.id === item.id
-                      ? "bg-gray-200 hover:bg-gray-300"
-                      : "bg-gray-100 hover:bg-gray-200"
+                      ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700/70 dark:border dark:border-gray-700/40 dark:hover:bg-gray-700/40"
+                      : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:border dark:border-gray-700/70 dark:hover:bg-gray-700/70"
                   )}
                   onClick={() => handleCurrentId(item.id)}
                 >
@@ -232,7 +230,7 @@ export const CreditsClient = () => {
       <div className="h-full w-full xl:w-3/5">
         {current.id !== 0 ? (
           <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
-            <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex bg-gray-200 justify-between items-center w-full">
+            <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex bg-gray-200  justify-between items-center w-full dark:border-gray-700/70 dark:border">
               <div className="w-full">
                 <div className="flex gap-x-4 items-center">
                   <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
@@ -281,7 +279,7 @@ export const CreditsClient = () => {
                 </Button>
               </div>
             </Card>
-            <div className="h-full border rounded-md">
+            <div className="h-full border dark:border-gray-700/70 rounded-md">
               <div className="flex md:justify-between md:items-center px-4 pt-4 gap-2 md:gap-0 md:px-5 mb-4 flex-col md:flex-row items-start">
                 <CardTitle>Kredit Flow</CardTitle>
                 <div className="flex border p-1.5 rounded-md text-sm font-semibold items-center gap-x-2">
