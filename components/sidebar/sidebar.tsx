@@ -33,7 +33,7 @@ export const Sidebar = ({ isAdmin = false }: SidebarProps) => {
     <MotionConfig transition={{ duration: 0.5 }}>
       <motion.div
         className={cn(
-          "h-full md:flex flex-col justify-between items-center bg-white dark:bg-gray-900 border-gray-500 border-r py-4 hidden relative",
+          "h-full lg:flex flex-col justify-between items-center bg-white dark:bg-gray-900 border-gray-500 border-r py-4 hidden relative",
           isExpand ? "px-4" : "px-2"
         )}
         initial="isShrink"
