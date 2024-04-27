@@ -168,8 +168,8 @@ export const CreditsClient = () => {
     return null;
   }
   return (
-    <div className="flex h-full gap-2 md:gap-6 flex-col xl:flex-row">
-      <div className="w-full xl:w-2/5">
+    <div className="flex h-full gap-2 md:gap-6 flex-col lg:flex-row">
+      <div className="w-full lg:w-1/2 xl:w-2/5 lg:flex-1 xl:flex-auto">
         <Card className="p-2 md:p-4">
           <div className="w-full relative flex items-center mb-4">
             <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
@@ -197,18 +197,16 @@ export const CreditsClient = () => {
                   )}
                   onClick={() => handleCurrentId(item.id)}
                 >
-                  <div className="w-full">
-                    <div className="flex gap-x-2 items-center">
-                      <div className="w-8 h-8 overflow-hidden rounded relative flex-none">
-                        <Image alt="" src={"/avatar.webp"} fill />
-                      </div>
-                      <div className="flex flex-col">
-                        <p>{item.nama}</p>
-                      </div>
+                  <div className="flex gap-x-2 items-center w-full">
+                    <div className="w-8 h-8 overflow-hidden rounded relative flex-none">
+                      <Image alt="" src={"/avatar.webp"} fill />
+                    </div>
+                    <div className="flex flex-col text-ellipsis overflow-hidden">
+                      <p>{item.nama}</p>
                     </div>
                   </div>
                   <div className="flex w-[80px] lg:w-auto justify-between items-center">
-                    <div className="w-auto lg:w-[150px] flex-none text-center">
+                    <div className="w-auto xl:w-[150px] flex-none text-center">
                       {item.kredit}
                     </div>
                     <div className="w-auto lg:w-[50px] flex-none flex justify-center">
@@ -227,27 +225,34 @@ export const CreditsClient = () => {
           </ul>
         </Card>
       </div>
-      <div className="h-full w-full xl:w-3/5">
+      <div className="h-full w-full lg:w-1/2 xl:w-3/5 lg:flex-1 xl:flex-auto">
         {current.id !== 0 ? (
           <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
             <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex bg-gray-200  justify-between items-center w-full dark:border-gray-700/70 dark:border">
               <div className="w-full">
-                <div className="flex gap-x-4 items-center">
+                <div className="flex gap-x-4 items-center w-full justify-between">
                   <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
                     <Image alt="" src={"/avatar.webp"} fill />
                   </div>
-                  <div className="flex flex-col md:flex-row md:items-center w-full md:gap-6 pr-4">
-                    <p className="text-sm md:text-base font-semibold flex-none">
+                  <div
+                    className={cn(
+                      "flex w-full pr-4",
+                      !editedKredit
+                        ? "flex-col md:flex-row md:items-center md:gap-6 gap-2"
+                        : "flex-col gap-1"
+                    )}
+                  >
+                    <p className="text-sm md:text-base font-semibold flex-1 text-ellipsis overflow-hidden whitespace-nowrap">
                       {current.nama}
                     </p>
                     {!editedKredit ? (
-                      <div className="w-auto md:w-[150px] flex-none ">
+                      <div className="w-auto xl:w-[150px] flex-none ">
                         {current.kredit} Kredit
                       </div>
                     ) : (
                       <Input
                         type="number"
-                        className="h-9 px-2"
+                        className="h-9 px-2 w-auto xl:w-[150px] flex-none"
                         value={current.kredit}
                         onChange={(e) =>
                           setCurrent((prev) => ({

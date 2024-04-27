@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useModal } from "@/hooks/use-modal";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, XCircle } from "lucide-react";
 import Image from "next/image";
@@ -12,6 +13,7 @@ interface DataProps {
 }
 
 const WaitingAffiliate = (data: DataProps) => {
+  const { onOpen } = useModal();
   return (
     <>
       <Card className="flex items-center px-3 py-1.5 md:px-4 md:py-2 gap-2 md:gap-4 bg-gray-100 dark:border dark:border-gray-700/70">
@@ -35,11 +37,17 @@ const WaitingAffiliate = (data: DataProps) => {
         </div>
       </Card>
       <div className="flex w-full gap-4">
-        <Button className="w-full bg-red-500 hover:bg-red-400 text-black">
+        <Button
+          className="w-full bg-red-500 hover:bg-red-400 text-black"
+          onClick={() => onOpen("reject-affiliate")}
+        >
           <XCircle className="w-4 h-4 mr-2" />
           Reject
         </Button>
-        <Button className="w-full bg-green-500 hover:bg-green-400 text-black">
+        <Button
+          className="w-full bg-green-500 hover:bg-green-400 text-black"
+          onClick={() => onOpen("approve-affiliate")}
+        >
           <CheckCircle2 className="w-4 h-4 mr-2" />
           Approve
         </Button>

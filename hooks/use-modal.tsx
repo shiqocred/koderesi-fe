@@ -4,7 +4,9 @@ export type ModalType =
   | "add-resi"
   | "delete-akun"
   | "save-manifest"
-  | "add-transaction";
+  | "add-transaction"
+  | "reject-affiliate"
+  | "approve-affiliate";
 interface ManifestProps {
   waktu: string;
   tanggal: string;

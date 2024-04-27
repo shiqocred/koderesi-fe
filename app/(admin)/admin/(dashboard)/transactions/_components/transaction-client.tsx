@@ -186,8 +186,8 @@ export const CreditsClient = () => {
     return null;
   }
   return (
-    <div className="flex h-full gap-4 md:gap-6 flex-col xl:flex-row">
-      <div className="w-full xl:w-2/5">
+    <div className="flex h-full gap-4 md:gap-6 flex-col lg:flex-row">
+      <div className="w-full lg:1/2 xl:w-2/5 lg:flex-1">
         <Card className="p-2 md:p-4">
           <div className="w-full relative flex items-center mb-4">
             <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
@@ -196,7 +196,7 @@ export const CreditsClient = () => {
               placeholder="Search user name..."
             />
           </div>
-          <div className="w-full bg-gray-300 dark:bg-gray-700 lg:flex justify-center items-center py-2 rounded-sm px-5 hidden">
+          <div className="w-full bg-gray-300 dark:bg-gray-700 xl:flex justify-center items-center py-2 rounded-sm px-5 hidden">
             <p className="text-sm font-semibold w-full flex-1">Pengguna</p>
             <p className="text-sm font-semibold w-[80px] flex-none text-center">
               Kredit
@@ -223,15 +223,15 @@ export const CreditsClient = () => {
                       <div className="h-10 aspect-square overflow-hidden rounded relative flex-none">
                         <Image alt="" src={"/avatar.webp"} fill />
                       </div>
-                      <div className="flex flex-col md:flex-row w-full gap-1">
+                      <div className="flex flex-col xl:flex-row w-full gap-1">
                         <p className="text-sm font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap flex-1">
                           {item.nama}
                         </p>
                         <div className="flex gap-4 items-center">
-                          <div className="w-[70px] md:w-[80px] flex-none lg:text-center text-xs lg:text-sm">
+                          <div className="w-[70px] xl:w-[80px] flex-none xl:text-center text-xs lg:text-sm">
                             {item.kredit} Kredit
                           </div>
-                          <div className="md:w-[100px] flex-none text-center text-xs lg:text-sm">
+                          <div className="xl:w-[100px] flex-none text-center text-xs lg:text-sm">
                             {formatRupiah(item.cash)}
                           </div>
                         </div>
@@ -254,7 +254,7 @@ export const CreditsClient = () => {
           </ul>
         </Card>
       </div>
-      <div className="h-full w-full xl:w-3/5">
+      <div className="h-full w-full lg:1/2 xl:w-3/5 lg:flex-1">
         {current.id !== 0 ? (
           <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
             <Card className="md:py-2 md:px-3 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 dark:border dark:border-gray-700/70 justify-between items-center">
@@ -263,15 +263,15 @@ export const CreditsClient = () => {
                   <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
                     <Image alt="" src={"/avatar.webp"} fill />
                   </div>
-                  <div className="flex flex-col md:flex-row md:justify-between w-full gap-1">
+                  <div className="flex flex-col xl:flex-row xl:justify-between w-full gap-1">
                     <p className="text-sm md:text-base font-semibold">
                       {current.nama}
                     </p>
                     <div className="flex items-center gap-4">
-                      <div className="lg:w-[150px] md:w-[80px] flex-none md:text-center md:text-sm text-xs">
+                      <div className="xl:w-[150px] md:w-[80px] flex-none xl:text-center md:text-sm text-xs">
                         {current.kredit} Kredit
                       </div>
-                      <div className="lg:w-[150px] md:w-[100px] flex-none md:text-center md:text-sm text-xs">
+                      <div className="xl:w-[150px] md:w-[100px] flex-none xl:text-center md:text-sm text-xs">
                         {formatRupiah(current.cash)}
                       </div>
                     </div>
@@ -286,8 +286,8 @@ export const CreditsClient = () => {
               <PlusCircle className="w-4 h-4 mr-2" />
               Tambah Transaksi
             </Button>
-            <div className="h-full border dark:border-gray-700/70 rounded-md p-0 md:p-4">
-              <div className="flex md:justify-between md:items-center px-4 pt-4 gap-2 md:gap-0 md:px-5 mb-4 flex-col md:flex-row items-start">
+            <div className="h-full border dark:border-gray-700/70 rounded-md p-0 xl:p-4">
+              <div className="flex xl:justify-between xl:items-center px-4 pt-4 gap-2 xl:gap-0 md:px-5 mb-4 flex-col xl:flex-row items-start">
                 <CardTitle>Transaksi Flow</CardTitle>
                 <div className="flex border p-1.5 rounded-md text-sm font-semibold items-center gap-x-2">
                   <Button
