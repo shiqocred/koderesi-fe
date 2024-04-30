@@ -5,10 +5,16 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn, formatRupiah } from "@/lib/utils";
-import { ArrowDownCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowDownCircle,
+  ChevronLeft,
+  ChevronRight,
+  XCircle,
+} from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { ChartAffiliate } from "./chart-affiliate";
+import { useModal } from "@/hooks/use-modal";
 
 interface DataProps {
   id: number;
@@ -50,6 +56,7 @@ const mapIncome: IncomeProps[] = [
 
 const ApprovedAffiliate = (data: DataProps) => {
   const [mth, setMth] = useState<number>(0);
+  const { onOpen } = useModal();
 
   const month = [
     {
@@ -189,6 +196,16 @@ const ApprovedAffiliate = (data: DataProps) => {
             </div>
           </Card>
         ))}
+        <div className="w-full">
+          <Button
+            className="w-full mt-2"
+            variant={"destructive"}
+            onClick={() => onOpen("reject-affiliate")}
+          >
+            <XCircle className="w-4 h-4 mr-2" />
+            Stop Akses
+          </Button>
+        </div>
       </div>
     </>
   );

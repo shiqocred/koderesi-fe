@@ -6,7 +6,10 @@ export type ModalType =
   | "save-manifest"
   | "add-transaction"
   | "reject-affiliate"
-  | "approve-affiliate";
+  | "approve-affiliate"
+  | "reject-withdraw"
+  | "approve-withdraw"
+  | "add-user";
 interface ManifestProps {
   waktu: string;
   tanggal: string;

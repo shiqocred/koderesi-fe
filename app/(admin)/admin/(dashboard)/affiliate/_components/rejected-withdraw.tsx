@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn, formatRupiah } from "@/lib/utils";
 import { Edit, Save } from "lucide-react";
 import Image from "next/image";
@@ -45,31 +45,29 @@ const RejectedWithdraw = (data: DataProps) => {
         <p className="font-semibold">Nomor DANA</p>
         <p>0888-8888-8888</p>
       </Card>
-      <Card className="flex flex-col px-3 py-1.5 md:px-4 md:py-2 gap-2 md:gap-4 bg-gray-100 dark:border dark:border-gray-700/70 text-xs md:text-sm ">
-        <div className="flex flex-col md:flex-row items-center w-full gap-2 md:gap-4">
-          <Input
-            value="Terindikasi bermasalah, silahkan hubungi CS"
-            className="border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 disabled:opacity-100"
-            disabled={!isEdited}
-          />
-          {!isEdited ? (
-            <Button
-              className="bg-yellow-300 hover:bg-yellow-200 text-black flex-none md:p-0 w-full md:w-10"
-              onClick={() => setIsEdited(!isEdited)}
-            >
-              <Edit className="w-4 h-4" />
-            </Button>
-          ) : (
-            <Button
-              className="bg-green-400 hover:bg-green-300 text-black flex-none"
-              size={"icon"}
-              onClick={() => setIsEdited(!isEdited)}
-            >
-              <Save className="w-4 h-4" />
-            </Button>
-          )}
-        </div>
-      </Card>
+      <div className="flex flex-col md:flex-row items-center w-full gap-2 md:gap-4">
+        <Textarea
+          value="Terindikasi bermasalah, silahkan hubungi CS"
+          className="bg-transparent border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 disabled:opacity-100"
+          disabled={!isEdited}
+        />
+        {!isEdited ? (
+          <Button
+            className="bg-yellow-300 hover:bg-yellow-200 text-black flex-none md:p-0 w-full md:w-10"
+            onClick={() => setIsEdited(!isEdited)}
+          >
+            <Edit className="w-4 h-4" />
+          </Button>
+        ) : (
+          <Button
+            className="bg-green-400 hover:bg-green-300 text-black flex-none"
+            size={"icon"}
+            onClick={() => setIsEdited(!isEdited)}
+          >
+            <Save className="w-4 h-4" />
+          </Button>
+        )}
+      </div>
     </>
   );
 };

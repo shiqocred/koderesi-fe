@@ -5,7 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import qs from "query-string";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  DatabaseBackup,
+  Search,
+  TextSelect,
+} from "lucide-react";
 
 import { cn, formatRupiah } from "@/lib/utils";
 
@@ -429,7 +435,7 @@ const AffiliateClient = () => {
             </div>
           </Card>
         </div>
-        <div className="w-full" id="content">
+        <div className="w-full">
           <Card className="p-2 md:p-4 w-full gap-2 md:gap-4 flex-col flex h-auto">
             {/* waiting */}
             {currentA.id !== 0 && currentA.status === "waiting" && (
@@ -453,7 +459,17 @@ const AffiliateClient = () => {
             {currentW.id !== 0 && currentW.status === "rejected" && (
               <RejectedWithdraw {...currentW} />
             )}
-            {currentW.id === 0 && currentA.id === 0 && <p>No Data Viewed.</p>}
+            {currentW.id === 0 && currentA.id === 0 && (
+              <div className="w-full h-[300px] flex items-center justify-center flex-col text-gray-400">
+                <TextSelect className="w-16 h-16 " />
+                <h3 className="text-2xl font-bold mt-2 text-gray-500">
+                  No data viewed.
+                </h3>
+                <p className="text-sm leading-none">
+                  Please, select any data first.
+                </p>
+              </div>
+            )}
           </Card>
         </div>
       </div>
