@@ -19,10 +19,12 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const isDesktop = useMediaQuery("(min-width: 1100px)");
+  const pathname = usePathname();
 
   const buttonWidthVariant = {
     isExpand: { width: "100%" },
@@ -126,23 +128,23 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
                 </div>
               </div>
               <CommandSeparator className="bg-gray-500 dark:bg-gray-400" />
-              <div className="flex justify-between px-2 py-2 items-center">
-                <div className="flex items-center">
-                  <Rocket className="w-4 h-4 mr-2" />
-                  <p>Total Kredit</p>
-                </div>
-                <span className="text-xs px-2 py-0.5 bg-green-400 rounded text-gray-900">
-                  3200 Kredit
-                </span>
-              </div>
-              <CommandSeparator className="bg-gray-500 dark:bg-gray-400" />
-              <Link href={"/accounts/profile"}>
+              <Link
+                href={
+                  pathname.includes("admin")
+                    ? "/admin/accounts/profile"
+                    : "/accounts/profile"
+                }
+              >
                 <CommandItem>
                   <User className="w-4 h-4 mr-2" />
                   Profile
                 </CommandItem>
               </Link>
-              <Link href={"/contacts"}>
+              <Link
+                href={
+                  pathname.includes("admin") ? "/admin/contacts" : "/contacts"
+                }
+              >
                 <CommandItem>
                   <Headset className="w-4 h-4 mr-2" />
                   Contact Support

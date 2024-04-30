@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Edit, Save } from "lucide-react";
 import Image from "next/image";
@@ -37,10 +38,10 @@ const RejectedAffiliate = (data: DataProps) => {
         </div>
       </Card>
       <div className="flex w-full gap-4">
-        <Input
+        <Textarea
           value="Akun anda terdeteksi melakukan pelanggaran"
           disabled={!isEdited}
-          className="disabled:opacity-100 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+          className="bg-transparent disabled:opacity-100 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
         />
         {!isEdited ? (
           <Button

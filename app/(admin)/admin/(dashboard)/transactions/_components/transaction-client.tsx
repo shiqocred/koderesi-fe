@@ -10,9 +10,9 @@ import {
   ArrowUpCircle,
   ChevronLeft,
   ChevronRight,
-  Edit,
   PlusCircle,
   Search,
+  TextSelect,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn, formatRupiah, mapNewestTransaction } from "@/lib/utils";
@@ -196,22 +196,12 @@ export const CreditsClient = () => {
               placeholder="Search user name..."
             />
           </div>
-          <div className="w-full bg-gray-300 dark:bg-gray-700 xl:flex justify-center items-center py-2 rounded-sm px-5 hidden">
-            <p className="text-sm font-semibold w-full flex-1">Pengguna</p>
-            <p className="text-sm font-semibold w-[80px] flex-none text-center">
-              Kredit
-            </p>
-            <p className="text-sm font-semibold w-[100px] flex-none text-center">
-              Nominal
-            </p>
-            <p className="text-sm font-semibold w-[30px] flex-none" />
-          </div>
-          <ul className="lg:pt-2 space-y-2 flex flex-col">
+          <ul className="space-y-2 flex flex-col">
             {mapUsers.map((item) => (
               <li className="capitalize" key={item.id}>
                 <Button
                   className={cn(
-                    "md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex h-auto gap-1 justify-between md:items-center w-full text-start text-black dark:text-white",
+                    "md:py-2 md:px-5 px-2 py-1.5 h-14 md:h-20 rounded-sm text-xs md:text-sm flex gap-1 justify-between md:items-center w-full text-start text-black dark:text-white",
                     current.id === item.id
                       ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700/70 dark:border dark:border-gray-700/40 dark:hover:bg-gray-700/40"
                       : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:border dark:border-gray-700/70 dark:hover:bg-gray-700/70"
@@ -220,11 +210,11 @@ export const CreditsClient = () => {
                 >
                   <div className="w-full">
                     <div className="flex gap-2 items-center w-full">
-                      <div className="h-10 aspect-square overflow-hidden rounded relative flex-none">
+                      <div className="h-10 md:h-14 aspect-square overflow-hidden rounded relative flex-none">
                         <Image alt="" src={"/avatar.webp"} fill />
                       </div>
                       <div className="flex flex-col xl:flex-row w-full gap-1">
-                        <p className="text-sm font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap flex-1">
+                        <p className="text-sm md:text-base font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap flex-1">
                           {item.nama}
                         </p>
                         <div className="flex gap-4 items-center">
@@ -345,8 +335,16 @@ export const CreditsClient = () => {
             </div>
           </Card>
         ) : (
-          <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 justify-between items-center w-full">
-            No data viewed
+          <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-sm flex justify-between items-center w-full">
+            <div className="w-full h-[300px] flex items-center justify-center flex-col text-gray-400">
+              <TextSelect className="md:w-16 md:h-16 w-12 h-12" />
+              <h3 className="text-lg md:text-2xl font-bold mt-2 text-gray-500">
+                No data viewed.
+              </h3>
+              <p className="text-xs md:text-sm leading-none">
+                Please, select any data first.
+              </p>
+            </div>
           </Card>
         )}
       </div>

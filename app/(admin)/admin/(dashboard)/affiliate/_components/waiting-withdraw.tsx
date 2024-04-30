@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useModal } from "@/hooks/use-modal";
 import { cn, formatRupiah } from "@/lib/utils";
 import { CheckCircle2, XCircle } from "lucide-react";
 import Image from "next/image";
@@ -14,6 +15,7 @@ interface DataProps {
 }
 
 const WaitingWithdraw = (data: DataProps) => {
+  const { onOpen } = useModal();
   return (
     <>
       <Card className="flex items-center px-3 py-1.5 md:px-4 md:py-2 gap-2 md:gap-4 bg-gray-100 dark:border dark:border-gray-700/70">
@@ -47,11 +49,17 @@ const WaitingWithdraw = (data: DataProps) => {
       <Card className="flex items-center flex-col px-3 py-1.5 md:p-4 gap-2 md:gap-4 bg-gray-100 dark:border dark:border-gray-700/70 text-sm">
         <Label className="text-xs md:text-sm">Update status</Label>
         <div className="flex gap-2 md:gap-4 w-full flex-col-reverse md:flex-row">
-          <Button className="w-full bg-red-500 hover:bg-red-400 text-black">
+          <Button
+            className="w-full bg-red-500 hover:bg-red-400 text-black"
+            onClick={() => onOpen("reject-withdraw")}
+          >
             <XCircle className="w-4 h-4 mr-2" />
             Reject
           </Button>
-          <Button className="w-full bg-green-500 hover:bg-green-400 text-black">
+          <Button
+            className="w-full bg-green-500 hover:bg-green-400 text-black"
+            onClick={() => onOpen("approve-withdraw")}
+          >
             <CheckCircle2 className="w-4 h-4 mr-2" />
             Approve
           </Button>
