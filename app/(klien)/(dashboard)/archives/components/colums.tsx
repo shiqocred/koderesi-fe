@@ -9,6 +9,7 @@ import { mapCourier } from "@/components/modals/add-resi-modal";
 import { Button } from "@/components/ui/button";
 import { TooltipProviderPage } from "@/providers/tooltip-provider-page";
 import { useModal } from "@/hooks/use-modal";
+import { ArchiveButton } from "./archive-button";
 
 export const columns: ColumnDef<ArchiveProps>[] = [
   {
@@ -77,20 +78,6 @@ export const columns: ColumnDef<ArchiveProps>[] = [
   {
     accessorKey: "action",
     header: "",
-    cell: ({ row }) => {
-      const { onOpen } = useModal();
-      return (
-        <TooltipProviderPage text="Unarchive">
-          <Button
-            type="button"
-            aria-label="unarchive"
-            className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 border flex items-center justify-center border-gray-500 text-gray-500 dark:bg-gray-700 dark:text-gray-200 p-0"
-            onClick={() => onOpen("unarchive-resi", row.original.id)}
-          >
-            <ArchiveRestore className="w-4 h-4" />
-          </Button>
-        </TooltipProviderPage>
-      );
-    },
+    cell: ({ row }) => <ArchiveButton id={row.original.id} />,
   },
 ];
