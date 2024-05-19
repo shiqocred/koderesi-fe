@@ -71,7 +71,7 @@ export const DateTimePicker = ({
           )
         : value
     );
-  }, [selectedDate, jam, menit, detik, triggerTime, value]);
+  }, [selectedDate, jam, menit, detik]);
 
   useEffect(() => {
     formatTimePartial();
