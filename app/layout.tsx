@@ -3,6 +3,8 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import ModalProvider from "@/providers/modal-provider";
+import { ToastProvider } from "@/providers/toast-provider";
+import { CookiesProvider } from "next-client-cookies/server";
 
 const font = DM_Sans({ subsets: ["latin"] });
 
@@ -23,8 +25,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={font.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
-          <ModalProvider />
-          {children}
+          <CookiesProvider>
+            <ModalProvider />
+            <ToastProvider />
+            {children}
+          </CookiesProvider>
         </ThemeProvider>
       </body>
     </html>

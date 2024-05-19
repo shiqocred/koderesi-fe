@@ -1,10 +1,41 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { v4 as uuidv4 } from "uuid";
+import { format as formatDateFns } from "date-fns";
+import { id as indonesia } from "date-fns/locale";
+
+export const formatNumber = (number: number) => {
+  const formatter = new Intl.NumberFormat("id-ID"); // Atur kode bahasa dan negara sesuai kebutuhan Anda
+  return formatter.format(number);
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const formatWaktu = (tanggal: string) => {
+  return (
+    !isNaN(new Date(tanggal).getTime()) &&
+    formatDateFns(new Date(tanggal), "HH:mm", {
+      locale: indonesia,
+    })
+  );
+};
+export const formatTanggal = (tanggal: string) => {
+  return (
+    !isNaN(new Date(tanggal).getTime()) &&
+    formatDateFns(new Date(tanggal), "dd MMM yyyy", {
+      locale: indonesia,
+    })
+  );
+};
+export const formatTanggalWaktu = (tanggal: string) => {
+  return (
+    !isNaN(new Date(tanggal).getTime()) &&
+    formatDateFns(new Date(tanggal), "dd MMM yyyy - HH:mm", {
+      locale: indonesia,
+    })
+  );
+};
 
 export function formatRupiah(rupiah: number) {
   const formatter = new Intl.NumberFormat("id-ID", {
@@ -228,3 +259,66 @@ export const mapNewestTransaction = [
     status: "in",
   },
 ];
+
+export const month = [
+  {
+    label: "januari",
+    value: "jan",
+  },
+  {
+    label: "februari",
+    value: "feb",
+  },
+  {
+    label: "maret",
+    value: "mar",
+  },
+  {
+    label: "april",
+    value: "apr",
+  },
+  {
+    label: "mei",
+    value: "mei",
+  },
+  {
+    label: "juni",
+    value: "jun",
+  },
+  {
+    label: "juli",
+    value: "jul",
+  },
+  {
+    label: "agustus",
+    value: "agu",
+  },
+  {
+    label: "september",
+    value: "sep",
+  },
+  {
+    label: "oktober",
+    value: "okt",
+  },
+  {
+    label: "november",
+    value: "nov",
+  },
+  {
+    label: "desember",
+    value: "des",
+  },
+];
+
+export const formatThousand = (value: number): string => {
+  if (value >= 1000) {
+    const formattedValue = value / 1000;
+    const formattedString =
+      formattedValue % 1 === 0
+        ? formattedValue.toFixed(0)
+        : formattedValue.toFixed(1);
+    return `${formattedString} K`;
+  }
+  return value.toString();
+};

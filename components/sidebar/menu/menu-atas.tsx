@@ -81,7 +81,7 @@ const MenuAtas = ({ isExpand, isAdmin }: MenuAtasProps) => {
         <motion.button
           type="button"
           className={cn(
-            "flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium dark:text-gray-900",
+            "flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium text-gray-900",
             isExpand ? "px-4 gap-2" : "hover:rounded-[20px]"
           )}
           initial="isShrink"
@@ -90,7 +90,7 @@ const MenuAtas = ({ isExpand, isAdmin }: MenuAtasProps) => {
           transition={{ duration: 0.5 }}
           onClick={() => onOpen("add-resi")}
         >
-          <span className="w-5 h-5 stroke-gray-900">
+          <span className="w-5 h-5 stroke-gray-900 text-gray-900">
             <PlusIcon className="w-5 h-5" />
           </span>
           <motion.p
@@ -102,7 +102,7 @@ const MenuAtas = ({ isExpand, isAdmin }: MenuAtasProps) => {
                 ? { delay: 0.5, duration: 0.5 }
                 : { delay: 0, duration: 0.5 }
             }
-            className="pr-3"
+            className="pr-3 text-gray-900"
           >
             Tambah Resi
           </motion.p>

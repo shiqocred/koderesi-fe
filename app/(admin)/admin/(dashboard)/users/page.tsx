@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { UsersClient } from "./_components/users-client";
 
 const UsersPage = () => {
@@ -10,7 +10,9 @@ const UsersPage = () => {
           List semua pengguna koderesi
         </p>
       </div>
-      <UsersClient />
+      <Suspense>
+        <UsersClient />
+      </Suspense>
     </div>
   );
 };

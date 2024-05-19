@@ -1,66 +1,79 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { data, formatRupiah } from "@/lib/utils";
-import {
-  BadgeDollarSign,
-  Package,
-  PackageCheck,
-  Plus,
-  Rocket,
-  Truck,
-} from "lucide-react";
-import Link from "next/link";
-import React from "react";
+import { formatRupiah } from "@/lib/utils";
+import { BadgeDollarSign, Package, PackageCheck, Truck } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { ChartClient } from "./components/chart-client";
-import { useModal } from "@/hooks/use-modal";
+import { TopClientDashboard } from "./components/top-client-dashboard";
+import axios from "axios";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
+import { useCookies } from "next-client-cookies";
+
+interface NewManifest {
+  date_manifest: string;
+  id: string;
+  note: string;
+  status: string;
+  waybill_id: string;
+  waybill: { id: string; user_id: string; waybill: string };
+}
 
 const DashboardPage = () => {
-  const { onOpen } = useModal();
+  const [statistik, setStatistik] = useState({
+    total_resi: 0,
+    total_on_progress: 0,
+    total_delivered: 0,
+  });
+  const [newManifest, setNewManifest] = useState<NewManifest[]>([]);
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
+
+  const getStatistik = async () => {
+    try {
+      const res = await axios.get(
+        "http://koderesi.raventech.my.id/api/admin/dashboard/statistic",
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setStatistik(res.data.data);
+    } catch (error) {
+      console.log("[ERROR_GET_STATISTICT]:", error);
+    }
+  };
+  const getNewestManifest = async () => {
+    try {
+      const res = await axios.get(
+        "http://koderesi.raventech.my.id/api/admin/dashboard",
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setNewManifest(res.data.data);
+    } catch (error) {
+      console.log("[ERROR_GET_MANIFEST]:", error);
+    }
+  };
+
+  useEffect(() => {
+    getStatistik();
+    getNewestManifest();
+  }, []);
+
   return (
-    <div className="sm:px-6 sm:py-8 p-4 gap-6 flex flex-col">
-      <div className="w-full transition-all flex flex-col md:flex-row gap-4 xl:gap-8">
-        <Card className="w-full lg:w-2/5 xl:w-full px-4 py-2 xl:px-7 xl:py-4 flex justify-between items-center">
-          <div>
-            <h3 className="text-base md:text-xl font-bold">Lacak Resi Anda!</h3>
-            <p className="text-xs md:text-sm text-gray-500 dark:text-gray-300 font-light">
-              Silahkan masukan resi anda
-            </p>
-          </div>
-          <Button
-            className="w-16 h-16 border border-green-400 rounded-md text-green-400 hover:text-green-400 hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800"
-            variant={"outline"}
-            onClick={() => onOpen("add-resi")}
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
-        </Card>
-        <Card className="w-full lg:w-3/5 xl:w-full px-4 py-2 xl:px-7 xl:py-4 flex justify-between items-center">
-          <div>
-            <h3 className="text-base md:text-xl font-bold">Kredit Habis?</h3>
-            <p className="text-xs md:text-sm text-gray-500 dark:text-gray-300 font-light">
-              Top up kredit anda sekarang juga!
-            </p>
-          </div>
-          <div className="flex items-center">
-            <div className="px-6 lg:flex hidden flex-col items-center bg-green-400 h-[50px] justify-center rounded-l-md">
-              <h3 className="font-bold text-lg leading-none dark:text-gray-900">
-                3500 kredit
-              </h3>
-              <p className="text-xs text-gray-900">Total kredit anda</p>
-            </div>
-            <Link href={"/top-up"}>
-              <Button
-                className="w-16 h-16 border border-green-400 rounded-md text-green-400 hover:text-green-400 hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800"
-                variant={"outline"}
-              >
-                <Rocket className="w-6 h-6" />
-              </Button>
-            </Link>
-          </div>
-        </Card>
-      </div>
+    <div className="sm:px-6 sm:py-8 p-4 gap-6 flex flex-col bg-gray-50 dark:bg-black">
+      <TopClientDashboard />
       <div className="px-6 w-full md:w-auto flex lg:hidden flex-row items-center justify-between lg:flex-col lg:items-start bg-green-400 h-10 lg:justify-center rounded-md">
         <p className="text-xs lg:text-sm text-gray-900">Kredit anda</p>
         <h3 className="font-bold text-xs lg:text-sm leading-none dark:text-gray-900">
@@ -69,43 +82,39 @@ const DashboardPage = () => {
       </div>
       <Separator className="dark:bg-white bg-gray-500" />
       <div className="w-full transition-all flex flex-col gap-4">
-        <div className="w-full gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid">
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
+        <div className="w-full gap-4 grid-cols-2 md:grid-cols-3 grid">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4 col-span-2 md:col-span-1">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>Total Resi</h5>
               <Package className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
             </div>
             <p className="font-bold text-sm sm:text-xl">
-              5 <span className="font-semibold text-xs sm:text-base">Resi</span>
+              {statistik.total_delivered}{" "}
+              <span className="font-semibold text-xs sm:text-base">Resi</span>
             </p>
           </Card>
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
-            <div className="flex justify-between pb-2 border-b border-gray-500">
-              <h5>On Progress</h5>
-              <Truck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
-            </div>
-            <p className="font-bold text-sm sm:text-xl">
-              5 <span className="font-semibold text-xs sm:text-base">Resi</span>
-            </p>
-          </Card>
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
-            <div className="flex justify-between pb-2 border-b border-gray-500">
-              <h5>Delivered</h5>
-              <PackageCheck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
-            </div>
-            <p className="font-bold text-sm sm:text-xl">
-              5 <span className="font-semibold text-xs sm:text-base">Resi</span>
-            </p>
-          </Card>
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4 xl:col-span-1 lg:col-span-3 col-span-1">
-            <div className="flex justify-between pb-2 border-b border-gray-500">
-              <h5>Cash Flow</h5>
-              <BadgeDollarSign className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
-            </div>
-            <p className="font-bold text-sm sm:text-xl">
-              - {formatRupiah(3000000)}
-            </p>
-          </Card>
+          <div className="flex w-full col-span-2 grid-cols-2 gap-4">
+            <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
+              <div className="flex justify-between pb-2 border-b border-gray-500">
+                <h5>On Progress</h5>
+                <Truck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
+              </div>
+              <p className="font-bold text-sm sm:text-xl">
+                {statistik.total_on_progress + " "}
+                <span className="font-semibold text-xs sm:text-base">Resi</span>
+              </p>
+            </Card>
+            <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
+              <div className="flex justify-between pb-2 border-b border-gray-500">
+                <h5>Delivered</h5>
+                <PackageCheck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
+              </div>
+              <p className="font-bold text-sm sm:text-xl">
+                {statistik.total_delivered + " "}
+                <span className="font-semibold text-xs sm:text-base">Resi</span>
+              </p>
+            </Card>
+          </div>
         </div>
         <div className="flex xl:flex-row flex-col gap-4">
           <div className="w-full xl:w-7/12 ">
@@ -122,97 +131,40 @@ const DashboardPage = () => {
                 <p className="sm:text-sm text-xs font-light text-gray-700 dark:text-gray-300">
                   Daftar Manifest Terbaru.
                 </p>
-                <ul className="pt-4 space-y-4">
-                  <li className="flex text-sm justify-between items-center py-2">
-                    <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
-                        <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
+                <ul className="pt-4 space-y-2 md:space-y-4 w-full">
+                  {newManifest.map((item) => (
+                    <li
+                      className="flex text-sm justify-between items-center py-2 w-full"
+                      key={item.id}
+                    >
+                      <div className="flex gap-4 items-center w-full">
+                        <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300 flex-none">
+                          {item.status === "delivered" ? (
+                            <PackageCheck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
+                          ) : (
+                            <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
+                          )}
+                        </div>
+                        <div className="flex w-full justify-between flex-col md:flex-row overflow-hidden md:items-center md:gap-6">
+                          <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
+                            {item.waybill.waybill}
+                          </h5>
+                          <div className="flex flex-col md:items-end border-t border-gray-500 md:border-none mt-1 pt-1 md:p-0 md:m-0 overflow-hidden whitespace-nowrap w-full">
+                            <p className="sm:text-sm text-xs font-medium lg:text-base capitalize w-full md:text-end text-ellipsis overflow-hidden">
+                              {item.note}
+                            </p>
+                            <p className="lg:text-sm text-xs font-light">
+                              {format(
+                                new Date(item.date_manifest),
+                                "dd MMM yyyy - HH:mm:ss",
+                                { locale: id }
+                              )}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
-                        SPX10001010111
-                      </h5>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <p className="sm:text-sm text-xs font-medium lg:text-base">
-                        On Transit Solo
-                      </p>
-                      <p className="lg:text-sm text-xs font-light">
-                        13 Feb - 13.00
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex text-sm justify-between items-center py-2">
-                    <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
-                        <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
-                      </div>
-                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
-                        SPX10001010111
-                      </h5>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <p className="sm:text-sm text-xs font-medium lg:text-base">
-                        On Transit Solo
-                      </p>
-                      <p className="lg:text-sm text-xs font-light">
-                        13 Feb - 13.00
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex text-sm justify-between items-center py-2">
-                    <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
-                        <PackageCheck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
-                      </div>
-                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
-                        SPX10001010111
-                      </h5>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <p className="sm:text-sm text-xs font-medium lg:text-base">
-                        On Transit Solo
-                      </p>
-                      <p className="lg:text-sm text-xs font-light">
-                        13 Feb - 13.00
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex text-sm justify-between items-center py-2">
-                    <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
-                        <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
-                      </div>
-                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
-                        SPX10001010111
-                      </h5>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <p className="sm:text-sm text-xs font-medium lg:text-base">
-                        On Transit Solo
-                      </p>
-                      <p className="lg:text-sm text-xs font-light">
-                        13 Feb - 13.00
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex text-sm justify-between items-center py-2">
-                    <div className="flex gap-4 items-center">
-                      <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300">
-                        <PackageCheck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
-                      </div>
-                      <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
-                        SPX10001010111
-                      </h5>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <p className="sm:text-sm text-xs font-medium lg:text-base">
-                        Delivered
-                      </p>
-                      <p className="lg:text-sm text-xs font-light">
-                        13 Feb - 13.00
-                      </p>
-                    </div>
-                  </li>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </Card>

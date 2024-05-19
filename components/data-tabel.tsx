@@ -26,8 +26,6 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
-import { DataTableFilter } from "./data-table-filter";
-import { couriers } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -65,23 +63,16 @@ export function DataTable<TData, TValue>({
           <Input
             placeholder="Cari Kode Resi...."
             value={
-              (table.getColumn("kode_resi")?.getFilterValue() as string) ?? ""
+              (table.getColumn("waybill")?.getFilterValue() as string) ?? ""
             }
             onChange={(event) => {
               table
-                .getColumn("kode_resi".toLocaleLowerCase())
+                .getColumn("waybill".toLocaleLowerCase())
                 ?.setFilterValue(event.target.value.toLocaleLowerCase());
             }}
             className="pl-10 w-full focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 peer-hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
           />
         </div>
-        {table.getColumn("kode_kurir") && (
-          <DataTableFilter
-            column={table.getColumn("kode_kurir")}
-            title="Kurir"
-            options={couriers}
-          />
-        )}
       </div>
       <div className="rounded-md border dark:border-gray-300/40 relative w-full overflow-auto">
         <Table>

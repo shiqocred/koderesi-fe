@@ -5,7 +5,7 @@ import { AuroraBackground } from "@/components/ui/aurora";
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
     <AuroraBackground>
-      <div className="w-full h-full flex justify-center items-center relative">
+      <div className="w-full h-full flex justify-center items-center relative px-3 md:px-5">
         <TopNav />
         {children}
       </div>

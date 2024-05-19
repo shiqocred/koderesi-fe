@@ -28,38 +28,6 @@ const TracksPage = () => {
           </Button>
         </Link>
       </div>
-      <div className="flex gap-4 md:gap-6">
-        <Card className="flex w-full lg:px-5 lg:py-4 px-3 py-2 justify-between items-center  text-sm lg:text-base">
-          <div className="flex gap-2 items-center">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-gray-400"></span>
-            </span>
-            <p className="hidden sm:block">Semua</p>
-          </div>
-          <p>10</p>
-        </Card>
-        <Card className="flex w-full lg:px-5 lg:py-4 px-3 py-2 justify-between items-center  text-sm lg:text-base">
-          <div className="flex gap-2 items-center">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-400"></span>
-            </span>
-            <p className="hidden sm:block">On Progress</p>
-          </div>
-          <p>10</p>
-        </Card>
-        <Card className="flex w-full lg:px-5 lg:py-4 px-3 py-2 justify-between items-center  text-sm lg:text-base">
-          <div className="flex gap-2 items-center">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-400"></span>
-            </span>
-            <p className="hidden sm:block">Delivered</p>
-          </div>
-          <p>10</p>
-        </Card>
-      </div>
       <Suspense>
         <TracksClient />
       </Suspense>

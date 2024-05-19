@@ -126,17 +126,7 @@ export const CheckResiIdClient = () => {
                 </div>
                 <div className="py-4 flex flex-col md:flex-row md:items-center md:justify-between w-full px-4 gap-2">
                   Sedang transit di Solo
-                  <Button
-                    className="p-0 h-auto px-3 py-0.5 rounded-sm md:h-10 md:w-10"
-                    onClick={() =>
-                      onOpen("save-manifest", {
-                        waktu: "20.00",
-                        tanggal: "13 Feb",
-                        manifest: "Sedang transit di Solo",
-                        resiKode: resi,
-                      })
-                    }
-                  >
+                  <Button className="p-0 h-auto px-3 py-0.5 rounded-sm md:h-10 md:w-10">
                     <Save className="w-4 h-4 mr-2 md:mr-0" />
                     <p className="md:hidden">Tambah</p>
                   </Button>
@@ -149,17 +139,7 @@ export const CheckResiIdClient = () => {
                 </div>
                 <div className="py-4 flex flex-col md:flex-row md:items-center md:justify-between w-full px-4 gap-2">
                   Sedang Transit diJakarta
-                  <Button
-                    className="p-0 h-auto px-3 py-0.5 rounded-sm md:h-10 md:w-10"
-                    onClick={() =>
-                      onOpen("save-manifest", {
-                        waktu: "20.00",
-                        tanggal: "13 Feb",
-                        manifest: "Sedang transit di Solo",
-                        resiKode: resi,
-                      })
-                    }
-                  >
+                  <Button className="p-0 h-auto px-3 py-0.5 rounded-sm md:h-10 md:w-10">
                     <Save className="w-4 h-4 mr-2 md:mr-0" />
                     <p className="md:hidden">Tambah</p>
                   </Button>
@@ -172,17 +152,7 @@ export const CheckResiIdClient = () => {
                 </div>
                 <div className="py-4 flex flex-col md:flex-row md:items-center md:justify-between w-full px-4 gap-2">
                   Manifest dibuat
-                  <Button
-                    className="p-0 h-auto px-3 py-0.5 rounded-sm md:h-10 md:w-10"
-                    onClick={() =>
-                      onOpen("save-manifest", {
-                        waktu: "20.00",
-                        tanggal: "13 Feb",
-                        manifest: "Sedang transit di Solo",
-                        resiKode: resi,
-                      })
-                    }
-                  >
+                  <Button className="p-0 h-auto px-3 py-0.5 rounded-sm md:h-10 md:w-10">
                     <Save className="w-4 h-4 mr-2 md:mr-0" />
                     <p className="md:hidden">Tambah</p>
                   </Button>

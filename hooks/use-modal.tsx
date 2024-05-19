@@ -9,7 +9,13 @@ export type ModalType =
   | "approve-affiliate"
   | "reject-withdraw"
   | "approve-withdraw"
-  | "add-user";
+  | "add-user"
+  | "delete-resi"
+  | "archive-resi"
+  | "unarchive-resi"
+  | "delete-user"
+  | "edit-user"
+  | "delete-manifest";
 interface ManifestProps {
   waktu: string;
   tanggal: string;
@@ -18,17 +24,24 @@ interface ManifestProps {
 }
 
 interface UseModalProps {
+  data: string;
   type: ModalType | null;
   isOpen: boolean;
-  onOpen: (type: ModalType, dataManifest?: ManifestProps) => void;
+  onOpen: (
+    type: ModalType,
+    data?: string,
+    dataManifest?: ManifestProps
+  ) => void;
   onClose: () => void;
   dataManifest?: ManifestProps;
 }
 
 export const useModal: UseBoundStore<StoreApi<UseModalProps>> =
   create<UseModalProps>((set) => ({
+    data: "",
     type: null,
     isOpen: false,
-    onOpen: (type, dataManifest) => set({ isOpen: true, type, dataManifest }),
+    onOpen: (type, data, dataManifest) =>
+      set({ isOpen: true, type, data, dataManifest }),
     onClose: () => set({ isOpen: false, type: null }),
   }));

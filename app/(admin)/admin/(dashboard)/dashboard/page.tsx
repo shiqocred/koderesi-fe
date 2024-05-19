@@ -1,64 +1,127 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import {
-  ArrowDownCircle,
-  ArrowUpCircle,
-  ChevronLeft,
-  ChevronRight,
-  Link2,
-  Package,
-  PackageCheck,
-  Truck,
-  Users2,
-} from "lucide-react";
+import axios from "axios";
+import { useCookies } from "next-client-cookies";
 import React, { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardTitle } from "@/components/ui/card";
+
 import { ChartAdmin } from "./_components/chart-admin";
-import { data, formatRupiah, mapNewestTransaction } from "@/lib/utils";
-import { TransactionCurrentCard } from "./_components/transaction-current-card";
+import { TopDashboard } from "./_components/top-dashboard";
 import { ResiCurrentCard } from "./_components/resi-current-card";
 import { UserCurrentCard } from "./_components/user-current-card";
+import { TransactionCurrentCard } from "./_components/transaction-current-card";
 
-const mapNewUser = [
-  {
-    id: 1839147239,
-    nama: "Ahmad Fulan",
-    email: "example@mail.com",
-    handphone: "082223286788",
-    tanggal: "feb 2",
-    waktu: "08.00",
-  },
-  {
-    id: 4392839187,
-    nama: "Ahmad Fulan",
-    email: "example@mail.com",
-    handphone: "082223286788",
-    tanggal: "feb 2",
-    waktu: "08.00",
-  },
-  {
-    id: 2718391832,
-    nama: "Ahmad Fulan",
-    email: "example@mail.com",
-    handphone: "082223286788",
-    tanggal: "feb 2",
-    waktu: "08.00",
-  },
-  {
-    id: 7283712628,
-    nama: "Ahmad Fulan",
-    email: "example@mail.com",
-    handphone: "082223286788",
-    tanggal: "feb 2",
-    waktu: "08.00",
-  },
-];
+export interface TotalDashboard {
+  total_user: number;
+  total_revenue: number;
+  total_waybill: number;
+  total_waybill_op: number;
+  total_waybill_delivered: number;
+}
+
+export interface NewUserProps {
+  id: string;
+  name: string;
+  email: string;
+  email_verified_at: boolean | null;
+  role: string;
+  key: string;
+  total_tokens: number;
+  phone_number: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NewManifestProps {
+  id: string;
+  note: string;
+  status: string;
+  user_id: string | null;
+  waybill_id: string;
+  date_manifest: string;
+  created_at: string;
+  updated_at: string;
+  waybill: {
+    id: string;
+    waybill: string;
+    user_id: string | null;
+  };
+}
+
+export interface NewTransactionProps {
+  id: string;
+  user_name: string;
+  method_payment: string | null;
+  code_transaction: string;
+  amount_bill: number;
+  amount_credit: number;
+  transaction_date: string;
+  transaction_time: string;
+  status: string;
+}
 
 const AdminDashboardpage = () => {
   const [mth, setMth] = useState<number>(0);
   const [isMounted, setIsMounted] = useState<boolean>(false);
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
+  const [total, setTotal] = useState<TotalDashboard>({
+    total_user: 0,
+    total_revenue: 0,
+    total_waybill: 0,
+    total_waybill_op: 0,
+    total_waybill_delivered: 0,
+  });
+  const [newUser, setNewUser] = useState<NewUserProps[]>([
+    {
+      id: "",
+      name: "",
+      email: "",
+      email_verified_at: null,
+      role: "",
+      key: "",
+      total_tokens: 0,
+      phone_number: null,
+      created_at: "",
+      updated_at: "",
+    },
+  ]);
+  const [newManifest, setNewManifest] = useState<NewManifestProps[]>([
+    {
+      id: "",
+      note: "",
+      status: "",
+      user_id: null,
+      waybill_id: "",
+      date_manifest: "",
+      created_at: "",
+      updated_at: "",
+      waybill: {
+        id: "",
+        waybill: "",
+        user_id: null,
+      },
+    },
+  ]);
+  const [newTransactions, setNewTransactions] = useState<NewTransactionProps[]>(
+    [
+      {
+        id: "",
+        user_name: "",
+        method_payment: null,
+        code_transaction: "",
+        amount_bill: 0,
+        amount_credit: 0,
+        transaction_date: "",
+        transaction_time: "",
+        status: "",
+      },
+    ]
+  );
 
   const month = [
     {
@@ -119,98 +182,86 @@ const AdminDashboardpage = () => {
     }
   };
 
+  const getTotal = async () => {
+    try {
+      const res = await axios.get(
+        "http://koderesi.raventech.my.id/api/superadmin/dashboard/total",
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setTotal(res.data.data);
+    } catch (error) {
+      console.log("[ERROR_GET_TOTAL_DASHBOARD]:", error);
+    }
+  };
+  const getNewestUser = async () => {
+    try {
+      const res = await axios.get(
+        "http://koderesi.raventech.my.id/api/superadmin/dashboard/newestuser",
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setNewUser(res.data.data);
+    } catch (error) {
+      console.log("[ERROR_GET_NEWUSER_DASHBOARD]:", error);
+    }
+  };
+  const getNewestTransaction = async () => {
+    try {
+      const res = await axios.get(
+        "http://koderesi.raventech.my.id/api/superadmin/dashboard/newesttransaction",
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setNewTransactions(res.data.data);
+    } catch (error) {
+      console.log("[ERROR_GET_NEWUSER_DASHBOARD]:", error);
+    }
+  };
+  const getNewestWaybill = async () => {
+    try {
+      const res = await axios.get(
+        "http://koderesi.raventech.my.id/api/superadmin/dashboard/newestwaybill",
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setNewManifest(res.data.data);
+    } catch (error) {
+      console.log("[ERROR_GET_NEWUSER_DASHBOARD]:", error);
+    }
+  };
+
   useEffect(() => {
     setIsMounted(true);
+    getTotal();
+    getNewestUser();
+    getNewestTransaction();
+    getNewestWaybill();
   }, []);
 
   if (!isMounted) {
     return null;
   }
   return (
-    <div className="p-4 sm:px-6 sm:py-8 gap-4 md:gap-6 flex flex-col">
+    <div className="p-4 sm:px-6 sm:py-8 gap-4 md:gap-6 flex flex-col bg-gray-50 dark:bg-black">
       <div className="w-full transition-all flex flex-col gap-4">
-        <div className="w-full gap-2 sm:gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 grid">
-          <div className="grid col-span-2 sm:col-span-1 xl:col-span-2 gap-2 sm:gap-4 grid-cols-2 sm:grid-cols-1 xl:grid-cols-2 w-full">
-            <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 gap-4 col-span-1 border border-gray-200">
-              <div className="flex justify-between pb-2 border-b border-gray-500">
-                <h5>Total User</h5>
-                <Users2 className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
-              </div>
-              <p className="font-bold text-sm sm:text-xl h-full gap-x-1 items-center flex">
-                5
-                <span className="font-semibold text-xs sm:text-base">User</span>
-              </p>
-            </Card>
-            <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 gap-4 col-span-1 border border-gray-200">
-              <div className="flex justify-between pb-2 border-b border-gray-500">
-                <h5>Total Affiliate</h5>
-                <Link2 className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
-              </div>
-              <p className="font-bold text-sm sm:text-xl h-full gap-x-1 items-center flex">
-                5
-                <span className="font-semibold text-xs sm:text-base">User</span>
-              </p>
-            </Card>
-          </div>
-          <div className="col-span-2 sm:col-span-1 xl:col-span-2 gap-2 grid grid-cols-1 sm:gap-4">
-            <Card className="w-full text-xs sm:text-sm justify-between items-center flex p-2 sm:p-4 gap-4 border border-gray-200 col-span-2 sm:col-span-1 lg:col-span-2">
-              <div className="flex gap-x-2 bg-gray-200 dark:bg-gray-400 py-1 px-2 rounded-full text-black">
-                <Package className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
-                <h5>Total Resi</h5>
-              </div>
-              <p className="font-bold text-sm sm:text-xl">
-                5{" "}
-                <span className="font-semibold text-xs sm:text-base">Resi</span>
-              </p>
-            </Card>
-            <div className="gap-2 col-span-2 sm:col-span-1 lg:col-span-2 xl:grid-cols-2 sm:gap-4 grid w-full">
-              <Card className="w-full text-xs sm:text-sm justify-between items-center flex p-2 sm:p-4 gap-4 border border-gray-200">
-                <div className="flex gap-x-2 bg-yellow-100 dark:bg-yellow-300 py-1 px-2 rounded-full text-black">
-                  <Truck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
-                  <h5>On Progress</h5>
-                </div>
-                <p className="font-bold text-sm sm:text-xl">
-                  5{" "}
-                  <span className="font-semibold text-xs sm:text-base">
-                    Resi
-                  </span>
-                </p>
-              </Card>
-              <Card className="w-full text-xs sm:text-sm justify-between items-center flex p-2 sm:p-4 gap-4 border border-gray-200">
-                <div className="flex gap-x-2 bg-green-100 dark:bg-green-300 py-1 px-2 rounded-full text-black">
-                  <PackageCheck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
-                  <h5>Delivered</h5>
-                </div>
-                <p className="font-bold text-sm sm:text-xl">
-                  5{" "}
-                  <span className="font-semibold text-xs sm:text-base">
-                    Resi
-                  </span>
-                </p>
-              </Card>
-            </div>
-          </div>
-          <div className="flex flex-row lg:flex-col gap-2 sm:gap-4 h-full w-full col-span-2 lg:col-span-1">
-            <Card className="w-full text-xs sm:text-sm justify-between items-center lg:flex-col xl:items-center lg:items-start xl:flex-row bg-green-200/50 border border-green-300 flex p-2 sm:p-4 gap-4 h-full">
-              <div className="flex gap-x-2 items-center justify-between w-full lg:border-b xl:border-0 xl:p-0 lg:pb-2 border-gray-500">
-                <p className="hidden lg:block xl:hidden">Cash In</p>
-                <ArrowDownCircle className="text-green-700 sm:w-6 sm:h-6 w-4 h-4 stroke-1" />
-              </div>
-              <p className="font-bold text-xs sm:text-base h-full flex items-center">
-                {formatRupiah(1200000)}
-              </p>
-            </Card>
-            <Card className="w-full text-xs sm:text-sm justify-between items-center lg:flex-col xl:items-center lg:items-start xl:flex-row bg-green-200/50 border border-green-300 flex p-2 sm:p-4 gap-4 h-full">
-              <div className="flex gap-x-2 items-center justify-between w-full lg:border-b xl:border-0 xl:p-0 lg:pb-2 border-gray-500">
-                <p className="hidden lg:block xl:hidden">Cash Out</p>
-                <ArrowUpCircle className="text-red-500 sm:w-6 sm:h-6 w-4 h-4 stroke-1" />
-              </div>
-              <p className="font-bold text-xs sm:text-base h-full flex items-center">
-                {formatRupiah(500000)}
-              </p>
-            </Card>
-          </div>
-        </div>
+        <TopDashboard {...total} />
         <Separator className="dark:bg-white bg-gray-500" />
         <div className="flex lg:flex-row flex-col gap-4">
           <div className="w-full xl:w-9/12 lg:w-3/5 ">
@@ -246,10 +297,10 @@ const AdminDashboardpage = () => {
               </div>
             </Card>
           </div>
-          <div className="w-full xl:w-3/12 lg:w-2/5 ">
+          <div className="w-full xl:w-3/12 lg:w-2/5 xl:min-h-[462px] ">
             <TransactionCurrentCard
               label="Transaksi Terbaru"
-              data={mapNewestTransaction}
+              data={newTransactions}
               href="/admin/transactions"
             />
           </div>
@@ -258,14 +309,14 @@ const AdminDashboardpage = () => {
           <div className="w-full">
             <UserCurrentCard
               label="User Terbaru"
-              data={mapNewUser}
+              data={newUser}
               href="/admin/users"
             />
           </div>
           <div className="w-full ">
             <ResiCurrentCard
               label="Manifest Terbaru"
-              data={data}
+              data={newManifest}
               href="/admin/tracks"
             />
           </div>
