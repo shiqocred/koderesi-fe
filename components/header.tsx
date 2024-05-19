@@ -1,5 +1,8 @@
 "use client";
 
+import { formatNumber } from "@/lib/utils";
+import { useCookies } from "next-client-cookies";
+
 interface HeaderProps {
   title: string;
   description?: string;
@@ -7,6 +10,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ title, description, isAccount }: HeaderProps) => {
+  const cookies = useCookies();
   return (
     <div className="flex w-full justify-between md:items-center border-b border-gray-500 pb-4 md:flex-row flex-col items-start gap-4">
       <div className="flex flex-col">
@@ -17,7 +21,8 @@ export const Header = ({ title, description, isAccount }: HeaderProps) => {
         <div className="px-6 w-full md:w-auto flex flex-row items-center justify-between md:flex-col md:items-start bg-green-400 h-10 md:h-[50px] md:justify-center rounded-md">
           <p className="text-sm text-gray-900 leading-none">Kredit anda</p>
           <h3 className="font-bold text-sm lg:text-lg leading-none dark:text-gray-900">
-            3500 kredit
+            {formatNumber(parseFloat(cookies.get("totalCreadits") ?? "0"))}{" "}
+            kredit
           </h3>
         </div>
       )}

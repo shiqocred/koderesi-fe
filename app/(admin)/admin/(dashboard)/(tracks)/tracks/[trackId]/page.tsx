@@ -7,22 +7,22 @@ type Props = {
   params: { trackId: string };
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  // read route params
-  const id = params.trackId;
+// export async function generateMetadata(
+//   { params }: Props,
+//   parent: ResolvingMetadata
+// ): Promise<Metadata> {
+//   // read route params
+//   const id = params.trackId;
 
-  // fetch data
-  const resi = await fetch(`https://koderesi.vercel.app/api/resi/${id}`).then(
-    (res) => res.json()
-  );
+//   // fetch data
+//   const resi = await fetch(`https://koderesi.vercel.app/api/resi/${id}`).then(
+//     (res) => res.json()
+//   );
 
-  return {
-    title: `Detail ${resi.kode_resi}`,
-  };
-}
+//   return {
+//     title: `Detail ${resi.kode_resi}`,
+//   };
+// }
 
 const DetailPage = () => {
   return (

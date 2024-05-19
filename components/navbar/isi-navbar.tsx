@@ -35,6 +35,7 @@ import {
   CommandSeparator,
 } from "../ui/command";
 import AccountModal from "../modals/account-modal";
+import Link from "next/link";
 
 export const IsiNavbar = ({
   open,
@@ -132,7 +133,7 @@ export const IsiNavbar = ({
             ) : (
               <div className="py-8 gap-4 flex flex-col">
                 <Button
-                  className="flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium dark:text-gray-900"
+                  className="flex items-center leading-none h-10 bg-green-400 hover:bg-green-500 transition-all rounded-md justify-center text-xs font-medium text-gray-900"
                   onClick={() => {
                     onOpen("add-resi");
                     onOpenChange(false);
@@ -186,7 +187,9 @@ export const IsiNavbar = ({
             )}
           </SheetContent>
         </Sheet>
-        <LogoExpandIcon className="h-6" />
+        <Link href={pathname.includes("admin") ? "/admin" : "/"}>
+          <LogoExpandIcon className="h-6" />
+        </Link>
       </div>
       <div className="flex gap-2 items-center">
         <Button

@@ -1,135 +1,89 @@
 "use client";
 
-import { Card, CardTitle } from "@/components/ui/card";
-import { ChartCredit } from "./chart-credits";
-import { useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useCookies } from "next-client-cookies";
+import { toast } from "sonner";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import qs from "query-string";
+import axios from "axios";
 import {
   ChevronLeft,
   ChevronRight,
   Edit,
+  Loader2,
   Save,
   Search,
   TextSelect,
+  Undo2,
+  X,
 } from "lucide-react";
+
+import { cn, formatNumber, month } from "@/lib/utils";
+import { useDebounce } from "@/hooks/use-debounce";
+
+import { Card, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChartCredit } from "./chart-credits";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import qs from "query-string";
-import { useRouter, useSearchParams } from "next/navigation";
 
 interface UsersProps {
-  id: number;
-  nama: string;
-  kredit: number;
+  id: string;
+  name: string;
+  total_tokens: number;
 }
 
-const mapUsers: UsersProps[] = [
-  {
-    id: 58203384201,
-    nama: "Amie Bechtelar",
-    kredit: 1659,
-  },
-  {
-    id: 58203384202,
-    nama: "Maximillia Breitenberg",
-    kredit: 1829,
-  },
-  {
-    id: 58203384203,
-    nama: "Chasity Hoeger",
-    kredit: 2418,
-  },
-  {
-    id: 58203384204,
-    nama: "Ara Breitenberg",
-    kredit: 913,
-  },
-  {
-    id: 58203384205,
-    nama: "Corrine Stark",
-    kredit: 2089,
-  },
-  {
-    id: 58203384206,
-    nama: "Johnpaul Waelchi",
-    kredit: 984,
-  },
-];
+interface selectedDateProps {
+  month: number;
+  year: number;
+}
+
+interface firstLastDateProps {
+  first_month: number;
+  last_month: number;
+  first_year: number;
+  last_year: number;
+}
+
+export interface selectedBarDataProps {
+  date: number;
+  in: number;
+  out: number;
+}
 
 export const CreditsClient = () => {
-  const [current, setCurrent] = useState<UsersProps>({
-    id: 0,
-    nama: "",
-    kredit: 0,
-  });
-  const [editedKredit, setEditedKredit] = useState<boolean>(false);
-  const [mth, setMth] = useState<number>(0);
-  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
   const params = useSearchParams();
   const router = useRouter();
 
-  const month = [
-    {
-      label: "januari",
-      value: "jan",
-    },
-    {
-      label: "februari",
-      value: "feb",
-    },
-    {
-      label: "maret",
-      value: "mar",
-    },
-    {
-      label: "april",
-      value: "apr",
-    },
-    {
-      label: "mei",
-      value: "mei",
-    },
-    {
-      label: "juni",
-      value: "jun",
-    },
-    {
-      label: "juli",
-      value: "jul",
-    },
-    {
-      label: "agustus",
-      value: "agu",
-    },
-    {
-      label: "september",
-      value: "sep",
-    },
-    {
-      label: "oktober",
-      value: "okt",
-    },
-    {
-      label: "november",
-      value: "nov",
-    },
-    {
-      label: "desember",
-      value: "des",
-    },
-  ];
+  const [current, setCurrent] = useState<UsersProps>({
+    id: "",
+    name: "",
+    total_tokens: 0,
+  });
+  const [selectedBar, setSelectedBar] = useState<selectedDateProps>({
+    month: 1,
+    year: new Date().getFullYear(),
+  });
+  const [firstLast, setFirstLast] = useState<firstLastDateProps>();
+  const [userList, setUserList] = useState<UsersProps[]>([]);
+  const [selectedBarData, setSelectedBarData] = useState<
+    selectedBarDataProps[]
+  >([]);
 
-  const onChangeMonth = (value: "prev" | "next") => {
-    if (value === "prev") {
-      setMth(mth !== 0 ? mth - 1 : 0);
-    } else if (value === "next") {
-      setMth(mth !== month.length - 1 ? mth + 1 : month.length - 1);
-    }
-  };
+  const [isUpdatingList, setIsUpdatingList] = useState<boolean>(false);
+  const [isUpdatingBar, setIsUpdatingBar] = useState<boolean>(false);
+  const [editedKredit, setEditedKredit] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [isGetList, setIsGetList] = useState<boolean>(false);
+
+  const [search, setSearch] = useState(params.get("q") ?? "");
+  const searchValue = useDebounce(search);
 
   const handleCurrentId = useCallback(
-    (id: number) => {
+    (id: string, q: string) => {
       let currentQuery = {};
 
       if (params) {
@@ -138,8 +92,17 @@ export const CreditsClient = () => {
 
       const updateQuery: any = {
         ...currentQuery,
+        q: q,
         currentId: id,
       };
+
+      if (!q || q === "") {
+        delete updateQuery.q;
+      }
+
+      if (!id || id === "") {
+        delete updateQuery.currentId;
+      }
 
       const url = qs.stringifyUrl(
         {
@@ -154,20 +117,152 @@ export const CreditsClient = () => {
     [params, router]
   );
 
-  useEffect(() => {
-    if (params.get("currentId")) {
-      const currentUser = mapUsers.find(
-        (item) => item.id === parseFloat(params.get("currentId") ?? "0")
+  const handleUpdateKredit = async (e: FormEvent, dataId: string) => {
+    e.preventDefault();
+    const body = new FormData();
+    body.append("user_id", current.id);
+    body.append("amount", current.total_tokens.toString());
+    try {
+      setIsUpdatingList(true);
+      await axios.post(
+        `http://koderesi.raventech.my.id/api/superadmin/kredit/updatekredit/${dataId}`,
+        body,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      setCurrent({
-        id: currentUser?.id ?? 0,
-        nama: currentUser?.nama ?? "",
-        kredit: currentUser?.kredit ?? 0,
-      });
+      toast.success(`Kredit ${current.name} berhasi diperbarui`);
+      setEditedKredit(false);
+      router.refresh();
+    } catch (error) {
+      console.log("[ERROR_UPDATE_KREDIT]:", error);
+      toast.error(`Kredit ${current.name} gagal diperbarui`);
+    } finally {
+      setIsUpdatingList(false);
     }
-  }, [params]);
+  };
+
+  const getKreditList = async () => {
+    try {
+      setIsGetList(true);
+      const res = await axios.get(
+        `http://koderesi.raventech.my.id/api/superadmin/kredit${
+          searchValue !== ""
+            ? search !== ""
+              ? "?q=" + searchValue ?? search
+              : ""
+            : ""
+        }`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUserList(res.data.data.data ?? []);
+    } catch (error) {
+      console.log("[ERROR_GET_KREDIT_LIST]:", error);
+    } finally {
+      setIsGetList(false);
+    }
+  };
+
+  const getDetailKredit = async (dataId: string) => {
+    try {
+      setIsUpdating(true);
+      const res = await axios.get(
+        `http://koderesi.raventech.my.id/api/superadmin/kredit/${dataId}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCurrent(res.data.data.detail);
+    } catch (error) {
+      console.log("[ERROR_GET_KREDIT_DETAIL]:", error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const getBarKredit = async (dataId: string, method: string) => {
+    const currentMonth = selectedBar.month;
+    const currentYear = selectedBar.year;
+    const prevMonth = currentMonth <= 1 ? 12 : currentMonth - 1;
+    const nextMonth = currentMonth >= 12 ? 1 : currentMonth + 1;
+    const nextYear = currentMonth >= 12 ? currentYear + 1 : currentYear;
+    const prevYear = currentMonth <= 1 ? currentYear - 1 : currentYear;
+    try {
+      setIsUpdatingBar(true);
+      const res = await axios.get(
+        `http://koderesi.raventech.my.id/api/superadmin/kredit/bar/${dataId}${
+          method === "prev" ? "?m=" + prevMonth + "&y=" + prevYear : ""
+        }${method === "next" ? "?m=" + nextMonth + "&y=" + nextYear : ""}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const response = res.data.data;
+      setSelectedBar({
+        month: parseFloat(response.selected_month.date.month),
+        year: parseFloat(response.selected_month.date.year),
+      });
+      setSelectedBarData(response.bar);
+      setFirstLast({
+        first_month: parseFloat(response.month.first_month.month),
+        last_month: parseFloat(response.month.last_month.month),
+        first_year: parseFloat(response.month.first_month.year),
+        last_year: parseFloat(response.month.last_month.year),
+      });
+    } catch (error) {
+      console.log("[ERROR_GET_KREDIT_BAR]:", error);
+    } finally {
+      setIsUpdatingBar(false);
+    }
+  };
+
+  const handleChangeCurrent = (dataId: string) => {
+    handleCurrentId(dataId, search);
+    setEditedKredit(false);
+  };
 
   useEffect(() => {
+    handleCurrentId(params.get("currentId") ?? "", searchValue);
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (params.get("currentId")) {
+      getDetailKredit(params.get("currentId") ?? "");
+      getBarKredit(params.get("currentId") ?? "", "");
+    } else {
+      setCurrent({ id: "", name: "", total_tokens: 0 });
+    }
+  }, [params.get("currentId")]);
+
+  useEffect(() => {
+    if (isUpdatingList) {
+      setIsUpdatingBar(true);
+      setTimeout(() => {
+        getBarKredit(current.id, "");
+      }, 1000);
+      getKreditList();
+    } else {
+      getKreditList();
+    }
+  }, [isUpdatingList, params.get("q")]);
+
+  useEffect(() => {
+    getKreditList();
+    handleCurrentId(params.get("currentId") ?? "", params.get("q") ?? "");
     setIsMounted(true);
   }, []);
 
@@ -181,54 +276,102 @@ export const CreditsClient = () => {
           <div className="w-full relative flex items-center mb-4">
             <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
             <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="pl-10 peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
               placeholder="Search user name..."
             />
           </div>
-          <ul className="md:pt-2 space-y-2 flex flex-col">
-            {mapUsers.map((item) => (
-              <li className="capitalize" key={item.id}>
-                <Button
-                  className={cn(
-                    "md:py-2 md:px-5 px-2 py-1.5 h-14 md:h-20 rounded-sm text-xs md:text-sm flex  gap-1 justify-between items-center w-full text-black dark:text-white",
-                    current.id === item.id
-                      ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700/70 dark:border dark:border-gray-700/40 dark:hover:bg-gray-700/40"
-                      : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:border dark:border-gray-700/70 dark:hover:bg-gray-700/70"
-                  )}
-                  onClick={() => handleCurrentId(item.id)}
-                >
-                  <div className="flex gap-x-2 items-center w-full">
-                    <div className="w-10 aspect-square md:w-14 overflow-hidden rounded relative flex-none">
-                      <Image alt="" src={"/avatar.webp"} fill />
-                    </div>
-                    <div className="flex w-full justify-between">
-                      <div className="flex flex-col text-ellipsis overflow-hidden w-full flex-1 text-start">
-                        <p>{item.nama}</p>
+          {userList.length !== 0 ? (
+            <ul
+              className={cn(
+                "md:pt-2 space-y-2 flex flex-col relative w-full h-auto",
+                userList.length === 0 && "min-h-[200px]"
+              )}
+            >
+              {(isGetList || isUpdatingList) && (
+                <div className="w-full h-full absolute bg-gray-500/20 backdrop-blur-sm top-0 left-0 z-10 flex items-center justify-center rounded-md">
+                  <Loader2 className="w-10 h-10 animate-spin text-gray-700 dark:text-white" />
+                </div>
+              )}
+              {userList.map((item) => (
+                <li className="capitalize" key={item.id}>
+                  <Button
+                    className={cn(
+                      "md:py-2 md:px-5 px-2 py-1.5 h-14 md:h-20 rounded-sm text-xs md:text-sm flex  gap-1 justify-between items-center w-full text-black dark:text-white",
+                      current.id === item.id
+                        ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700/70 dark:border dark:border-gray-700/40 dark:hover:bg-gray-700/40"
+                        : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:border dark:border-gray-700/70 dark:hover:bg-gray-700/70"
+                    )}
+                    onClick={() =>
+                      current.id !== item.id && handleChangeCurrent(item.id)
+                    }
+                  >
+                    <div className="flex gap-x-2 items-center w-full">
+                      <div className="w-10 aspect-square md:w-14 overflow-hidden rounded relative flex-none">
+                        <Image alt="" src={"/avatar.webp"} fill />
                       </div>
-                      <div className="w-auto xl:w-[150px] flex-none text-center">
-                        {item.kredit} Kredit
+                      <div className="flex w-full justify-between">
+                        <div className="flex flex-col text-ellipsis overflow-hidden w-full flex-1 text-start capitalize">
+                          <p>{item.name}</p>
+                        </div>
+                        <div className="w-auto xl:w-[150px] flex-none text-center">
+                          {formatNumber(item.total_tokens)} Kredit
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="w-auto lg:w-[50px] flex-none flex justify-center">
-                    <Button
-                      size={"icon"}
-                      className=" hover:bg-gray-200 h-6 w-6"
-                      variant={"ghost"}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </Button>
-              </li>
-            ))}
-          </ul>
+                    <div className="w-auto lg:w-[50px] flex-none flex justify-center">
+                      <Button
+                        size={"icon"}
+                        className=" hover:bg-gray-200 dark:hover:bg-gray-700 h-6 w-6"
+                        variant={"ghost"}
+                        onClick={() => {
+                          current.id === item.id && handleCurrentId("", search);
+                        }}
+                      >
+                        {current.id === item.id ? (
+                          <X className="h-4 w-4" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="md:pt-2 space-y-2 flex flex-col relative w-full">
+              {isGetList && (
+                <div className="w-full h-full absolute bg-gray-500/20 backdrop-blur-sm top-0 left-0 z-10 flex items-center justify-center rounded-md">
+                  <Loader2 className="w-10 h-10 animate-spin text-gray-700 dark:text-white" />
+                </div>
+              )}
+              <div className="w-full h-[220px] flex items-center justify-center flex-col text-gray-400">
+                <TextSelect className="md:w-16 md:h-16 w-12 h-12" />
+                <h3 className="text-lg md:text-2xl font-bold mt-2 text-gray-500">
+                  No data listed.
+                </h3>
+                <p className="text-xs md:text-sm leading-none">
+                  Please, include any data or correct params.
+                </p>
+              </div>
+            </div>
+          )}
         </Card>
       </div>
-      <div className="h-full w-full lg:w-1/2 xl:w-3/5 lg:flex-1 xl:flex-auto">
-        {current.id !== 0 ? (
+      <div className="h-full w-full lg:w-1/2 xl:w-3/5 lg:flex-1 xl:flex-auto relative">
+        {isUpdating && (
+          <div className="w-full h-full absolute bg-gray-500/20 backdrop-blur-sm top-0 left-0 z-10 flex items-center justify-center rounded-md">
+            <Loader2 className="w-10 h-10 animate-spin text-gray-700 dark:text-white" />
+          </div>
+        )}
+        {current.id !== "" ? (
           <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
-            <Card className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex bg-gray-200  justify-between items-center w-full dark:border-gray-700/70 dark:border">
+            <form
+              onSubmit={(e) => handleUpdateKredit(e, current.id)}
+              className="md:py-2 md:px-5 px-2 py-1.5 rounded-sm text-xs md:text-sm flex bg-gray-200 dark:bg-transparent  justify-between items-center w-full dark:border-gray-700/70 dark:border"
+            >
               <div className="w-full">
                 <div className="flex gap-x-4 items-center w-full justify-between">
                   <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
@@ -239,25 +382,25 @@ export const CreditsClient = () => {
                       "flex w-full pr-4",
                       !editedKredit
                         ? "flex-col md:flex-row md:items-center md:gap-6 gap-2"
-                        : "flex-col gap-1"
+                        : "flex-col gap-1 xl:flex-row xl:items-center"
                     )}
                   >
-                    <p className="text-sm md:text-base font-semibold flex-1 text-ellipsis overflow-hidden whitespace-nowrap">
-                      {current.nama}
+                    <p className="text-sm md:text-base font-semibold flex-1 text-ellipsis overflow-hidden whitespace-nowrap capitalize">
+                      {current.name}
                     </p>
                     {!editedKredit ? (
                       <div className="w-auto xl:w-[150px] flex-none ">
-                        {current.kredit} Kredit
+                        {formatNumber(current.total_tokens)} Kredit
                       </div>
                     ) : (
                       <Input
                         type="number"
                         className="h-9 px-2 w-auto xl:w-[150px] flex-none"
-                        value={current.kredit}
+                        value={current.total_tokens}
                         onChange={(e) =>
                           setCurrent((prev) => ({
                             ...prev,
-                            kredit: parseFloat(e.target.value),
+                            total_tokens: parseFloat(e.target.value),
                           }))
                         }
                       />
@@ -265,25 +408,47 @@ export const CreditsClient = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-[50px] flex-none flex justify-center">
-                <Button
-                  size={"icon"}
-                  className={cn(
-                    "text-black",
-                    !editedKredit
-                      ? "hover:bg-yellow-300 bg-yellow-400"
-                      : "hover:bg-green-300 bg-green-400"
-                  )}
-                  onClick={() => setEditedKredit(!editedKredit)}
-                >
-                  {!editedKredit ? (
+              {!editedKredit ? (
+                <div className="w-[50px] flex-none flex justify-center">
+                  <Button
+                    type="button"
+                    size={"icon"}
+                    className={cn(
+                      "text-black hover:bg-yellow-300 bg-yellow-400"
+                    )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setEditedKredit(!editedKredit);
+                    }}
+                  >
                     <Edit className="h-4 w-4" />
-                  ) : (
+                  </Button>
+                </div>
+              ) : (
+                <div className="w-[100px] flex-none flex justify-center gap-2">
+                  <Button
+                    type="submit"
+                    size={"icon"}
+                    className={cn("text-black hover:bg-green-300 bg-green-400")}
+                  >
                     <Save className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-            </Card>
+                  </Button>
+                  <Button
+                    type="button"
+                    size={"icon"}
+                    className={cn(
+                      "text-black hover:bg-gray-100 bg-transparent border border-gray-700 hover:border-gray-900 dark:text-white dark:border-gray-200/30 dark:hover:border-gray-200/70 dark:hover:bg-gray-700/40"
+                    )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setEditedKredit(!editedKredit);
+                    }}
+                  >
+                    <Undo2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </form>
             <div className="h-full border dark:border-gray-700/70 rounded-md">
               <div className="flex md:justify-between md:items-center px-4 pt-4 gap-2 md:gap-0 md:px-5 mb-4 flex-col md:flex-row items-start">
                 <CardTitle>Kredit Flow</CardTitle>
@@ -291,26 +456,44 @@ export const CreditsClient = () => {
                   <Button
                     className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
                     variant={"ghost"}
-                    onClick={() => onChangeMonth("prev")}
-                    disabled={mth === 0}
+                    onClick={() => getBarKredit(current.id, "prev")}
+                    disabled={
+                      selectedBar.month === firstLast?.first_month &&
+                      selectedBar.year === firstLast.first_year
+                    }
                   >
                     <ChevronLeft className="w-3 md:w-4 h-3 md:h-4" />
                   </Button>
-                  <span className="capitalize md:w-20 w-14 select-none flex items-center justify-center text-xs md:text-sm">
-                    {month[mth].label}
+                  <span className="capitalize md:w-36 w-full select-none flex items-center justify-center text-xs md:text-sm">
+                    {month[selectedBar.month - 1].label +
+                      " - " +
+                      selectedBar.year}
                   </span>
                   <Button
                     className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
                     variant={"ghost"}
-                    onClick={() => onChangeMonth("next")}
-                    disabled={mth === month.length - 1}
+                    onClick={() => getBarKredit(current.id, "next")}
+                    disabled={
+                      selectedBar.month === firstLast?.last_month &&
+                      selectedBar.year === firstLast.last_year
+                    }
                   >
                     <ChevronRight className="w-3 md:w-4 h-3 md:h-4" />
                   </Button>
                 </div>
               </div>
-              <div className="xl:h-[350px] md:h-[300px] h-[200px]">
-                <ChartCredit month={month[mth].value} />
+              <div className="xl:h-[350px] md:h-[300px] h-[200px] relative">
+                {!isUpdating && isUpdatingBar && (
+                  <div className="w-full h-full absolute bg-gray-500/20 backdrop-blur-sm top-0 left-0 z-10 flex items-center justify-center rounded-md">
+                    <Loader2 className="w-10 h-10 animate-spin text-gray-700 dark:text-white" />
+                  </div>
+                )}
+                {!isUpdatingBar && selectedBarData && (
+                  <ChartCredit
+                    month={month[selectedBar.month - 1].value}
+                    initialData={selectedBarData}
+                  />
+                )}
               </div>
             </div>
           </Card>

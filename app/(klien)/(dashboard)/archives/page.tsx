@@ -1,9 +1,6 @@
-import { DataTable } from "@/components/data-tabel";
 import { Header } from "@/components/header";
-import { Card } from "@/components/ui/card";
-import { archives } from "@/lib/utils";
-import { columns } from "./components/colums";
 import { Metadata } from "next";
+import { ArchiveClient } from "./components/client";
 
 export const metadata: Metadata = {
   title: "Arsip Resi",
@@ -16,9 +13,7 @@ const ArchivesPage = () => {
         title="List Arsip Resi"
         description="Simpan resi yang tidak terpakai"
       />
-      <Card className="flex flex-col text-sm text-center p-4 divide-y">
-        <DataTable columns={columns} data={archives} />
-      </Card>
+      <ArchiveClient />
     </div>
   );
 };

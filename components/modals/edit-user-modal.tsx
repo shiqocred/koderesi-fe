@@ -1,18 +1,19 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Modal } from "./modal";
 import { useModal } from "@/hooks/use-modal";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
+import { useLocalStorage } from "@/hooks/use-localstorage";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 
-export const AddUserModal = () => {
-  const { isOpen, onClose, type } = useModal();
+export const EditUserModal = () => {
+  const { isOpen, onClose, type, data } = useModal();
   const [input, setInput] = useState({
     name: "",
     email: "",
@@ -20,7 +21,7 @@ export const AddUserModal = () => {
   });
   const router = useRouter();
 
-  const isModalOpen = isOpen && type === "add-user";
+  const isModalOpen = isOpen && type === "edit-user";
   const cookies = useCookies();
   const token = cookies.get("accessToken");
 
@@ -32,10 +33,32 @@ export const AddUserModal = () => {
     });
   };
 
+  const getDetail = async () => {
+    try {
+      const res = await axios.get(
+        `http://koderesi.raventech.my.id/api/superadmin/pengguna/show/${data}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const dataDetail = res.data.data;
+      setInput((prev) => ({
+        ...prev,
+        name: dataDetail?.name,
+        email: dataDetail?.email,
+      }));
+    } catch (error) {
+      console.log("[ERROR_GET_DETAIL_USER]:", error);
+    }
+  };
+
   const onSubmit = async (e: FormEvent) => {
     try {
-      await axios.post(
-        "http://koderesi.raventech.my.id/api/superadmin/pengguna/store",
+      await axios.put(
+        `http://koderesi.raventech.my.id/api/superadmin/pengguna/update/${data}`,
         input,
         {
           headers: {
@@ -47,11 +70,14 @@ export const AddUserModal = () => {
       toast.success("User added.");
       onClose();
       router.refresh();
-      router.push("/admin/users");
     } catch (error) {
       console.log("[ERROR_ADD_USER]:", error);
     }
   };
+
+  useEffect(() => {
+    data && getDetail();
+  }, [data]);
 
   return (
     <Modal

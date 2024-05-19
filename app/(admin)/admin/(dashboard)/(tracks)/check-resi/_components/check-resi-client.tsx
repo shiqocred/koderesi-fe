@@ -2,13 +2,33 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 import { Search } from "lucide-react";
+import { useCookies } from "next-client-cookies";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export const CheckResiClient = () => {
   const router = useRouter();
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
   const [resi, setResi] = useState<string>("");
+
+  const handleCheck = async () => {
+    try {
+      const res = await axios.post(
+        `http://koderesi.raventech.my.id/api/superadmin/waybill/store`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log("[ERROR_CHECK_RESI]:", error);
+    }
+  };
 
   const handleSearch = (resi: string) => {
     router.push(`/admin/check-resi/${resi}`);
