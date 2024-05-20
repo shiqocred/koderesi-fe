@@ -39,8 +39,6 @@ import {
 import { cn, formatTanggal } from "@/lib/utils";
 import { useModal } from "@/hooks/use-modal";
 import { DetailProps } from "../../components/detail-client";
-import { TimeSelect } from "@/components/time-select";
-import { DatePicker } from "@/components/date-picker";
 import { DateTimePicker } from "./date-time-picker";
 import { format } from "date-fns";
 
