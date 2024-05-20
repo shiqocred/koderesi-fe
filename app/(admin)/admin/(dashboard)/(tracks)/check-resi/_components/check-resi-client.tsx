@@ -17,7 +17,7 @@ export const CheckResiClient = () => {
   const handleCheck = async () => {
     try {
       const res = await axios.post(
-        `http://koderesi.raventech.my.id/api/superadmin/waybill/store`,
+        `https://koderesi.raventech.my.id/api/superadmin/waybill/store`,
         {
           headers: {
             Accept: "application/json",

@@ -125,7 +125,7 @@ export const CreditsClient = () => {
     try {
       setIsUpdatingList(true);
       await axios.post(
-        `http://koderesi.raventech.my.id/api/superadmin/kredit/updatekredit/${dataId}`,
+        `https://koderesi.raventech.my.id/api/superadmin/kredit/updatekredit/${dataId}`,
         body,
         {
           headers: {
@@ -149,7 +149,7 @@ export const CreditsClient = () => {
     try {
       setIsGetList(true);
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/kredit${
+        `https://koderesi.raventech.my.id/api/superadmin/kredit${
           searchValue !== ""
             ? search !== ""
               ? "?q=" + searchValue ?? search
@@ -175,7 +175,7 @@ export const CreditsClient = () => {
     try {
       setIsUpdating(true);
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/kredit/${dataId}`,
+        `https://koderesi.raventech.my.id/api/superadmin/kredit/${dataId}`,
         {
           headers: {
             Accept: "application/json",
@@ -201,7 +201,7 @@ export const CreditsClient = () => {
     try {
       setIsUpdatingBar(true);
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/kredit/bar/${dataId}${
+        `https://koderesi.raventech.my.id/api/superadmin/kredit/bar/${dataId}${
           method === "prev" ? "?m=" + prevMonth + "&y=" + prevYear : ""
         }${method === "next" ? "?m=" + nextMonth + "&y=" + nextYear : ""}`,
         {

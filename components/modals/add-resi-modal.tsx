@@ -183,7 +183,7 @@ export const AddResiModal = () => {
   const getCourier = async () => {
     try {
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/list-courier?page=${page}&q=${searchValue}`,
+        `https://koderesi.raventech.my.id/api/list-courier?page=${page}&q=${searchValue}`,
         {
           headers: {
             Accept: "application/json",
@@ -205,7 +205,7 @@ export const AddResiModal = () => {
   const onSubmit = async (values: FormSchema) => {
     try {
       const res: ResponseProps = await axios.post(
-        "http://koderesi.raventech.my.id/api/admin/waybill/store",
+        "https://koderesi.raventech.my.id/api/admin/waybill/store",
         values,
         {
           headers: {

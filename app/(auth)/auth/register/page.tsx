@@ -48,7 +48,7 @@ const RegisterPage = () => {
     try {
       await axios
         .post(
-          `http://koderesi.raventech.my.id/api/auth/registerFromAdmin`,
+          `https://koderesi.raventech.my.id/api/auth/registerFromAdmin`,
           values
         )
         .then((res: any) => {

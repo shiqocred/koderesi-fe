@@ -35,7 +35,7 @@ export const AddUserModal = () => {
   const onSubmit = async (e: FormEvent) => {
     try {
       await axios.post(
-        "http://koderesi.raventech.my.id/api/superadmin/pengguna/store",
+        "https://koderesi.raventech.my.id/api/superadmin/pengguna/store",
         input,
         {
           headers: {

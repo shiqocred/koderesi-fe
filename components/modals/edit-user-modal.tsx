@@ -36,7 +36,7 @@ export const EditUserModal = () => {
   const getDetail = async () => {
     try {
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/pengguna/show/${data}`,
+        `https://koderesi.raventech.my.id/api/superadmin/pengguna/show/${data}`,
         {
           headers: {
             Accept: "application/json",
@@ -58,7 +58,7 @@ export const EditUserModal = () => {
   const onSubmit = async (e: FormEvent) => {
     try {
       await axios.put(
-        `http://koderesi.raventech.my.id/api/superadmin/pengguna/update/${data}`,
+        `https://koderesi.raventech.my.id/api/superadmin/pengguna/update/${data}`,
         input,
         {
           headers: {

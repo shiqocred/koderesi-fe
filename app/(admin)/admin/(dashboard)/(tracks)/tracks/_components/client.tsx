@@ -75,7 +75,7 @@ const TracksClient = () => {
     try {
       setIsUpdateList(true);
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/waybill${
+        `https://koderesi.raventech.my.id/api/superadmin/waybill${
           filter
             ? filter !== "semua"
               ? filter === "on_progress"

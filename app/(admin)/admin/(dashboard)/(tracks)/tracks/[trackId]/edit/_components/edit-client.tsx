@@ -39,8 +39,6 @@ import {
 import { cn, formatTanggal } from "@/lib/utils";
 import { useModal } from "@/hooks/use-modal";
 import { DetailProps } from "../../components/detail-client";
-import { TimeSelect } from "@/components/time-select";
-import { DatePicker } from "@/components/date-picker";
 import { DateTimePicker } from "./date-time-picker";
 import { format } from "date-fns";
 
@@ -89,7 +87,7 @@ const EditClient = () => {
     setIsUpdating(true);
     try {
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/waybill/show/${trackId}`,
+        `https://koderesi.raventech.my.id/api/superadmin/waybill/show/${trackId}`,
         {
           headers: {
             Accept: "application/json",
@@ -122,7 +120,7 @@ const EditClient = () => {
     setIsUpdatingManifest(true);
     try {
       await axios.put(
-        `http://koderesi.raventech.my.id/api/superadmin/waybill/update/${trackId}`,
+        `https://koderesi.raventech.my.id/api/superadmin/waybill/update/${trackId}`,
         data,
         {
           headers: {
@@ -149,7 +147,7 @@ const EditClient = () => {
     setIsUpdatingManifest(true);
     try {
       await axios.put(
-        `http://koderesi.raventech.my.id/api/superadmin/manifest/update/${id}`,
+        `https://koderesi.raventech.my.id/api/superadmin/manifest/update/${id}`,
         data,
         {
           headers: {
