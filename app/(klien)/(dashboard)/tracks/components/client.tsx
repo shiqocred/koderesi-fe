@@ -57,7 +57,7 @@ const TracksAdminClient = () => {
     try {
       setIsUpdateList(true);
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/admin/waybill${
+        `https://koderesi.raventech.my.id/api/admin/waybill${
           filter
             ? filter !== "semua"
               ? filter === "on_progress"

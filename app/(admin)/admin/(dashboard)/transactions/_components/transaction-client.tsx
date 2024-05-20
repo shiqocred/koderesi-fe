@@ -129,7 +129,7 @@ export const CreditsClient = () => {
     try {
       setIsGetList(true);
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/transaksi${
+        `https://koderesi.raventech.my.id/api/superadmin/transaksi${
           searchValue !== ""
             ? search !== ""
               ? "?q=" + searchValue ?? search
@@ -155,7 +155,7 @@ export const CreditsClient = () => {
     try {
       setIsUpdating(true);
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/transaksi/${dataId}`,
+        `https://koderesi.raventech.my.id/api/superadmin/transaksi/${dataId}`,
         {
           headers: {
             Accept: "application/json",
@@ -187,7 +187,7 @@ export const CreditsClient = () => {
     try {
       setIsUpdatingBar(true);
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/superadmin/transaksi/bar/${dataId}${
+        `https://koderesi.raventech.my.id/api/superadmin/transaksi/bar/${dataId}${
           method === "prev" ? "?m=" + prevMonth + "&y=" + prevYear : ""
         }${method === "next" ? "?m=" + nextMonth + "&y=" + nextYear : ""}`,
         {

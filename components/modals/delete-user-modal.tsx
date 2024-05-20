@@ -20,7 +20,7 @@ export const DeleteUserModal = () => {
   const onDelete = async (e: FormEvent) => {
     try {
       await axios.delete(
-        `http://koderesi.raventech.my.id/api/superadmin/pengguna/destroy/${data}`,
+        `https://koderesi.raventech.my.id/api/superadmin/pengguna/destroy/${data}`,
         {
           headers: {
             Accept: "application/json",

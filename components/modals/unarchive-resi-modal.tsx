@@ -21,7 +21,7 @@ export const UnArchiveResiModal = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://koderesi.raventech.my.id/api/admin/archive/unarchive/${data}`,
+        `https://koderesi.raventech.my.id/api/admin/archive/unarchive/${data}`,
         {},
         {
           headers: {

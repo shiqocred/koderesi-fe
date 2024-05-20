@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
   const isAdminPageRequested = isAdminPages(nextUrl.pathname);
 
   const data = await fetch(
-    new URL("http://koderesi.raventech.my.id/api/auth/page").href,
+    new URL("https://koderesi.raventech.my.id/api/auth/page").href,
     {
       method: "GET",
       headers: { Accept: "application/json", Authorization: `Bearer ${token}` },

@@ -47,7 +47,7 @@ export const ArchiveClient = () => {
   const getArchive = async () => {
     try {
       const res = await axios.get(
-        `http://koderesi.raventech.my.id/api/admin/archive`,
+        `https://koderesi.raventech.my.id/api/admin/archive`,
         {
           headers: {
             Accept: "application/json",

@@ -133,7 +133,7 @@ export const UsersClient = () => {
   const getUserList = async () => {
     try {
       const res = await axios.get(
-        "http://koderesi.raventech.my.id/api/superadmin/pengguna",
+        "https://koderesi.raventech.my.id/api/superadmin/pengguna",
         {
           headers: {
             Accept: "application/json",

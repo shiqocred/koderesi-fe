@@ -21,7 +21,7 @@ export const ArchiveResiModal = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://koderesi.raventech.my.id/api/admin/waybill/archive/${data}`,
+        `https://koderesi.raventech.my.id/api/admin/waybill/archive/${data}`,
         {},
         {
           headers: {

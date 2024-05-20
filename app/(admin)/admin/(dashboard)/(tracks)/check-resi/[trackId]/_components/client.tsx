@@ -8,13 +8,12 @@ import { Separator } from "@/components/ui/separator";
 import { useModal } from "@/hooks/use-modal";
 import { ArchiveDataProps, archives, data } from "@/lib/utils";
 import { ArrowDown, PackageCheck, Save, Search } from "lucide-react";
-import { redirect, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export const CheckResiIdClient = () => {
   const { trackId } = useParams();
   const router = useRouter();
-  const { onOpen } = useModal();
   const [isMounted, setIsMounted] = useState(false);
 
   const [resi, setResi] = useState(trackId);

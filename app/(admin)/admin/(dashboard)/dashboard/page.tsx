@@ -185,7 +185,7 @@ const AdminDashboardpage = () => {
   const getTotal = async () => {
     try {
       const res = await axios.get(
-        "http://koderesi.raventech.my.id/api/superadmin/dashboard/total",
+        "https://koderesi.raventech.my.id/api/superadmin/dashboard/total",
         {
           headers: {
             Accept: "application/json",
@@ -201,7 +201,7 @@ const AdminDashboardpage = () => {
   const getNewestUser = async () => {
     try {
       const res = await axios.get(
-        "http://koderesi.raventech.my.id/api/superadmin/dashboard/newestuser",
+        "https://koderesi.raventech.my.id/api/superadmin/dashboard/newestuser",
         {
           headers: {
             Accept: "application/json",
@@ -217,7 +217,7 @@ const AdminDashboardpage = () => {
   const getNewestTransaction = async () => {
     try {
       const res = await axios.get(
-        "http://koderesi.raventech.my.id/api/superadmin/dashboard/newesttransaction",
+        "https://koderesi.raventech.my.id/api/superadmin/dashboard/newesttransaction",
         {
           headers: {
             Accept: "application/json",
@@ -233,7 +233,7 @@ const AdminDashboardpage = () => {
   const getNewestWaybill = async () => {
     try {
       const res = await axios.get(
-        "http://koderesi.raventech.my.id/api/superadmin/dashboard/newestwaybill",
+        "https://koderesi.raventech.my.id/api/superadmin/dashboard/newestwaybill",
         {
           headers: {
             Accept: "application/json",

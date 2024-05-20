@@ -22,7 +22,7 @@ export const DeleteResiModal = () => {
     e.preventDefault();
     try {
       await axios.delete(
-        `http://koderesi.raventech.my.id/api/admin/waybill/destroy/${trackId}`,
+        `https://koderesi.raventech.my.id/api/admin/waybill/destroy/${trackId}`,
         {
           headers: {
             Accept: "application/json",

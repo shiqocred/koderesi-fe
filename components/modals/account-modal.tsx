@@ -63,7 +63,7 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
   const getDataAuth = async () => {
     try {
       const response = await axios.get(
-        "http://koderesi.raventech.my.id/api/auth/page",
+        "https://koderesi.raventech.my.id/api/auth/page",
         {
           headers: {
             Accept: "application/json",
@@ -88,7 +88,7 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
   const handleLogOut = async () => {
     try {
       await axios.post(
-        "http://koderesi.raventech.my.id/api/auth/logout",
+        "https://koderesi.raventech.my.id/api/auth/logout",
         {},
         {
           headers: {

@@ -45,7 +45,7 @@ const Loginpage = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios
-        .post(`http://koderesi.raventech.my.id/api/auth/login`, values)
+        .post(`https://koderesi.raventech.my.id/api/auth/login`, values)
         .then((res: any) => {
           toast.success("Login berhasil.");
           cookies.set("accessToken", res.data.access_token);

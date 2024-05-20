@@ -20,7 +20,7 @@ export const DeleteManifestModal = () => {
   const onDelete = async (e: FormEvent) => {
     try {
       await axios.delete(
-        `http://koderesi.raventech.my.id/api/superadmin/manifest/destroy/${data}`,
+        `https://koderesi.raventech.my.id/api/superadmin/manifest/destroy/${data}`,
         {
           headers: {
             Accept: "application/json",

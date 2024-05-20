@@ -61,7 +61,7 @@ export const DetailClient = () => {
 
   const getDetail = async () => {
     const detail = await axios.get(
-      `http://koderesi.raventech.my.id/api/admin/waybill/show/${trackId}`,
+      `https://koderesi.raventech.my.id/api/admin/waybill/show/${trackId}`,
       {
         headers: {
           Accept: "application/json",

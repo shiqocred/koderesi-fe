@@ -34,7 +34,7 @@ const DashboardPage = () => {
   const getStatistik = async () => {
     try {
       const res = await axios.get(
-        "http://koderesi.raventech.my.id/api/admin/dashboard/statistic",
+        "https://koderesi.raventech.my.id/api/admin/dashboard/statistic",
         {
           headers: {
             Accept: "application/json",
@@ -51,7 +51,7 @@ const DashboardPage = () => {
   const getNewestManifest = async () => {
     try {
       const res = await axios.get(
-        "http://koderesi.raventech.my.id/api/admin/dashboard",
+        "https://koderesi.raventech.my.id/api/admin/dashboard",
         {
           headers: {
             Accept: "application/json",
