@@ -1,5 +1,10 @@
 import React, { Suspense } from "react";
 import { CreditsClient } from "./_components/transaction-client";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Transaksi",
+};
 
 const CreditsPage = () => {
   return (

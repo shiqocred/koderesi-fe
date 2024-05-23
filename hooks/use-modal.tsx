@@ -16,11 +16,11 @@ export type ModalType =
   | "delete-user"
   | "edit-user"
   | "delete-manifest";
-interface ManifestProps {
-  waktu: string;
-  tanggal: string;
-  manifest: string;
-  resiKode: string | string[];
+export interface ManifestProps {
+  note: string;
+  status: string;
+  waybill_id: string;
+  date_manifest: string;
 }
 
 interface UseModalProps {
@@ -41,6 +41,12 @@ export const useModal: UseBoundStore<StoreApi<UseModalProps>> =
     data: "",
     type: null,
     isOpen: false,
+    dataManifest: {
+      note: "",
+      status: "",
+      waybill_id: "",
+      date_manifest: "",
+    },
     onOpen: (type, data, dataManifest) =>
       set({ isOpen: true, type, data, dataManifest }),
     onClose: () => set({ isOpen: false, type: null }),

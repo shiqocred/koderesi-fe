@@ -1,5 +1,10 @@
 import React, { Suspense } from "react";
 import { UsersClient } from "./_components/users-client";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "List Pengguna",
+};
 
 const UsersPage = () => {
   return (

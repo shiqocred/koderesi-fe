@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export const TopNav = () => {
   const { setTheme, theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
   const onChangeTheme = () => {
     if (theme === "light") {
       setTheme("dark");
@@ -28,13 +30,15 @@ export const TopNav = () => {
   return (
     <div className="flex justify-between items-center w-full border-b border-gray-500  pb-4">
       <div className="flex gap-2 items-center w-full ">
-        <Link href="/dashboard">
+        <Link href={"/"}>
           <Button variant={"ghost"} size={"icon"}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
         </Link>
         <div className="flex w-full  flex-col items-start gap-1">
-          <LogoExpandIcon className="h-8" />
+          <Link href="/">
+            <LogoExpandIcon className="h-8" />
+          </Link>
           <p className="font-light text-sm lg:text-base">Contact Support</p>
         </div>
       </div>

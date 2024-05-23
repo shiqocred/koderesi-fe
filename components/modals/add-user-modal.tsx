@@ -33,6 +33,7 @@ export const AddUserModal = () => {
   };
 
   const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     try {
       await axios.post(
         "https://koderesi.raventech.my.id/api/superadmin/pengguna/store",
@@ -46,8 +47,8 @@ export const AddUserModal = () => {
       );
       toast.success("User added.");
       onClose();
+      cookies.set("new", "added");
       router.refresh();
-      router.push("/admin/users");
     } catch (error) {
       console.log("[ERROR_ADD_USER]:", error);
     }

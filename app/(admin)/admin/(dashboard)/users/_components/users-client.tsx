@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/popover";
 import { useLocalStorage } from "@/hooks/use-localstorage";
 import { useModal } from "@/hooks/use-modal";
-import { formatTanggalWaktu } from "@/lib/utils";
+import { cn, formatTanggalWaktu } from "@/lib/utils";
 import axios from "axios";
 import {
+  Check,
   ChevronDown,
   Edit,
   Eye,
@@ -29,66 +30,10 @@ import {
 } from "lucide-react";
 import { useCookies } from "next-client-cookies";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-
-const mapUsers = [
-  {
-    id: "66074c7cf732095f9b270eb5",
-    nama: "Aaliyah Mueller",
-    wa: "0693-5385-1670",
-    email: "Zakary_Herzog73@example.com",
-    tgl: "apr 29 - 16.56",
-  },
-  {
-    id: "66074c7cf732095f9b270eb6",
-    nama: "Cindy Toy",
-    wa: "0864-9054-7942",
-    email: "Enrique_Schamberger53@example.com",
-    tgl: "feb 17 - 19.46",
-  },
-  {
-    id: "66074c7cf732095f9b270eb7",
-    nama: "Beth Nader",
-    wa: "0493-5969-0078",
-    email: "Elfrieda_Will76@example.com",
-    tgl: "feb 4 - 04.16",
-  },
-  {
-    id: "66074c7cf732095f9b270eb8",
-    nama: "Katelin D'Amore",
-    wa: "0478-4485-5832",
-    email: "Isobel43@example.com",
-    tgl: "mar 8 - 01.21",
-  },
-  {
-    id: "66074c7cf732095f9b270eb9",
-    nama: "Kimberly Corkery",
-    wa: "0807-6384-4762",
-    email: "Hoyt87@example.com",
-    tgl: "jan 29 - 17.07",
-  },
-  {
-    id: "66074c7cf732095f9b270eba",
-    nama: "Lucie Jacobs",
-    wa: "0500-6362-6570",
-    email: "Edward_Zboncak60@example.com",
-    tgl: "jan 27 - 19.06",
-  },
-  {
-    id: "66074c7cf732095f9b270ebb",
-    nama: "Modesto Abernathy",
-    wa: "0597-9301-4274",
-    email: "Van.Ebert@example.com",
-    tgl: "jan 12 - 02.52",
-  },
-  {
-    id: "66074c7cf732095f9b270ebc",
-    nama: "Juanita Kutch",
-    wa: "0503-3471-2596",
-    email: "Delta_Trantow17@example.com",
-    tgl: "jan 11 - 03.53",
-  },
-];
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import qs from "query-string";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export interface UserListProps {
   created_at: string;
@@ -108,7 +53,10 @@ export const UsersClient = () => {
   const { onOpen } = useModal();
   const [sort, setSort] = useState("");
   const [open, setOpen] = useState(false);
-
+  const params = useSearchParams();
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+  const debounceValue = useDebounce(search);
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
   const [userList, setUserList] = useState<UserListProps[]>([
@@ -130,6 +78,41 @@ export const UsersClient = () => {
   const cookies = useCookies();
   const token = cookies.get("accessToken");
 
+  const handleCurrentId = useCallback(
+    (q: string, f: string) => {
+      // setFilter(f);
+      let currentQuery = {};
+
+      if (params) {
+        currentQuery = qs.parse(params.toString());
+      }
+
+      const updateQuery: any = {
+        ...currentQuery,
+        q: q,
+        f: f,
+      };
+
+      if (!q || q === "") {
+        delete updateQuery.q;
+      }
+      if (!f || f === "") {
+        delete updateQuery.f;
+      }
+
+      const url = qs.stringifyUrl(
+        {
+          url: "/admin/users",
+          query: updateQuery,
+        },
+        { skipNull: true }
+      );
+
+      router.push(url);
+    },
+    [params, router]
+  );
+
   const getUserList = async () => {
     try {
       const res = await axios.get(
@@ -148,6 +131,17 @@ export const UsersClient = () => {
   };
 
   useEffect(() => {
+    handleCurrentId(debounceValue, sort);
+  }, [debounceValue, sort]);
+
+  useEffect(() => {
+    if (cookies.get("new") === "added") {
+      getUserList();
+      cookies.remove("new");
+    }
+  }, [cookies.get("new")]);
+
+  useEffect(() => {
     setIsMounted(true);
     getUserList();
   }, []);
@@ -163,6 +157,8 @@ export const UsersClient = () => {
           <Input
             className="pl-10 flex-1 peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
             placeholder="Search user name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <div className="flex gap-2 md:gap-4 w-full md:w-auto">
@@ -176,7 +172,7 @@ export const UsersClient = () => {
                 <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-1 md:w-48" align="start">
+            <PopoverContent className="p-0 w-48" align="start">
               <Command>
                 <CommandList>
                   <CommandGroup>
@@ -186,6 +182,12 @@ export const UsersClient = () => {
                         setOpen(!open);
                       }}
                     >
+                      <Check
+                        className={cn(
+                          "w-4 h-4 mr-2 opacity-0",
+                          sort === "nama" && "opacity-100"
+                        )}
+                      />
                       Filter by name
                     </CommandItem>
                     <CommandItem
@@ -194,6 +196,12 @@ export const UsersClient = () => {
                         setOpen(!open);
                       }}
                     >
+                      <Check
+                        className={cn(
+                          "w-4 h-4 mr-2 opacity-0",
+                          sort === "tanggal" && "opacity-100"
+                        )}
+                      />
                       Filter by tanggal
                     </CommandItem>
                   </CommandGroup>
@@ -231,8 +239,10 @@ export const UsersClient = () => {
                       <div className="w-10 aspect-square md:w-12 md:h-12 overflow-hidden rounded relative flex-none">
                         <Image alt="" src={"/avatar.webp"} fill />
                       </div>
-                      <div className="flex flex-col w-full overflow-hidden text-ellipsis xl:flex-row xl:items-center xl:gap-20">
-                        <p className="text-base font-semibold">{item.name}</p>
+                      <div className="flex flex-col w-full overflow-hidden text-ellipsis xl:flex-row xl:items-center">
+                        <p className="text-base font-semibold xl:w-[250px]">
+                          {item.name}
+                        </p>
                         <p className="md:text-sm font-light lowercase text-ellipsis overflow-hidden w-full xl:w-auto text-xs">
                           {item.email}
                         </p>
@@ -245,7 +255,7 @@ export const UsersClient = () => {
                         {item.phone_number ? (
                           item.phone_number
                         ) : (
-                          <p className="italic text-xs text-gray-700 px-2 bg-gray-200 rounded py-0.5">
+                          <p className="italic text-xs text-gray-700 px-2 bg-gray-200 dark:bg-gray-700/80 dark:text-white rounded py-0.5">
                             WhatsApp not yet
                           </p>
                         )}

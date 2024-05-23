@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { formatRupiah } from "@/lib/utils";
+import { formatNumber, formatRupiah } from "@/lib/utils";
 import { BadgeDollarSign, Package, PackageCheck, Truck } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { ChartClient } from "./components/chart-client";
@@ -77,7 +77,7 @@ const DashboardPage = () => {
       <div className="px-6 w-full md:w-auto flex lg:hidden flex-row items-center justify-between lg:flex-col lg:items-start bg-green-400 h-10 lg:justify-center rounded-md">
         <p className="text-xs lg:text-sm text-gray-900">Kredit anda</p>
         <h3 className="font-bold text-xs lg:text-sm leading-none dark:text-gray-900">
-          3500 kredit
+          {formatNumber(parseFloat(cookies.get("totalCreadits") ?? "0"))} Kredit
         </h3>
       </div>
       <Separator className="dark:bg-white bg-gray-500" />
