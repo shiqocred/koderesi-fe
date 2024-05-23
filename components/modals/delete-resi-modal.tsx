@@ -5,7 +5,7 @@ import { Modal } from "./modal";
 import { useModal } from "@/hooks/use-modal";
 import { Button } from "../ui/button";
 import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
 
@@ -15,6 +15,7 @@ export const DeleteResiModal = () => {
   const cookies = useCookies();
   const token = cookies.get("accessToken");
   const router = useRouter();
+  const pathname = usePathname();
 
   const isModalOpen = isOpen && type === "delete-resi";
 
@@ -22,7 +23,9 @@ export const DeleteResiModal = () => {
     e.preventDefault();
     try {
       await axios.delete(
-        `https://koderesi.raventech.my.id/api/admin/waybill/destroy/${trackId}`,
+        `https://koderesi.raventech.my.id/api/${
+          pathname.includes("admin") ? "superadmin" : "admin"
+        }/waybill/destroy/${trackId}`,
         {
           headers: {
             Accept: "application/json",
@@ -33,7 +36,7 @@ export const DeleteResiModal = () => {
       toast.success("Resi berhasil dihapus");
       onClose();
       router.refresh();
-      router.push("/tracks");
+      router.push(pathname.includes("admin") ? "/admin/tracks" : "/tracks");
     } catch (error) {
       console.log("[ERROR_DELETE_RESI]:", error);
       toast.error("Resi gagal dihapus");

@@ -3,12 +3,15 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useModal } from "@/hooks/use-modal";
+import { formatNumber } from "@/lib/utils";
 import { Plus, Rocket } from "lucide-react";
+import { useCookies } from "next-client-cookies";
 import Link from "next/link";
 import React from "react";
 
 export const TopClientDashboard = () => {
   const { onOpen } = useModal();
+  const cookies = useCookies();
   return (
     <div className="w-full transition-all flex flex-col md:flex-row gap-4 xl:gap-8">
       <Card className="w-full lg:w-2/5 xl:w-full px-4 py-2 xl:px-7 xl:py-4 flex justify-between items-center">
@@ -36,7 +39,8 @@ export const TopClientDashboard = () => {
         <div className="flex items-center">
           <div className="px-6 lg:flex hidden flex-col items-center bg-green-400 h-[50px] justify-center rounded-l-md">
             <h3 className="font-bold text-lg leading-none dark:text-gray-900">
-              3500 kredit
+              {formatNumber(parseFloat(cookies.get("totalCreadits") ?? "0"))}{" "}
+              kredit
             </h3>
             <p className="text-xs text-gray-900">Total kredit anda</p>
           </div>

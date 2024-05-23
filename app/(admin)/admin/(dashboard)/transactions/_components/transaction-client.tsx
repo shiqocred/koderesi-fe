@@ -89,6 +89,7 @@ export const CreditsClient = () => {
   const [isUpdatingBar, setIsUpdatingBar] = useState<boolean>(false);
   const [search, setSearch] = useState(params.get("q") ?? "");
   const searchValue = useDebounce(search);
+  const addedTrasaction = cookies.get("transaction");
 
   const handleCurrentId = useCallback(
     (id: string, q: string) => {
@@ -225,13 +226,17 @@ export const CreditsClient = () => {
   }, [params.get("q")]);
 
   useEffect(() => {
+    if (addedTrasaction === "added") {
+      cookies.remove("transaction");
+      getTransactionList();
+    }
     if (params.get("currentId")) {
       getDetailTransaction(params.get("currentId") ?? "");
       getBarTransaction(params.get("currentId") ?? "", "");
     } else {
       setCurrent({ id: "", name: "", total_tokens: 0, transaction: 0 });
     }
-  }, [params.get("currentId")]);
+  }, [params.get("currentId"), addedTrasaction]);
 
   useEffect(() => {
     getTransactionList();
@@ -346,19 +351,19 @@ export const CreditsClient = () => {
           <Card className="flex flex-col p-2 md:p-4 gap-4 h-full w-full">
             <Card className="md:py-2 md:px-3 px-2 py-1.5 rounded-sm text-sm flex bg-gray-200 dark:border dark:border-gray-700/70 justify-between items-center">
               <div className="w-full">
-                <div className="flex gap-x-4 items-center">
-                  <div className="w-10 h-10 overflow-hidden rounded relative flex-none">
+                <div className="flex gap-2 items-center w-full">
+                  <div className="h-10 md:h-14 aspect-square overflow-hidden rounded relative flex-none">
                     <Image alt="" src={"/avatar.webp"} fill />
                   </div>
-                  <div className="flex flex-col xl:flex-row xl:justify-between w-full gap-1">
-                    <p className="text-sm md:text-base font-semibold capitalize">
+                  <div className="flex flex-col xl:flex-row w-full gap-1">
+                    <p className="text-sm md:text-base font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap flex-1 capitalize">
                       {current.name}
                     </p>
-                    <div className="flex items-center gap-4">
-                      <div className="xl:w-[150px] md:w-[80px] flex-none xl:text-center md:text-sm text-xs">
+                    <div className="flex gap-4 items-center lg:pr-5 lg:gap-6">
+                      <div className="whitespace-nowrap flex-none xl:text-center text-xs lg:text-sm">
                         {formatNumber(current.total_tokens)} Kredit
                       </div>
-                      <div className="xl:w-[150px] md:w-[100px] flex-none xl:text-center md:text-sm text-xs">
+                      <div className="flex-none text-center text-xs lg:text-sm">
                         {formatRupiah(current.transaction)}
                       </div>
                     </div>

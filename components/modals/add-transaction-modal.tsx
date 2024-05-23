@@ -1,7 +1,7 @@
 "use client";
 
 import { z } from "zod";
-import React from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Modal } from "./modal";
 import { useModal } from "@/hooks/use-modal";
 import {
@@ -16,24 +16,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
+import { useCookies } from "next-client-cookies";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { CalendarIcon, Clock } from "lucide-react";
+import { Command, CommandGroup, CommandItem, CommandList } from "../ui/command";
+import { cn, formatTanggal } from "@/lib/utils";
+import { Separator } from "../ui/separator";
+import { Calendar } from "../ui/calendar";
+import { format } from "date-fns";
 
 const formSchema = z.object({
-  metode: z.string().min(1, {
+  methode_payment: z.string().min(1, {
     message: "Metode tidak boleh kosong",
   }),
-  kode: z.string().min(1, {
+  code_transaction: z.string().min(1, {
     message: "Kode transaksi tidak boleh kosong",
   }),
-  nominal: z.string().min(1, {
+  amount_bill: z.string().min(1, {
     message: "Nominal tidak boleh kosong",
   }),
-  kredit: z.string().min(1, {
+  amount_credit: z.string().min(1, {
     message: "Kredit tidak boleh kosong",
   }),
-  tanggal: z.string().min(1, {
+  transaction_date: z.string().min(1, {
     message: "Tanggal tidak boleh kosong",
   }),
-  waktu: z.string().min(1, {
+  transaction_time: z.string().min(1, {
     message: "Waktu tidak boleh kosong",
   }),
 });
@@ -41,34 +52,102 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export const AddTransactionModal = () => {
+  const router = useRouter();
+  const cookies = useCookies();
+  const params = useSearchParams();
+  const token = cookies.get("accessToken");
   const { isOpen, onClose, type } = useModal();
+  const [jam1, setJam1] = useState("0");
+  const [jam2, setJam2] = useState("0");
+  const [menit1, setMenit1] = useState("0");
+  const [menit2, setMenit2] = useState("0");
+  const [detik1, setDetik1] = useState("0");
+  const [detik2, setDetik2] = useState("0");
+  const [selectedDate, setSelectedDate] = useState<Date>();
 
   const isModalOpen = isOpen && type === "add-transaction";
+
+  const handleClose = () => {
+    onClose();
+    setSelectedDate(undefined);
+    setJam1("0");
+    setJam2("0");
+    setMenit1("0");
+    setMenit2("0");
+    setDetik1("0");
+    setDetik2("0");
+  };
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      kode: "",
-      kredit: "",
-      metode: "",
-      nominal: "",
-      tanggal: "",
-      waktu: "",
+      code_transaction: "",
+      amount_credit: "",
+      methode_payment: "",
+      amount_bill: "",
+      transaction_date: "",
+      transaction_time: "",
     },
   });
 
-  const onSubmit = (values: FormSchema) => {
-    console.log(values);
+  const onSubmit = async (values: FormSchema) => {
+    try {
+      const res = await axios.post(
+        `https://koderesi.raventech.my.id/api/superadmin/transaksi/store/${params.get(
+          "currentId"
+        )}`,
+        values,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.data.data) {
+        toast.success("Tambah Transaksi berhasil ditambahkan");
+        handleClose();
+        cookies.set("transaction", "added");
+        router.refresh();
+      } else {
+        console.log("[ERROR_ADD_TRANSACTION]:", res.data.message);
+        toast.error(res.data.message);
+      }
+    } catch (error: any) {
+      console.log("[ERROR_ADD_TRANSACTION]:", error);
+      toast.error("Tambah Transaksi gagal ditambahkan");
+    }
   };
 
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting } = form.formState;
+
+  useEffect(() => {
+    if (parseFloat(jam1) === 2 && parseFloat(jam2) > 3) {
+      setJam1("2");
+      setJam2("3");
+    }
+    form.setValue(
+      "transaction_time",
+      `${jam1 + jam2}:${menit1 + menit2}:${detik1 + detik2}`
+    );
+  }, [jam1, jam2, menit1, menit2, detik1, detik2]);
+
+  useEffect(() => {
+    form.setValue(
+      "transaction_date",
+      format(
+        selectedDate ? selectedDate.toString() : new Date().toString(),
+        "yyyy-MM-dd"
+      )
+    );
+  }, [selectedDate]);
 
   return (
     <Modal
       title="Tambah Transaksi Baru"
       description="Tambah transaksi pengguna disini"
       isOpen={isModalOpen}
-      onClose={onClose}
+      onClose={handleClose}
     >
       <Form {...form}>
         <form
@@ -78,7 +157,7 @@ export const AddTransactionModal = () => {
           <div className="flex gap-2 md:gap-4 w-full">
             <FormField
               control={form.control}
-              name="metode"
+              name="methode_payment"
               render={({ field }) => (
                 <FormItem className="w-full gap-1 flex flex-col space-y-0">
                   <FormLabel>Metode</FormLabel>
@@ -95,7 +174,7 @@ export const AddTransactionModal = () => {
             />
             <FormField
               control={form.control}
-              name="kode"
+              name="code_transaction"
               render={({ field }) => (
                 <FormItem className="w-full gap-1 flex flex-col space-y-0">
                   <FormLabel>Kode Transaksi</FormLabel>
@@ -113,7 +192,7 @@ export const AddTransactionModal = () => {
           </div>
           <FormField
             control={form.control}
-            name="nominal"
+            name="amount_bill"
             render={({ field }) => (
               <FormItem className="w-full gap-1 flex flex-col space-y-0">
                 <FormLabel>Nominal</FormLabel>
@@ -130,7 +209,7 @@ export const AddTransactionModal = () => {
           />
           <FormField
             control={form.control}
-            name="kredit"
+            name="amount_credit"
             render={({ field }) => (
               <FormItem className="w-full gap-1 flex flex-col space-y-0">
                 <FormLabel>Kredit</FormLabel>
@@ -148,16 +227,30 @@ export const AddTransactionModal = () => {
           <div className="flex gap-x-4 w-full">
             <FormField
               control={form.control}
-              name="tanggal"
+              name="transaction_date"
               render={({ field }) => (
                 <FormItem className="w-full gap-1 flex flex-col space-y-0">
                   <FormLabel>Tanggal</FormLabel>
                   <FormControl>
-                    <Input
-                      className="focus-visible:outline-none w-full focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
-                      {...field}
-                      disabled={isSubmitting}
-                    />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button className="justify-between bg-transparent hover:bg-transparent text-black border dark:text-white">
+                          {field.value}
+                          <CalendarIcon className="w-4 h-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="flex px-0 py-2 gap-0 w-auto"
+                        align="start"
+                      >
+                        <Calendar
+                          selected={selectedDate}
+                          initialFocus
+                          onSelect={setSelectedDate}
+                          mode="single"
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -165,16 +258,161 @@ export const AddTransactionModal = () => {
             />
             <FormField
               control={form.control}
-              name="waktu"
+              name="transaction_time"
               render={({ field }) => (
-                <FormItem className="w-full gap-1 md:gap-2 flex flex-col space-y-0">
+                <FormItem className="w-full gap-1 flex flex-col space-y-0">
                   <FormLabel>Waktu</FormLabel>
                   <FormControl>
-                    <Input
-                      className="focus-visible:outline-none w-full focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
-                      {...field}
-                      disabled={isSubmitting}
-                    />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button className="justify-between bg-transparent hover:bg-transparent text-black border dark:text-white border-green-200">
+                          {field.value}
+                          <Clock className="w-4 h-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="flex p-0 gap-0 w-[230px]"
+                        align="start"
+                      >
+                        <Command>
+                          <CommandGroup>
+                            <CommandList className="w-10 px-2 h-[280px] overflow-y-scroll">
+                              {Array.from({ length: 3 }, (_, index) => (
+                                <CommandItem
+                                  className={cn(
+                                    "w-8 h-7 text-sm p-0 flex items-center justify-center tracking-wider",
+                                    parseFloat(jam1) === index
+                                      ? "bg-gray-200 aria-selected:bg-gray-300 dark:bg-gray-700 dark:aria-selected:bg-gray-600"
+                                      : ""
+                                  )}
+                                  key={index}
+                                  onSelect={() => setJam1(index.toString())}
+                                  value={index.toString()}
+                                >
+                                  {index}
+                                </CommandItem>
+                              ))}
+                            </CommandList>
+                          </CommandGroup>
+                        </Command>
+                        <Command>
+                          <CommandGroup>
+                            <CommandList className="w-10 px-2 h-[280px] overflow-y-scroll">
+                              {Array.from(
+                                { length: parseFloat(jam1) === 2 ? 4 : 10 },
+                                (_, index) => (
+                                  <CommandItem
+                                    className={cn(
+                                      "w-8 h-7 text-sm p-0 flex items-center justify-center tracking-wider",
+                                      parseFloat(jam2) === index
+                                        ? "bg-gray-200 aria-selected:bg-gray-300 dark:bg-gray-700 dark:aria-selected:bg-gray-600"
+                                        : ""
+                                    )}
+                                    key={index}
+                                    onSelect={() => setJam2(index.toString())}
+                                    value={index.toString()}
+                                  >
+                                    {index}
+                                  </CommandItem>
+                                )
+                              )}
+                            </CommandList>
+                          </CommandGroup>
+                        </Command>
+                        <Separator
+                          orientation="vertical"
+                          className="bg-gray-500 h-[280px] mx-1"
+                        />
+                        <Command>
+                          <CommandGroup>
+                            <CommandList className="w-10 px-2 h-[280px] overflow-y-scroll">
+                              {Array.from({ length: 6 }, (_, index) => (
+                                <CommandItem
+                                  className={cn(
+                                    "w-8 h-7 text-sm p-0 flex items-center justify-center tracking-wider",
+                                    parseFloat(menit1) === index
+                                      ? "bg-gray-200 aria-selected:bg-gray-300 dark:bg-gray-700 dark:aria-selected:bg-gray-600"
+                                      : ""
+                                  )}
+                                  key={index}
+                                  onSelect={() => setMenit1(index.toString())}
+                                  value={index.toString()}
+                                >
+                                  {index}
+                                </CommandItem>
+                              ))}
+                            </CommandList>
+                          </CommandGroup>
+                        </Command>
+                        <Command>
+                          <CommandGroup>
+                            <CommandList className="w-10 px-2 h-[280px] overflow-y-scroll">
+                              {Array.from({ length: 10 }, (_, index) => (
+                                <CommandItem
+                                  className={cn(
+                                    "w-8 h-7 text-sm p-0 flex items-center justify-center tracking-wider",
+                                    parseFloat(menit2) === index
+                                      ? "bg-gray-200 aria-selected:bg-gray-300 dark:bg-gray-700 dark:aria-selected:bg-gray-600"
+                                      : ""
+                                  )}
+                                  key={index}
+                                  onSelect={() => setMenit2(index.toString())}
+                                  value={index.toString()}
+                                >
+                                  {index}
+                                </CommandItem>
+                              ))}
+                            </CommandList>
+                          </CommandGroup>
+                        </Command>
+                        <Separator
+                          orientation="vertical"
+                          className="bg-gray-500 h-[280px] mx-1"
+                        />
+                        <Command>
+                          <CommandGroup>
+                            <CommandList className="w-10 px-2 h-[280px] overflow-y-scroll">
+                              {Array.from({ length: 6 }, (_, index) => (
+                                <CommandItem
+                                  className={cn(
+                                    "w-8 h-7 text-sm p-0 flex items-center justify-center tracking-wider",
+                                    parseFloat(detik1) === index
+                                      ? "bg-gray-200 aria-selected:bg-gray-300 dark:bg-gray-700 dark:aria-selected:bg-gray-600"
+                                      : ""
+                                  )}
+                                  key={index}
+                                  onSelect={() => setDetik1(index.toString())}
+                                  value={index.toString()}
+                                >
+                                  {index}
+                                </CommandItem>
+                              ))}
+                            </CommandList>
+                          </CommandGroup>
+                        </Command>
+                        <Command>
+                          <CommandGroup>
+                            <CommandList className="w-10 px-2 h-[280px] overflow-y-scroll">
+                              {Array.from({ length: 10 }, (_, index) => (
+                                <CommandItem
+                                  className={cn(
+                                    "w-8 h-7 text-sm p-0 flex items-center justify-center tracking-wider",
+                                    parseFloat(detik2) === index
+                                      ? "bg-gray-200 aria-selected:bg-gray-300 dark:bg-gray-700 dark:aria-selected:bg-gray-600"
+                                      : ""
+                                  )}
+                                  key={index}
+                                  onSelect={() => setDetik2(index.toString())}
+                                  value={index.toString()}
+                                >
+                                  {index}
+                                </CommandItem>
+                              ))}
+                            </CommandList>
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -185,7 +423,7 @@ export const AddTransactionModal = () => {
             <Button
               className="w-full bg-green-400 hover:bg-green-500 text-gray-900"
               type="submit"
-              disabled={!isValid || isSubmitting}
+              disabled={isSubmitting}
             >
               Tambah
             </Button>

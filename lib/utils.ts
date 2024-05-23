@@ -21,12 +21,11 @@ export const formatWaktu = (tanggal: string) => {
   );
 };
 export const formatTanggal = (tanggal: string) => {
-  return (
-    !isNaN(new Date(tanggal).getTime()) &&
-    formatDateFns(new Date(tanggal), "dd MMM yyyy", {
-      locale: indonesia,
-    })
-  );
+  return !isNaN(new Date(tanggal).getTime())
+    ? formatDateFns(new Date(tanggal), "dd MMM yyyy", {
+        locale: indonesia,
+      }).toString()
+    : "";
 };
 export const formatTanggalWaktu = (tanggal: string) => {
   return (

@@ -77,7 +77,7 @@ export const DetailClient = () => {
 
   useEffect(() => {
     getResiDetail();
-  });
+  }, []);
   return (
     <>
       <div className="flex justify-between pb-4 border-b items-end md:items-center">
