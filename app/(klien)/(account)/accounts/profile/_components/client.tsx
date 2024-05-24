@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modal";
 import { Edit, Save, Trash2 } from "lucide-react";
 import Image from "next/image";
-import React, { MouseEvent, useState } from "react";
+import React, { useState } from "react";
 
 export const Client = () => {
   const { onOpen } = useModal();
