@@ -69,7 +69,7 @@ export const Sidebar = ({ isAdmin = false }: SidebarProps) => {
           />
         </div>
         <div className="w-full">
-          <MenuAkun isExpand={isExpand} isAdmin={isAdmin} />
+          <MenuAkun isExpand={isExpand} isAdmin={isAdmin} pathname={pathname} />
         </div>
       </motion.div>
     </MotionConfig>

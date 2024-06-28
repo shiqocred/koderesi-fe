@@ -1,19 +1,23 @@
 "use client";
 
 import AccountModal from "@/components/modals/account-modal";
+import { Separator } from "@/components/ui/separator";
 import { useModal } from "@/hooks/use-modal";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Moon, MoreHorizontal, Sun } from "lucide-react";
+import { Headset, Moon, MoreHorizontal, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ButtonSidebar } from "../button-sidebar";
 
 const MenuAkun = ({
   isExpand,
   isAdmin,
+  pathname,
 }: {
+  pathname: string;
   isExpand: boolean;
   isAdmin?: boolean;
 }) => {
@@ -79,7 +83,14 @@ const MenuAkun = ({
           {theme}
         </motion.p>
       </motion.button>
-      {/* sasda */}
+      <Separator className="bg-gray-500 dark:bg-white" />
+      <ButtonSidebar
+        label="Contact Support"
+        icon={<Headset className="w-5 h-5" />}
+        href={isAdmin ? "/admin/contacts" : "/contacts"}
+        active={pathname.startsWith(!isAdmin ? "/contacts" : "/admin/contacts")}
+        expand={isExpand}
+      />
       <Link
         href={isAdmin ? "/admin/settings" : "/settings"}
         className="relative flex justify-center w-full group"

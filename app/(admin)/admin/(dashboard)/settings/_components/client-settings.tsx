@@ -76,15 +76,15 @@ export const ClientSettings = () => {
   }
   return (
     <div className="flex h-full gap-4 md:gap-6 flex-col w-full max-w-7xl mx-auto">
-      <Card className="p-5 flex w-full gap-4 bg-transparent border-gray-500 border">
+      <Card className="md:p-5 p-3 flex w-full gap-4 bg-transparent border-gray-500 border flex-col lg:flex-row">
         <div className="flex w-full flex-col">
           <h2 className="text-3xl font-semibold">Personalisasi</h2>
           <p className="font-light">Konfigurasi data pribadi anda.</p>
         </div>
         <div className="flex flex-col gap-4 w-full">
-          <Card className="p-5 flex flex-col gap-4 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+          <Card className="md:p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border p-3">
             <h5 className="font-medium text-lg">Atur Foto</h5>
-            <div className="flex items-start justify-start gap-6">
+            <div className="flex items-start justify-start gap-6 flex-col md:flex-row">
               <div className="relative aspect-square overflow-hidden rounded-md w-20">
                 <Image
                   src={"/avatar.webp"}
@@ -94,14 +94,14 @@ export const ClientSettings = () => {
                 />
               </div>
               <div className="flex-col flex gap-4">
-                <div className="flex items-center gap-4">
-                  <Button className="bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 border border-black dark:border-gray-500 text-black dark:text-white">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <Button className="bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 border border-black dark:border-gray-500 text-black dark:text-white w-full md:w-auto">
                     <Upload className="h-4 w-4 mr-2" />
                     Upload
                   </Button>
-                  <Button className="bg-transparent hover:bg-red-50 dark:hover:bg-red-500/10 border border-red-500 dark:border-red-500/50 text-red-500">
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Hapus
+                  <Button className="bg-transparent hover:bg-red-50 dark:hover:bg-red-500/10 border border-red-500 dark:border-red-500/50 text-red-500 w-10 md:w-auto p-0 md:px-3 md:py-2 flex-none">
+                    <Trash2 className="h-4 w-4 md:mr-2" />
+                    <p className="hidden md:flex">Hapus</p>
                   </Button>
                 </div>
                 <p className="text-xs font-light">
@@ -110,7 +110,7 @@ export const ClientSettings = () => {
               </div>
             </div>
           </Card>
-          <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+          <Card className="md:p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border p-3">
             <div className="flex items-center justify-between">
               <h5 className="font-medium text-lg">Atur Nama</h5>
               {isNameEdit ? (
@@ -193,7 +193,7 @@ export const ClientSettings = () => {
                   />
                 </div>
 
-                <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                <div className="w-full justify-between flex dark:bg-gray-800 rounded md:px-3 py-1 md:items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 px-2">
                   <p className="text-sm dark:text-gray-300">
                     Periksa terlebih dahulu sebelum konfirmasi.
                   </p>
@@ -209,7 +209,7 @@ export const ClientSettings = () => {
               </form>
             </Form>
           </Card>
-          <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+          <Card className="md:p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border p-3">
             <div className="flex items-center justify-between">
               <h5 className="font-medium text-lg">
                 Atur Email dan No. WhatsApp
@@ -294,7 +294,7 @@ export const ClientSettings = () => {
                   />
                 </div>
 
-                <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                <div className="w-full justify-between flex dark:bg-gray-800 rounded md:px-3 py-1 md:items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 px-2">
                   <p className="text-sm dark:text-gray-300">
                     Periksa terlebih dahulu sebelum konfirmasi.
                   </p>
@@ -310,7 +310,7 @@ export const ClientSettings = () => {
               </form>
             </Form>
           </Card>
-          <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+          <Card className="md:p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border p-3">
             <div className="flex items-center justify-between">
               <h5 className="font-medium text-lg">Atur Password Baru</h5>
               {isPasswordEdit ? (
@@ -480,7 +480,7 @@ export const ClientSettings = () => {
                   />
                 </div>
 
-                <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                <div className="w-full justify-between flex dark:bg-gray-800 rounded md:px-3 py-1 md:items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 px-2">
                   <p className="text-sm dark:text-gray-300">
                     Periksa terlebih dahulu sebelum konfirmasi.
                   </p>
@@ -496,7 +496,7 @@ export const ClientSettings = () => {
               </form>
             </Form>
           </Card>
-          <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-red-300 dark:border-red-700 border bg-red-50 dark:bg-red-800/20">
+          <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-red-300 dark:border-red-700 border bg-red-50 dark:bg-red-800/20">
             <div className="flex items-center justify-between">
               <h5 className="font-medium text-lg">Hapus Akun</h5>
             </div>
@@ -505,7 +505,7 @@ export const ClientSettings = () => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="w-full gap-4 flex flex-col"
               >
-                <div className="w-full justify-between flex dark:bg-red-800/60 rounded px-3 py-1 items-center bg-red-100">
+                <div className="w-full justify-between flex dark:bg-red-800/60 rounded md:px-3 px-2 py-1 items-center bg-red-100 flex-col gap-3 md:gap-0">
                   <p className="text-sm dark:text-red-200">
                     Tindakan bersifat permanen. Tidak dapat diulang
                   </p>

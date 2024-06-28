@@ -208,15 +208,24 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
               </CommandGroup>
             ) : (
               <CommandGroup>
-                <div className="flex px-2 py-2 select-none pointer-events-none">
-                  <div className="h-10 w-10 relative overflow-hidden rounded-md mr-4">
-                    <Image src="/avatar.webp" fill alt="" />
-                  </div>
-                  <div>
-                    <h5 className="font-semibold">{detailAuth?.name}</h5>
-                    <p className="text-xs font-light">{detailAuth?.email}</p>
-                  </div>
-                </div>
+                <Link
+                  href={
+                    pathname.includes("admin") ? "/admin/settings" : "/settings"
+                  }
+                >
+                  <CommandItem
+                    className="flex px-2 py-2 select-none pointer-events-none"
+                    onSelect={() => setIsOpen(false)}
+                  >
+                    <div className="h-10 w-10 relative overflow-hidden rounded-md mr-4">
+                      <Image src="/avatar.webp" fill alt="" />
+                    </div>
+                    <div>
+                      <h5 className="font-semibold">{detailAuth?.name}</h5>
+                      <p className="text-xs font-light">{detailAuth?.email}</p>
+                    </div>
+                  </CommandItem>
+                </Link>
                 {!pathname.includes("admin") && (
                   <>
                     <CommandSeparator className="bg-gray-500 dark:bg-gray-400" />
@@ -231,29 +240,6 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
                     </div>
                   </>
                 )}
-                <CommandSeparator className="bg-gray-500 dark:bg-gray-400" />
-                <Link
-                  href={
-                    pathname.includes("admin")
-                      ? "/admin/accounts/profile"
-                      : "/accounts/profile"
-                  }
-                >
-                  <CommandItem>
-                    <User className="w-4 h-4 mr-2" />
-                    Profile
-                  </CommandItem>
-                </Link>
-                <Link
-                  href={
-                    pathname.includes("admin") ? "/admin/contacts" : "/contacts"
-                  }
-                >
-                  <CommandItem>
-                    <Headset className="w-4 h-4 mr-2" />
-                    Contact Support
-                  </CommandItem>
-                </Link>
                 <CommandSeparator className="bg-gray-500 dark:bg-gray-400" />
                 <CommandItem
                   className="text-red-500 aria-selected:text-red-500"

@@ -129,6 +129,15 @@ export const IsiNavbar = ({
                   expand
                   onClick={() => onOpenChange(false)}
                 />
+                <Separator className="bg-gray-500 dark:bg-white/50" />
+                <ButtonSidebar
+                  label="Contact Service"
+                  icon={<Headset className="w-5 h-5" />}
+                  href="/admin/contacts"
+                  active={pathname.startsWith("/admin/contacts")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
               </div>
             ) : (
               <div className="py-8 gap-4 flex flex-col">
@@ -180,6 +189,15 @@ export const IsiNavbar = ({
                   icon={<HeartHandshake className="w-5 h-5" />}
                   href="/affiliate"
                   active={pathname.startsWith("/affiliate")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <Separator className="bg-gray-500 dark:bg-white/50" />
+                <ButtonSidebar
+                  label="Contact Service"
+                  icon={<Headset className="w-5 h-5" />}
+                  href="/contacts"
+                  active={pathname.startsWith("/contacts")}
                   expand
                   onClick={() => onOpenChange(false)}
                 />

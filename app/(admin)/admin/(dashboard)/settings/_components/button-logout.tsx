@@ -40,9 +40,13 @@ export const ButtonLogout = () => {
     return;
   }
   return (
-    <Button variant={"destructive"} onClick={handleLogOut}>
-      <LogOut className="w-4 h-4 mr-2" />
-      Logout
+    <Button
+      variant={"destructive"}
+      onClick={handleLogOut}
+      className="md:w-auto w-10 p-0 md:px-3 md:py-2"
+    >
+      <LogOut className="w-4 h-4 md:mr-2" />
+      <p className="hidden md:flex">Logout</p>
     </Button>
   );
 };

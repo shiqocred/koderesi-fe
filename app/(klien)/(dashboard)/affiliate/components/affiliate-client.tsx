@@ -34,19 +34,17 @@ import {
   X,
   Youtube,
 } from "lucide-react";
-import React, { FormEvent, MouseEvent, useState } from "react";
+import React, { FormEvent, MouseEvent, useEffect, useState } from "react";
 import { ChartAffiliateClient } from "./chart-affiliate-client";
-
-interface FormFieldProps {
-  label: string;
-  value: string;
-}
+import { useCookies } from "next-client-cookies";
+import axios from "axios";
+import { toast } from "sonner";
 
 enum AffiliateProgress {
-  STEP1,
-  STEP2,
-  STEP3,
-  STEP4,
+  FALSE,
+  WAITING,
+  REJECTED,
+  APPROVED,
 }
 
 const affiliateMap = [
@@ -77,36 +75,69 @@ const affiliateMap = [
 ];
 
 export const AffiliateClient = () => {
-  const [formFields, setFormFields] = useState<FormFieldProps[]>([
-    { label: "Field 1", value: "" },
-  ]);
+  const [formFields, setFormFields] = useState<string[]>([]);
   const [isInstagram, setIsInstagram] = useState<boolean>(false);
   const [isFacebook, setIsFacebook] = useState<boolean>(false);
   const [isTwitter, setIsTwitter] = useState<boolean>(false);
   const [isYoutube, setIsYoutube] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [step, setStep] = useState<number>(0);
+  const [step, setStep] = useState<string>("false");
 
-  const [dropdown, setDropdown] = useState<string>("Pilih opsi...");
-  const [socialLink, setSocialLink] = useState({
-    instagram: "",
-    facebook: "",
-    twitter: "",
-    youtube: "",
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
+
+  const [input, setInput] = useState({
+    type_promot: "",
+    affiliate_webs: formFields,
+    ig_link: "",
+    fb_link: "",
+    twt_link: "",
+    yt_link: "",
   });
 
-  const handleSubmit = (e: FormEvent) => {
+  const getData = async () => {
+    try {
+      const res = await axios.get(
+        `https://koderesi.raventech.my.id/api/admin/affiliate`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setStep(
+        res.data.data.status ? (res.data.data.status as string) : "false"
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.log("[ERROR_GET_DATA]:", error);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setStep(1);
+    try {
+      await axios.post(
+        `https://koderesi.raventech.my.id/api/admin/affiliate/store`,
+        input,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Data berhasil diajukan");
+      setStep("waiting");
+    } catch (error) {
+      console.log("[ERROR_SUBMIT_DATA]:", error);
+    }
   };
 
   const addFormField = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const newFormField: FormFieldProps = {
-      label: `Field ${formFields.length + 1}`,
-      value: "",
-    };
-    setFormFields([...formFields, newFormField]);
+    setFormFields([...formFields, ""]);
   };
 
   const removeFormField = (index: number) => {
@@ -117,17 +148,12 @@ export const AffiliateClient = () => {
 
   const handleInputChange = (index: number, value: string) => {
     const updatedFormFields = [...formFields];
-    updatedFormFields[index].value = value;
+    updatedFormFields[index] = value;
     setFormFields(updatedFormFields);
   };
 
   const onNextStep = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (step < 3 || step === 0) {
-      setStep((prev) => prev + 1);
-    } else if (step === 3) {
-      setStep(0);
-    }
   };
   const [mth, setMth] = useState<number>(0);
 
@@ -189,7 +215,14 @@ export const AffiliateClient = () => {
     }
   };
 
-  if (AffiliateProgress.STEP2 === step) {
+  useEffect(() => {
+    getData();
+  }, [step]);
+  useEffect(() => {
+    getData();
+  }, []);
+
+  if (step.toLowerCase() === "waiting") {
     return (
       <div className="flex flex-col gap-y-2">
         <Alert className="bg-yellow-300 text-black">
@@ -198,16 +231,10 @@ export const AffiliateClient = () => {
             Pengajuan anda sedang kami tinjau
           </AlertTitle>
         </Alert>
-        <Button
-          onClick={onNextStep}
-          className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-56"
-        >
-          Ajukan Affiliate Partner
-        </Button>
       </div>
     );
   }
-  if (AffiliateProgress.STEP3 === step) {
+  if (step.toLowerCase() === "rejected") {
     return (
       <div className="flex flex-col gap-y-2">
         <Alert>
@@ -220,16 +247,10 @@ export const AffiliateClient = () => {
           <X className="w-4 h-4 dark:text-black" />
           <AlertTitle className="m-0">Pengajuan anda ditolak</AlertTitle>
         </Alert>
-        <Button
-          onClick={onNextStep}
-          className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-56"
-        >
-          Ajukan Affiliate Partner
-        </Button>
       </div>
     );
   }
-  if (AffiliateProgress.STEP4 === step) {
+  if (step.toLowerCase() === "approved") {
     return (
       <div className="flex flex-col md:flex-row gap-y-2 md:gap-x-4 w-full">
         <div className="w-full">
@@ -343,7 +364,7 @@ export const AffiliateClient = () => {
                 className="flex justify-between items-center w-full dark:bg-gray-800 dark:hover:bg-gray-700"
                 variant={"outline"}
               >
-                {dropdown}
+                {input.type_promot === "" ? "Pilih Opsi..." : input.type_promot}
                 <ChevronDown className="w-4 h-4" />
               </Button>
             </PopoverTrigger>
@@ -353,27 +374,38 @@ export const AffiliateClient = () => {
                   <CommandGroup>
                     <CommandItem
                       onSelect={() => {
-                        setDropdown("blablabla");
+                        setInput((prev) => ({
+                          ...prev,
+                          type_promot: "Saya mempromosikan menggunakan Website",
+                        }));
                         setIsOpen(false);
                       }}
                     >
-                      blablabla
+                      Saya mempromosikan menggunakan Website
                     </CommandItem>
                     <CommandItem
                       onSelect={() => {
-                        setDropdown("busalsa");
+                        setInput((prev) => ({
+                          ...prev,
+                          type_promot:
+                            "Saya mempromosikan menggunakan Sosial Media",
+                        }));
                         setIsOpen(false);
                       }}
                     >
-                      busalsa
+                      Saya mempromosikan menggunakan Sosial Media
                     </CommandItem>
                     <CommandItem
                       onSelect={() => {
-                        setDropdown("bdsaidja");
+                        setInput((prev) => ({
+                          ...prev,
+                          type_promot:
+                            "Saya mempromosikan menggunakan Advertising",
+                        }));
                         setIsOpen(false);
                       }}
                     >
-                      bdsaidja
+                      Saya mempromosikan menggunakan Advertising
                     </CommandItem>
                   </CommandGroup>
                 </CommandList>
@@ -385,7 +417,7 @@ export const AffiliateClient = () => {
           <h5>Website yang ingin anda gunakan?</h5>
           <div className="flex flex-col space-y-4">
             {formFields.map((field, index) => (
-              <div key={field.label} className="flex space-x-4">
+              <div key={index} className="flex space-x-4">
                 {formFields.length <= 1 ? (
                   <div className="w-10 h-10 flex-none flex justify-center items-center bg-gray-200 dark:bg-gray-700 rounded-md">
                     <Link className="w-5 h-5" />
@@ -403,7 +435,7 @@ export const AffiliateClient = () => {
                 )}
                 <div className="w-full relative">
                   <Input
-                    value={field.value}
+                    value={field}
                     onChange={(e) => handleInputChange(index, e.target.value)}
                     className="w-full focus-visible:ring-offset-0 focus-visible:ring-0 focus-visible:border-gray-300 dark:focus-visible:border-gray-700 pl-20 dark:bg-gray-800 dark:hover:border-gray-700 hover:border-gray-300"
                   />
@@ -438,11 +470,11 @@ export const AffiliateClient = () => {
                 </Button>
                 <div className="w-full relative">
                   <Input
-                    value={socialLink.instagram}
+                    value={input.ig_link}
                     onChange={(e) =>
-                      setSocialLink((prev) => ({
+                      setInput((prev) => ({
                         ...prev,
-                        instagram: e.target.value,
+                        ig_link: e.target.value,
                       }))
                     }
                     className="w-full focus-visible:ring-offset-0 focus-visible:ring-0 focus-visible:border-gray-300 dark:focus-visible:border-gray-700 pl-12 dark:bg-gray-800 dark:hover:border-gray-700 hover:border-gray-300"
@@ -465,11 +497,11 @@ export const AffiliateClient = () => {
                 </Button>
                 <div className="w-full relative">
                   <Input
-                    value={socialLink.facebook}
+                    value={input.fb_link}
                     onChange={(e) =>
-                      setSocialLink((prev) => ({
+                      setInput((prev) => ({
                         ...prev,
-                        facebook: e.target.value,
+                        fb_link: e.target.value,
                       }))
                     }
                     className="w-full focus-visible:ring-offset-0 focus-visible:ring-0 focus-visible:border-gray-300 dark:focus-visible:border-gray-700 pl-12 dark:bg-gray-800 dark:hover:border-gray-700 hover:border-gray-300"
@@ -492,11 +524,11 @@ export const AffiliateClient = () => {
                 </Button>
                 <div className="w-full relative">
                   <Input
-                    value={socialLink.twitter}
+                    value={input.twt_link}
                     onChange={(e) =>
-                      setSocialLink((prev) => ({
+                      setInput((prev) => ({
                         ...prev,
-                        twitter: e.target.value,
+                        twt_link: e.target.value,
                       }))
                     }
                     className="w-full focus-visible:ring-offset-0 focus-visible:ring-0 focus-visible:border-gray-300 dark:focus-visible:border-gray-700 pl-12 dark:bg-gray-800 dark:hover:border-gray-700 hover:border-gray-300"
@@ -519,11 +551,11 @@ export const AffiliateClient = () => {
                 </Button>
                 <div className="w-full relative">
                   <Input
-                    value={socialLink.youtube}
+                    value={input.yt_link}
                     onChange={(e) =>
-                      setSocialLink((prev) => ({
+                      setInput((prev) => ({
                         ...prev,
-                        youtube: e.target.value,
+                        yt_link: e.target.value,
                       }))
                     }
                     className="w-full focus-visible:ring-offset-0 focus-visible:ring-0 focus-visible:border-gray-300 dark:focus-visible:border-gray-700 pl-12 dark:bg-gray-800 dark:hover:border-gray-700 hover:border-gray-300"
