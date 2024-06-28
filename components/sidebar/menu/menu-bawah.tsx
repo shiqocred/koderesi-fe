@@ -1,6 +1,7 @@
 import React from "react";
 import { ButtonSidebar } from "../button-sidebar";
 import { AffiliateIcon, RocketIcon } from "@/components/svg";
+import { Headset } from "lucide-react";
 
 interface MenuBawahProps {
   isExpand: boolean;
@@ -27,6 +28,13 @@ const MenuBawah = ({ pathname, isExpand, isAdmin }: MenuBawahProps) => {
         active={pathname.startsWith(
           !isAdmin ? "/affiliate" : "/admin/affiliate"
         )}
+        expand={isExpand}
+      />
+      <ButtonSidebar
+        label="Contact Support"
+        icon={<Headset className="w-5 h-5" />}
+        href={isAdmin ? "/admin/contacts" : "/contacts"}
+        active={pathname.startsWith(!isAdmin ? "/contacts" : "/admin/contacts")}
         expand={isExpand}
       />
     </div>

@@ -11,7 +11,7 @@ import {
   Tooltip as ChartTooltip,
   Legend,
 } from "recharts";
-import { selectedBarDataProps } from "./credits-client";
+import { SelectedBarDataProps } from "./credits-client";
 
 const ContentTooltip = ({
   active,
@@ -60,7 +60,7 @@ export function ChartCredit({
   initialData,
 }: {
   month: string;
-  initialData: selectedBarDataProps[];
+  initialData: SelectedBarDataProps[];
 }) {
   const dataMap = Array.from({ length: 31 }, (_, index) => {
     const existing = initialData.find(

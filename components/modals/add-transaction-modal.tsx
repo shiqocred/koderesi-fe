@@ -35,6 +35,9 @@ const formSchema = z.object({
   code_transaction: z.string().min(1, {
     message: "Kode transaksi tidak boleh kosong",
   }),
+  channel: z.string().min(1, {
+    message: "Channel tidak boleh kosong",
+  }),
   amount_bill: z.string().min(1, {
     message: "Nominal tidak boleh kosong",
   }),
@@ -84,6 +87,7 @@ export const AddTransactionModal = () => {
       code_transaction: "",
       amount_credit: "",
       methode_payment: "",
+      channel: "",
       amount_bill: "",
       transaction_date: "",
       transaction_time: "",
@@ -152,18 +156,27 @@ export const AddTransactionModal = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-2 md:gap-4 w-full"
+          className="flex flex-col gap-6 w-full"
         >
-          <div className="flex gap-2 md:gap-4 w-full">
+          <div className="flex gap-2 md:gap-4 w-full mt-5">
             <FormField
               control={form.control}
               name="methode_payment"
               render={({ field }) => (
-                <FormItem className="w-full gap-1 flex flex-col space-y-0">
-                  <FormLabel>Metode</FormLabel>
+                <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
+                  <FormLabel
+                    className={cn(
+                      "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                      field.value.length === 0
+                        ? "translate-y-3.5 left-3 font-normal"
+                        : "-translate-y-3 left-0 font-semibold"
+                    )}
+                  >
+                    Metode
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      className="focus-visible:outline-none w-full focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+                      className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
                       {...field}
                       disabled={isSubmitting}
                     />
@@ -176,11 +189,20 @@ export const AddTransactionModal = () => {
               control={form.control}
               name="code_transaction"
               render={({ field }) => (
-                <FormItem className="w-full gap-1 flex flex-col space-y-0">
-                  <FormLabel>Kode Transaksi</FormLabel>
+                <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
+                  <FormLabel
+                    className={cn(
+                      "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                      field.value.length === 0
+                        ? "translate-y-3.5 left-3 font-normal"
+                        : "-translate-y-3 left-0 font-semibold"
+                    )}
+                  >
+                    Kode Transaksi
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      className="focus-visible:outline-none w-full focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+                      className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
                       {...field}
                       disabled={isSubmitting}
                     />
@@ -192,13 +214,48 @@ export const AddTransactionModal = () => {
           </div>
           <FormField
             control={form.control}
-            name="amount_bill"
+            name="channel"
             render={({ field }) => (
-              <FormItem className="w-full gap-1 flex flex-col space-y-0">
-                <FormLabel>Nominal</FormLabel>
+              <FormItem className="space-y-0.5 md:space-y-1 relative">
+                <FormLabel
+                  className={cn(
+                    "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                    field.value.length === 0
+                      ? "translate-y-3.5 left-3 font-normal"
+                      : "-translate-y-3 left-0 font-semibold"
+                  )}
+                >
+                  Channel Pembayaran
+                </FormLabel>
                 <FormControl>
                   <Input
-                    className="focus-visible:outline-none w-full focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
+                    {...field}
+                    disabled={isSubmitting}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="amount_bill"
+            render={({ field }) => (
+              <FormItem className="space-y-0.5 md:space-y-1 relative">
+                <FormLabel
+                  className={cn(
+                    "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                    field.value.length === 0
+                      ? "translate-y-3.5 left-3 font-normal"
+                      : "-translate-y-3 left-0 font-semibold"
+                  )}
+                >
+                  Nominal
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
                     {...field}
                     disabled={isSubmitting}
                   />
@@ -211,11 +268,20 @@ export const AddTransactionModal = () => {
             control={form.control}
             name="amount_credit"
             render={({ field }) => (
-              <FormItem className="w-full gap-1 flex flex-col space-y-0">
-                <FormLabel>Kredit</FormLabel>
+              <FormItem className="space-y-0.5 md:space-y-1 relative">
+                <FormLabel
+                  className={cn(
+                    "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                    field.value.length === 0
+                      ? "translate-y-3.5 left-3 font-normal"
+                      : "-translate-y-3 left-0 font-semibold"
+                  )}
+                >
+                  Kredit
+                </FormLabel>
                 <FormControl>
                   <Input
-                    className="focus-visible:outline-none w-full focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
                     {...field}
                     disabled={isSubmitting}
                   />
@@ -234,7 +300,7 @@ export const AddTransactionModal = () => {
                   <FormControl>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button className="justify-between bg-transparent hover:bg-transparent text-black border dark:text-white">
+                        <Button className="justify-between bg-transparent hover:bg-transparent text-black dark:text-white border-0 rounded-none border-b hover:border-green-500 dark:border-green-200/40 border-green-400 dark:hover:border-green-400">
                           {field.value}
                           <CalendarIcon className="w-4 h-4" />
                         </Button>
@@ -265,7 +331,7 @@ export const AddTransactionModal = () => {
                   <FormControl>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button className="justify-between bg-transparent hover:bg-transparent text-black border dark:text-white border-green-200">
+                        <Button className="justify-between bg-transparent hover:bg-transparent text-black dark:text-white border-0 rounded-none border-b hover:border-green-500 dark:border-green-200/40 border-green-400 dark:hover:border-green-400">
                           {field.value}
                           <Clock className="w-4 h-4" />
                         </Button>
