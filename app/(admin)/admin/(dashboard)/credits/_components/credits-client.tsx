@@ -33,19 +33,19 @@ interface UsersProps {
   total_tokens: number;
 }
 
-interface selectedDateProps {
+interface SelectedDateProps {
   month: number;
   year: number;
 }
 
-interface firstLastDateProps {
+interface FirstLastDateProps {
   first_month: number;
   last_month: number;
   first_year: number;
   last_year: number;
 }
 
-export interface selectedBarDataProps {
+export interface SelectedBarDataProps {
   date: number;
   in: number;
   out: number;
@@ -62,14 +62,14 @@ export const CreditsClient = () => {
     name: "",
     total_tokens: 0,
   });
-  const [selectedBar, setSelectedBar] = useState<selectedDateProps>({
+  const [selectedBar, setSelectedBar] = useState<SelectedDateProps>({
     month: 1,
     year: new Date().getFullYear(),
   });
-  const [firstLast, setFirstLast] = useState<firstLastDateProps>();
+  const [firstLast, setFirstLast] = useState<FirstLastDateProps>();
   const [userList, setUserList] = useState<UsersProps[]>([]);
   const [selectedBarData, setSelectedBarData] = useState<
-    selectedBarDataProps[]
+    SelectedBarDataProps[]
   >([]);
 
   const [isUpdatingList, setIsUpdatingList] = useState<boolean>(false);
@@ -135,8 +135,8 @@ export const CreditsClient = () => {
         }
       );
       toast.success(`Kredit ${current.name} berhasi diperbarui`);
+      cookies.set("updated", "updated");
       setEditedKredit(false);
-      router.refresh();
     } catch (error) {
       console.log("[ERROR_UPDATE_KREDIT]:", error);
       toast.error(`Kredit ${current.name} gagal diperbarui`);
@@ -249,16 +249,16 @@ export const CreditsClient = () => {
   }, [params.get("currentId")]);
 
   useEffect(() => {
-    if (isUpdatingList) {
+    if (cookies.get("updated")) {
       setIsUpdatingBar(true);
-      setTimeout(() => {
-        getBarKredit(current.id, "");
-      }, 1000);
+      getBarKredit(current.id, "");
       getKreditList();
-    } else {
-      getKreditList();
+      cookies.remove("updated");
     }
-  }, [isUpdatingList, params.get("q")]);
+  }, [cookies.get("updated")]);
+  useEffect(() => {
+    getKreditList();
+  }, [params.get("q")]);
 
   useEffect(() => {
     getKreditList();
@@ -298,10 +298,10 @@ export const CreditsClient = () => {
                 <li className="capitalize" key={item.id}>
                   <Button
                     className={cn(
-                      "md:py-2 md:px-5 px-2 py-1.5 h-14 md:h-20 rounded-sm text-xs md:text-sm flex  gap-1 justify-between items-center w-full text-black dark:text-white",
+                      "md:py-2 md:px-5 px-2 py-1.5 h-14 md:h-20 rounded-sm text-xs md:text-sm flex  gap-1 justify-between items-center w-full text-black dark:text-white bg-white hover:bg-green-50 dark:bg-gray-900 border dark:hover:bg-gray-700/40",
                       current.id === item.id
-                        ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700/70 dark:border dark:border-gray-700/40 dark:hover:bg-gray-700/40"
-                        : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:border dark:border-gray-700/70 dark:hover:bg-gray-700/70"
+                        ? " border-green-400 hover:bg-green-100 bg-green-50 dark:bg-gray-800/70"
+                        : " border-green-400/40"
                     )}
                     onClick={() =>
                       current.id !== item.id && handleChangeCurrent(item.id)

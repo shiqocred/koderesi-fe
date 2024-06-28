@@ -10,6 +10,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
+import { cn } from "@/lib/utils";
 
 export const AddUserModal = () => {
   const { isOpen, onClose, type } = useModal();
@@ -17,6 +18,7 @@ export const AddUserModal = () => {
     name: "",
     email: "",
     password: "",
+    whatsapp: "",
   });
   const router = useRouter();
 
@@ -29,6 +31,7 @@ export const AddUserModal = () => {
       name: "",
       email: "",
       password: "",
+      whatsapp: "",
     });
   };
 
@@ -65,32 +68,79 @@ export const AddUserModal = () => {
       }}
     >
       <form onSubmit={onSubmit}>
-        <div className="flex flex-col gap-2 md:gap-4 md:mt-4">
-          <div className="flex flex-col gap-1 w-full">
-            <Label>Nama Lengkap</Label>
+        <div className="flex flex-col gap-6 md:mt-4">
+          <div className="flex flex-col gap-1 w-full relative">
+            <Label
+              className={cn(
+                "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                input.name.length === 0
+                  ? "translate-y-3.5 left-3 font-normal"
+                  : "-translate-y-3 left-0 font-semibold"
+              )}
+            >
+              Nama Lengkap
+            </Label>
             <Input
-              className="bg-transparent dark:bg-transparent disabled:opacity-100 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+              className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
               value={input.name}
               onChange={(e) =>
                 setInput((prev) => ({ ...prev, name: e.target.value }))
               }
             />
           </div>
-          <div className="flex flex-col gap-1 w-full">
-            <Label>Email</Label>
+          <div className="flex flex-col gap-1 w-full relative">
+            <Label
+              className={cn(
+                "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                input.email.length === 0
+                  ? "translate-y-3.5 left-3 font-normal"
+                  : "-translate-y-3 left-0 font-semibold"
+              )}
+            >
+              Email
+            </Label>
             <Input
               type="email"
-              className="bg-transparent dark:bg-transparent disabled:opacity-100 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+              className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
               value={input.email}
               onChange={(e) =>
                 setInput((prev) => ({ ...prev, email: e.target.value }))
               }
             />
           </div>
-          <div className="flex flex-col gap-1 w-full">
-            <Label>Password</Label>
+          <div className="flex flex-col gap-1 w-full relative">
+            <Label
+              className={cn(
+                "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                input.whatsapp.length === 0
+                  ? "translate-y-3.5 left-3 font-normal"
+                  : "-translate-y-3 left-0 font-semibold"
+              )}
+            >
+              No. WhatsApp
+            </Label>
             <Input
-              className="bg-transparent dark:bg-transparent disabled:opacity-100 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
+              type="number"
+              className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
+              value={input.whatsapp}
+              onChange={(e) =>
+                setInput((prev) => ({ ...prev, whatsapp: e.target.value }))
+              }
+            />
+          </div>
+          <div className="flex flex-col gap-1 w-full relative">
+            <Label
+              className={cn(
+                "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                input.password.length === 0
+                  ? "translate-y-3.5 left-3 font-normal"
+                  : "-translate-y-3 left-0 font-semibold"
+              )}
+            >
+              Password
+            </Label>
+            <Input
+              className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
               value={input.password}
               onChange={(e) =>
                 setInput((prev) => ({ ...prev, password: e.target.value }))

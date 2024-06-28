@@ -6,9 +6,13 @@ import { AddUserModal } from "@/components/modals/add-user-modal";
 import { ApproveAffiliateModal } from "@/components/modals/approve-affiliate-modal";
 import { ApproveWithdrawModal } from "@/components/modals/approve-withdraw-modal";
 import { ArchiveResiModal } from "@/components/modals/archive-resi-modal";
+import { DeleteChatModal } from "@/components/modals/delete-chat-modal";
 import { DeleteManifestModal } from "@/components/modals/delete-manifest-modal";
 import { DeleteResiModal } from "@/components/modals/delete-resi-modal";
+import { DeleteTicketModal } from "@/components/modals/delete-ticket-modal";
 import { DeleteUserModal } from "@/components/modals/delete-user-modal";
+import { EditChatModal } from "@/components/modals/edit-chat-modal";
+import { EditTicketModal } from "@/components/modals/edit-ticket-modal";
 import { EditUserModal } from "@/components/modals/edit-user-modal";
 import { HapusAkunModal } from "@/components/modals/hapus-akun-modal";
 import { RejectedAffiliateModal } from "@/components/modals/rejected-affiliate-modal";
@@ -34,6 +38,10 @@ const ModalProvider = () => {
       <DeleteUserModal />
       <EditUserModal />
       <DeleteManifestModal />
+      <EditTicketModal />
+      <EditChatModal />
+      <DeleteChatModal />
+      <DeleteTicketModal />
     </>
   );
 };

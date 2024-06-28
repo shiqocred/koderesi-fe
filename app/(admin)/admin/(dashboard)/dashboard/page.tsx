@@ -264,7 +264,7 @@ const AdminDashboardpage = () => {
         <TopDashboard {...total} />
         <Separator className="dark:bg-white bg-gray-500" />
         <div className="flex lg:flex-row flex-col gap-4">
-          <div className="w-full xl:w-9/12 lg:w-3/5 ">
+          <div className="w-full xl:w-2/3 lg:w-3/5 ">
             <Card className="pr-2 pt-2 md:p-2 lg:p-4 rounded-md flex flex-col gap-y-4 ">
               <div className="flex justify-between flex-col sm:flex-row items-start px-2 gap-y-2 sm:gap-y-0 sm:items-center">
                 <CardTitle>Cash Flow</CardTitle>
@@ -292,12 +292,12 @@ const AdminDashboardpage = () => {
                   </Button>
                 </div>
               </div>
-              <div className="h-[200px] sm:h-[250px] lg:h-[380px] md:h-[300px]">
+              <div className="h-[200px] sm:h-[250px] lg:h-[380px] md:h-[300px] xl:h-[464px]">
                 <ChartAdmin month={month[mth].value} />
               </div>
             </Card>
           </div>
-          <div className="w-full xl:w-3/12 lg:w-2/5 xl:min-h-[462px] ">
+          <div className="w-full xl:w-1/3 lg:w-2/6 xl:min-h-[546px] ">
             <TransactionCurrentCard
               label="Transaksi Terbaru"
               data={newTransactions}

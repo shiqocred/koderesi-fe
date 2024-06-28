@@ -21,8 +21,10 @@ import axios from "axios";
 import {
   Check,
   ChevronDown,
+  DatabaseBackupIcon,
   Edit,
   Eye,
+  ListFilter,
   MoreHorizontal,
   Search,
   Trash2,
@@ -34,6 +36,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import qs from "query-string";
 import { useDebounce } from "@/hooks/use-debounce";
+import UserCard from "./user-card";
 
 export interface UserListProps {
   created_at: string;
@@ -51,11 +54,11 @@ export interface UserListProps {
 
 export const UsersClient = () => {
   const { onOpen } = useModal();
-  const [sort, setSort] = useState("");
   const [open, setOpen] = useState(false);
   const params = useSearchParams();
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(params.get("q") ?? "");
+  const [sort, setSort] = useState(params.get("f") ?? "date");
   const debounceValue = useDebounce(search);
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
@@ -116,7 +119,19 @@ export const UsersClient = () => {
   const getUserList = async () => {
     try {
       const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/superadmin/pengguna",
+        `https://koderesi.raventech.my.id/api/superadmin/pengguna${
+          debounceValue !== ""
+            ? search !== ""
+              ? "?q=" + debounceValue ?? search
+              : ""
+            : ""
+        }${
+          sort !== ""
+            ? debounceValue === "" || search === ""
+              ? "?filter=" + sort
+              : "&filter=" + sort
+            : ""
+        }`,
         {
           headers: {
             Accept: "application/json",
@@ -135,11 +150,15 @@ export const UsersClient = () => {
   }, [debounceValue, sort]);
 
   useEffect(() => {
-    if (cookies.get("new") === "added") {
+    if (cookies.get("new")) {
       getUserList();
       cookies.remove("new");
     }
   }, [cookies.get("new")]);
+
+  useEffect(() => {
+    getUserList();
+  }, [params.get("q"), params.get("f")]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -156,7 +175,7 @@ export const UsersClient = () => {
           <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
           <Input
             className="pl-10 flex-1 peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
-            placeholder="Search user name..."
+            placeholder="Pencarian username atau email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -166,9 +185,12 @@ export const UsersClient = () => {
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
-                className="w-full md:w-48 capitalize justify-between bg-transparent border-green-200 border dark:border-green-200/40 hover:border-green-400 dark:hover:border-green-400 hover:bg-transparent"
+                className="w-full md:w-52 capitalize justify-between bg-transparent border-green-200 border dark:border-green-200/40 hover:border-green-400 dark:hover:border-green-400 hover:bg-transparent"
               >
-                {sort ? `Menurut ${sort}` : "Urutkan"}
+                <div className="flex items-center">
+                  <ListFilter className="w-5 h-5 mr-2" />
+                  {sort === "date" ? `Menurut Tanggal` : "Menurut Nama"}
+                </div>
                 <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
             </PopoverTrigger>
@@ -178,31 +200,31 @@ export const UsersClient = () => {
                   <CommandGroup>
                     <CommandItem
                       onSelect={() => {
-                        sort === "nama" ? setSort("") : setSort("nama");
+                        setSort("name");
                         setOpen(!open);
                       }}
                     >
                       <Check
                         className={cn(
                           "w-4 h-4 mr-2 opacity-0",
-                          sort === "nama" && "opacity-100"
+                          sort === "name" && "opacity-100"
                         )}
                       />
-                      Filter by name
+                      Menurut name
                     </CommandItem>
                     <CommandItem
                       onSelect={() => {
-                        sort === "tanggal" ? setSort("") : setSort("tanggal");
+                        setSort("date");
                         setOpen(!open);
                       }}
                     >
                       <Check
                         className={cn(
                           "w-4 h-4 mr-2 opacity-0",
-                          sort === "tanggal" && "opacity-100"
+                          sort === "date" && "opacity-100"
                         )}
                       />
-                      Filter by tanggal
+                      Menurut tanggal
                     </CommandItem>
                   </CommandGroup>
                 </CommandList>
@@ -218,96 +240,20 @@ export const UsersClient = () => {
           </Button>
         </div>
       </div>
-      <Card className="p-2 md:p-4 bg-transparent border">
-        <div>
-          <div className="w-full bg-gray-300 dark:bg-gray-700 lg:flex justify-center items-center h-14 rounded-sm px-5 hidden">
-            <p className="text-base font-semibold w-full">Pengguna</p>
-            <p className="text-base font-semibold w-[200px] flex-none text-center">
-              WhatsApp
-            </p>
-            <p className="text-base font-semibold w-[150px] text-center flex-none">
-              Tanggal
-            </p>
-            <p className="text-base font-semibold w-[100px] flex-none" />
-          </div>
-          <ul className="lg:pt-4 gap-4 flex flex-col">
+      {userList.length ? (
+        <Card className="p-2 md:p-4 bg-transparent border">
+          <ul className="lg:pt-4 gap-4 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {userList.map((item) => (
-              <li className="capitalize" key={item.id}>
-                <Card className="lg:py-3 lg:px-5 md:py-2 p-2 rounded-md md:rounded-sm text-sm flex bg-gray-100 dark:bg-gray-700/40 flex-col md:flex-row md:items-center">
-                  <div className="w-full">
-                    <div className="flex gap-2 md:gap-4 items-center flex-row">
-                      <div className="w-10 aspect-square md:w-12 md:h-12 overflow-hidden rounded relative flex-none">
-                        <Image alt="" src={"/avatar.webp"} fill />
-                      </div>
-                      <div className="flex flex-col w-full overflow-hidden text-ellipsis xl:flex-row xl:items-center">
-                        <p className="text-base font-semibold xl:w-[250px]">
-                          {item.name}
-                        </p>
-                        <p className="md:text-sm font-light lowercase text-ellipsis overflow-hidden w-full xl:w-auto text-xs">
-                          {item.email}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center md:items-start lg:items-center pt-2 md:pt-0 mt-2 md:mt-0 md:ml-2 lg:ml-0 w-full md:w-[300px] lg:w-auto gap-2 border-t border-gray-400 dark:border-gray-600 md:border-none">
-                    <div className="flex justify-between w-full flex-col lg:flex-row lg:items-center gap-1 pl-2 border-l-2 border-gray-700 dark:border-gray-500 md:border-none">
-                      <div className="w-auto lg:w-[200px] flex-none lg:text-center text-xs">
-                        {item.phone_number ? (
-                          item.phone_number
-                        ) : (
-                          <p className="italic text-xs text-gray-700 px-2 bg-gray-200 dark:bg-gray-700/80 dark:text-white rounded py-0.5">
-                            WhatsApp not yet
-                          </p>
-                        )}
-                      </div>
-                      <div className="w-auto lg:w-[150px] flex-none lg:text-center text-xs md:text-sm text-gray-500 dark:text-gray-400">
-                        {item.created_at && formatTanggalWaktu(item.created_at)}
-                      </div>
-                    </div>
-                    <div className="w-auto lg:w-[100px] flex-none flex justify-center ">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            className="p-0 h-8 w-8 lg:w-10 lg:h-10 border-gray-400 dark:border-gray-600 border"
-                            variant={"ghost"}
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="p-0 w-[150px]" align="end">
-                          <Command>
-                            <CommandGroup>
-                              <CommandList>
-                                <CommandItem
-                                  onSelect={() => onOpen("edit-user", item.id)}
-                                >
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Edit
-                                </CommandItem>
-                              </CommandList>
-                              <CommandList>
-                                <CommandItem
-                                  className="text-red-400 aria-selected:text-red-500"
-                                  onSelect={() =>
-                                    onOpen("delete-user", item.id)
-                                  }
-                                >
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Hapus
-                                </CommandItem>
-                              </CommandList>
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </div>
-                </Card>
-              </li>
+              <UserCard {...item} />
             ))}
           </ul>
-        </div>
-      </Card>
+        </Card>
+      ) : (
+        <Card className="border border-green-200 dark:border-green-200/40 flex flex-col gap-2 text-gray-500 dark:text-gray-700 justify-center min-h-[200px] items-center text-lg lg:text-xl font-bold">
+          <DatabaseBackupIcon className="lg:w-14 lg:h-14 h-10 w-10" />
+          No Data Found.
+        </Card>
+      )}
     </Card>
   );
 };

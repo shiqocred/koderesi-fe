@@ -15,7 +15,11 @@ export type ModalType =
   | "unarchive-resi"
   | "delete-user"
   | "edit-user"
-  | "delete-manifest";
+  | "delete-manifest"
+  | "edit-chat"
+  | "delete-chat"
+  | "edit-ticket"
+  | "delete-ticket";
 export interface ManifestProps {
   note: string;
   status: string;

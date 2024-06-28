@@ -271,10 +271,10 @@ export const CreditsClient = () => {
                 <li className="capitalize" key={item.id}>
                   <Button
                     className={cn(
-                      "md:py-2 md:px-5 px-2 py-1.5 h-14 md:h-20 rounded-sm text-xs md:text-sm flex gap-1 justify-between md:items-center w-full text-start text-black dark:text-white",
+                      "md:py-2 md:px-5 px-2 py-1.5 h-14 md:h-20 rounded-sm text-xs md:text-sm flex  gap-1 justify-between items-center w-full text-black dark:text-white bg-white hover:bg-green-50 dark:bg-gray-900 border dark:hover:bg-gray-700/40",
                       current.id === item.id
-                        ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700/70 dark:border dark:border-gray-700/40 dark:hover:bg-gray-700/40"
-                        : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:border dark:border-gray-700/70 dark:hover:bg-gray-700/70"
+                        ? " border-green-400 hover:bg-green-100 bg-green-50 dark:bg-gray-800/70"
+                        : " border-green-400/40"
                     )}
                     onClick={() =>
                       current.id !== item.id && handleCurrentId(item.id, search)
@@ -286,7 +286,7 @@ export const CreditsClient = () => {
                           <Image alt="" src={"/avatar.webp"} fill />
                         </div>
                         <div className="flex flex-col xl:flex-row w-full gap-1">
-                          <p className="text-sm md:text-base font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap flex-1 capitalize">
+                          <p className="text-sm text-start md:text-base font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap flex-1 capitalize">
                             {item.name}
                           </p>
                           <div className="flex gap-4 items-center">

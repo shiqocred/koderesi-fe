@@ -52,6 +52,7 @@ export const DeleteUserModal = () => {
           <Button
             className="w-full bg-transparent hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent text-black dark:text-white border border-green-200 hover:border-green-400 dark:border-green-200/40 dark:hover:border-green-400"
             onClick={onClose}
+            type="button"
           >
             Batal
           </Button>

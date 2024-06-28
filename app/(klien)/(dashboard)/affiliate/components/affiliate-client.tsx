@@ -34,7 +34,7 @@ import {
   X,
   Youtube,
 } from "lucide-react";
-import React, { MouseEvent, useState } from "react";
+import React, { FormEvent, MouseEvent, useState } from "react";
 import { ChartAffiliateClient } from "./chart-affiliate-client";
 
 interface FormFieldProps {
@@ -94,6 +94,11 @@ export const AffiliateClient = () => {
     twitter: "",
     youtube: "",
   });
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setStep(1);
+  };
 
   const addFormField = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -321,7 +326,7 @@ export const AffiliateClient = () => {
   }
   return (
     <Card className="flex flex-col text-sm text-center p-4 space-y-6">
-      <form className="flex flex-col space-y-8 py-4">
+      <form onSubmit={handleSubmit} className="flex flex-col space-y-8 py-4">
         <div className="flex justify-start border-b border-gray-500 dark:border-gray-300 pb-1">
           <h3 className="text-xl font-semibold">
             Form Pengajuan Affiliate Partner
@@ -334,6 +339,7 @@ export const AffiliateClient = () => {
           <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
               <Button
+                type="button"
                 className="flex justify-between items-center w-full dark:bg-gray-800 dark:hover:bg-gray-700"
                 variant={"outline"}
               >
@@ -387,6 +393,7 @@ export const AffiliateClient = () => {
                 ) : (
                   <TooltipProviderPage text="Hapus link">
                     <Button
+                      type="button"
                       onClick={() => removeFormField(index)}
                       className="w-10 h-10 flex-none flex justify-center items-center bg-red-200 dark:bg-gray-700 rounded-md p-0 text-gray-900 hover:bg-red-300 dark:hover:bg-gray-600 dark:text-red-500"
                     >
@@ -407,6 +414,7 @@ export const AffiliateClient = () => {
               </div>
             ))}
             <Button
+              type="button"
               onClick={(e) => addFormField(e)}
               className="bg-transparent hover:bg-green-100 border border-dashed border-green-400 dark:hover:bg-gray-700 text-gray-900 dark:text-white w-40"
             >
@@ -421,6 +429,7 @@ export const AffiliateClient = () => {
             {isInstagram && (
               <div className="flex space-x-4">
                 <Button
+                  type="button"
                   onClick={() => setIsInstagram(!isInstagram)}
                   className="group w-10 h-10 flex-none flex justify-center items-center bg-gray-200 dark:bg-gray-700 rounded-md p-0 text-gray-900 hover:bg-red-300 dark:hover:bg-gray-600 dark:text-gray-300 dark:hover:text-red-500"
                 >
@@ -447,6 +456,7 @@ export const AffiliateClient = () => {
             {isFacebook && (
               <div className="flex space-x-4">
                 <Button
+                  type="button"
                   onClick={() => setIsFacebook(!isFacebook)}
                   className="group w-10 h-10 flex-none flex justify-center items-center bg-gray-200 dark:bg-gray-700 rounded-md p-0 text-gray-900 hover:bg-red-300 dark:hover:bg-gray-600 dark:text-gray-300 dark:hover:text-red-500"
                 >
@@ -473,6 +483,7 @@ export const AffiliateClient = () => {
             {isTwitter && (
               <div className="flex space-x-4">
                 <Button
+                  type="button"
                   onClick={() => setIsTwitter(!isTwitter)}
                   className="group w-10 h-10 flex-none flex justify-center items-center bg-gray-200 dark:bg-gray-700 rounded-md p-0 text-gray-900 hover:bg-red-300 dark:hover:bg-gray-600 dark:text-gray-300 dark:hover:text-red-500"
                 >
@@ -499,6 +510,7 @@ export const AffiliateClient = () => {
             {isYoutube && (
               <div className="flex space-x-4">
                 <Button
+                  type="button"
                   onClick={() => setIsYoutube(!isYoutube)}
                   className="group w-10 h-10 flex-none flex justify-center items-center bg-gray-200 dark:bg-gray-700 rounded-md p-0 text-gray-900 hover:bg-red-300 dark:hover:bg-gray-600 dark:text-gray-300 dark:hover:text-red-500"
                 >
@@ -526,6 +538,7 @@ export const AffiliateClient = () => {
           <div className="flex gap-2">
             {!isInstagram && (
               <Button
+                type="button"
                 onClick={() => setIsInstagram(!isInstagram)}
                 size={"icon"}
                 className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
@@ -535,6 +548,7 @@ export const AffiliateClient = () => {
             )}
             {!isFacebook && (
               <Button
+                type="button"
                 size={"icon"}
                 onClick={() => setIsFacebook(!isFacebook)}
                 className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
@@ -544,6 +558,7 @@ export const AffiliateClient = () => {
             )}
             {!isTwitter && (
               <Button
+                type="button"
                 size={"icon"}
                 onClick={() => setIsTwitter(!isTwitter)}
                 className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
@@ -553,6 +568,7 @@ export const AffiliateClient = () => {
             )}
             {!isYoutube && (
               <Button
+                type="button"
                 size={"icon"}
                 onClick={() => setIsYoutube(!isYoutube)}
                 className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
@@ -563,7 +579,7 @@ export const AffiliateClient = () => {
           </div>
         </div>
         <Button
-          onClick={onNextStep}
+          type="submit"
           className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-56"
         >
           Ajukan Affiliate Partner
