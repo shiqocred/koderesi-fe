@@ -244,7 +244,7 @@ export const UsersClient = () => {
         <Card className="p-2 md:p-4 bg-transparent border">
           <ul className="lg:pt-4 gap-4 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {userList.map((item) => (
-              <UserCard {...item} />
+              <UserCard {...item} key={item.id} />
             ))}
           </ul>
         </Card>
