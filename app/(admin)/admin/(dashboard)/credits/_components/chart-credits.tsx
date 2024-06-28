@@ -58,10 +58,10 @@ const ContentLegend = (props: any) => {
 export function ChartCredit({
   month,
   initialData,
-}: {
+}: Readonly<{
   month: string;
   initialData: SelectedBarDataProps[];
-}) {
+}>) {
   const dataMap = Array.from({ length: 31 }, (_, index) => {
     const existing = initialData.find(
       (item) => parseFloat(item.date.toString()) === index + 1

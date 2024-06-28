@@ -30,13 +30,6 @@ const MenuBawah = ({ pathname, isExpand, isAdmin }: MenuBawahProps) => {
         )}
         expand={isExpand}
       />
-      <ButtonSidebar
-        label="Contact Support"
-        icon={<Headset className="w-5 h-5" />}
-        href={isAdmin ? "/admin/contacts" : "/contacts"}
-        active={pathname.startsWith(!isAdmin ? "/contacts" : "/admin/contacts")}
-        expand={isExpand}
-      />
     </div>
   );
 };

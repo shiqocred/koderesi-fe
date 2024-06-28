@@ -256,13 +256,13 @@ export const KreditSettings = () => {
     return null;
   }
   return (
-    <Card className="p-5 flex w-full gap-4 bg-transparent border-gray-500 border">
+    <Card className="md:p-5 p-3 flex w-full gap-4 bg-transparent border-gray-500 border flex-col md:flex-row">
       <div className="flex w-full flex-col">
         <h2 className="text-3xl font-semibold">Harga Kredit</h2>
         <p className="font-light">Konfigurasi harga kredit.</p>
       </div>
       <div className="flex flex-col gap-4 w-full">
-        <div className="border p-5 flex flex-col gap-6 rounded-md border-gray-300 dark:border-gray-700">
+        <div className="border md:p-5 p-3 flex flex-col gap-6 rounded-md border-gray-300 dark:border-gray-700">
           <div className="flex items-center gap-2">
             <h5 className="font-medium text-lg">Buat Baru</h5>
             <Popover>
@@ -463,7 +463,7 @@ export const KreditSettings = () => {
               ))}
             </div>
 
-            <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+            <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
               <p className="text-sm dark:text-gray-300">
                 Periksa terlebih dahulu sebelum konfirmasi.
               </p>
@@ -486,13 +486,13 @@ export const KreditSettings = () => {
         >
           <AccordionItem
             value="sekaliBeli"
-            className="px-5 py-2 w-full border-gray-300 dark:border-gray-700 border rounded-md"
+            className="md:px-5 px-3 py-2 w-full border-gray-300 dark:border-gray-700 border rounded-md"
           >
             <AccordionTrigger>
               <h5 className="font-medium text-lg">Sekali Beli</h5>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 pt-2">
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 1</h5>
                   <div className="flex">
@@ -502,8 +502,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditSekaliPertama(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -511,8 +511,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditSekaliPertama(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -520,8 +520,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditSekaliPertama(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -661,10 +661,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -682,7 +682,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 2</h5>
                   <div className="flex">
@@ -692,8 +692,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditSekaliKedua(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -701,8 +701,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditSekaliKedua(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -710,8 +710,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditSekaliKedua(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -851,10 +851,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -872,7 +872,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 3</h5>
                   <div className="flex">
@@ -882,8 +882,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditSekaliKetiga(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -891,8 +891,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditSekaliKetiga(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -900,8 +900,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditSekaliKetiga(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -1041,10 +1041,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -1062,7 +1062,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 4</h5>
                   <div className="flex">
@@ -1072,8 +1072,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditSekaliKeempat(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -1081,8 +1081,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditSekaliKeempat(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -1090,8 +1090,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditSekaliKeempat(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -1231,10 +1231,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -1256,13 +1256,13 @@ export const KreditSettings = () => {
           </AccordionItem>
           <AccordionItem
             value="bulanan"
-            className="px-5 py-2 w-full border-gray-300 dark:border-gray-700 border rounded-md"
+            className="md:px-5 px-3 py-2 w-full border-gray-300 dark:border-gray-700 border rounded-md"
           >
             <AccordionTrigger>
               <h5 className="font-medium text-lg">Bulanan</h5>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 pt-2">
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 1</h5>
                   <div className="flex">
@@ -1272,8 +1272,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditBulananPertama(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -1281,8 +1281,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditBulananPertama(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -1290,8 +1290,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditBulananPertama(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -1431,10 +1431,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -1452,7 +1452,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 2</h5>
                   <div className="flex">
@@ -1462,8 +1462,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditBulananKedua(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -1471,8 +1471,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditBulananKedua(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -1480,8 +1480,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditBulananKedua(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -1621,10 +1621,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -1642,7 +1642,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 3</h5>
                   <div className="flex">
@@ -1652,8 +1652,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditBulananKetiga(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -1661,8 +1661,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditBulananKetiga(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -1670,8 +1670,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditBulananKetiga(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -1811,10 +1811,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -1832,7 +1832,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 4</h5>
                   <div className="flex">
@@ -1842,8 +1842,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditBulananKeempat(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -1851,8 +1851,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditBulananKeempat(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -1860,8 +1860,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditBulananKeempat(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -2001,10 +2001,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -2026,13 +2026,13 @@ export const KreditSettings = () => {
           </AccordionItem>
           <AccordionItem
             value="tahunan"
-            className="px-5 py-2 w-full border-gray-300 dark:border-gray-700 border rounded-md"
+            className="md:px-5 px-3 py-2 w-full border-gray-300 dark:border-gray-700 border rounded-md"
           >
             <AccordionTrigger>
               <h5 className="font-medium text-lg">Tahunan</h5>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 pt-2">
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 1</h5>
                   <div className="flex">
@@ -2042,8 +2042,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditTahunanPertama(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -2051,8 +2051,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditTahunanPertama(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -2060,8 +2060,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditTahunanPertama(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -2201,10 +2201,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -2222,7 +2222,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 2</h5>
                   <div className="flex">
@@ -2232,8 +2232,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditTahunanKedua(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -2241,8 +2241,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditTahunanKedua(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -2250,8 +2250,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditTahunanKedua(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -2391,10 +2391,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -2412,7 +2412,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 3</h5>
                   <div className="flex">
@@ -2422,8 +2422,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditTahunanKetiga(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -2431,8 +2431,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditTahunanKetiga(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -2440,8 +2440,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditTahunanKetiga(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -2581,10 +2581,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
@@ -2602,7 +2602,7 @@ export const KreditSettings = () => {
                   </form>
                 </Form>
               </Card>
-              <Card className="p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
+              <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium text-lg">Pilihan 4</h5>
                   <div className="flex">
@@ -2612,8 +2612,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditTahunanKeempat(false)}
                         className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
                       >
-                        <X className="w-4 h-4  mr-2" />
-                        Batal
+                        <X className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Batal</p>
                       </Button>
                     ) : (
                       <Button
@@ -2621,8 +2621,8 @@ export const KreditSettings = () => {
                         onClick={() => setIsKreditTahunanKeempat(true)}
                         className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
                       >
-                        <Edit3 className="w-4 h-4  mr-2" />
-                        Edit
+                        <Edit3 className="w-4 h-4 md:mr-2 m-0" />
+                        <p className="hidden md:flex">Edit</p>
                       </Button>
                     )}
                     <Button
@@ -2630,8 +2630,8 @@ export const KreditSettings = () => {
                       onClick={() => setIsKreditTahunanKeempat(true)}
                       className="bg-transparent hover:bg-transparent text-red-500 dark:text-red-400 hover:underline font-normal"
                     >
-                      <Trash2 className="w-4 h-4  mr-2" />
-                      Hapus
+                      <Trash2 className="w-4 h-4 md:mr-2 m-0" />
+                      <p className="hidden md:flex">Hapus</p>
                     </Button>
                   </div>
                 </div>
@@ -2771,10 +2771,10 @@ export const KreditSettings = () => {
                     <div className="flex items-center gap-2 p-3">
                       <Label className="flex items-center gap-2">
                         <Checkbox checked />
-                        <p>Check untuk menjadikan favorit</p>
+                        <p>Terpopuler</p>
                       </Label>
                     </div>
-                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100">
+                    <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0">
                       <p className="text-sm dark:text-gray-300">
                         Periksa terlebih dahulu sebelum konfirmasi.
                       </p>
