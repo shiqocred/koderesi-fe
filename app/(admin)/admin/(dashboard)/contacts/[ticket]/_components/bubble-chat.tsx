@@ -85,7 +85,7 @@ export const BubbleChat = ({
     return "Loading...";
   }
   return (
-    <div className="flex flex-col text-xs md:text-sm py-4 before:w-[1px] before:content-[''] before:absolute before:left-3 md:before:left-5 before:bg-gray-300 before:h-full before:top-0 relative z-0 first:pt-0 before:dark:bg-gray-700 last:pb-8">
+    <div className="flex flex-col text-xs md:text-sm py-4 before:w-[1px] before:content-[''] before:absolute before:left-3 md:before:left-5 before:bg-gray-300 before:h-full before:top-0 relative z-0 first:pt-8 before:dark:bg-gray-700 last:pb-0">
       <Dialog open={imageOpen} onOpenChange={setImageOpen}>
         <DialogContent className="w-full max-w-3xl p-3 md:p-5">
           <div className="w-full aspect-square rounded-md overflow-hidden relative">
@@ -169,7 +169,7 @@ export const BubbleChat = ({
           {attachment && attachment.length > 0 && (
             <div
               className={cn(
-                "rounded-b-md border px-3 md:px-5 py-2 md:py-3 grid grid-cols-5 md:grid-cols-6 lg:grid-cols-7 cxl:grid-cols-8 xl:grid-cols-9 z-10 gap-2 md:gap-4",
+                "rounded-b-md border px-3 md:px-5 py-2 md:py-3 grid grid-cols-4 md:grid-cols-6 lg:grid-cols-7 cxl:grid-cols-8 xl:grid-cols-9 z-10 gap-2 md:gap-4",
                 isOwner
                   ? "bg-green-50 border-green-300 dark:bg-green-900/40 dark:border-green-700/70"
                   : "bg-gray-100 border-gray-300 dark:bg-gray-900 dark:border-gray-700"
@@ -226,7 +226,7 @@ export const BubbleChat = ({
           {status === "closeWithoutPlan" && (
             <>
               <div className="flex rounded-full md:w-7 md:h-7 w-6 h-6 bg-gray-200 dark:bg-gray-700 items-center justify-center z-10 flex-none">
-                <CircleSlash className="md:w-4 md:h-4 w-3 h-3 text-white" />
+                <CircleSlash className="md:w-4 md:h-4 w-3 h-3 text-black dark:text-white" />
               </div>
               <div className="flex items-center gap-2 pt-1 md:pt-0">
                 <h5 className="flex items-center gap-1 flex-wrap">

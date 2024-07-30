@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useModal } from "@/hooks/use-modal";
 
 const formSchema = z
   .object({
@@ -46,6 +47,7 @@ export const ClientSettings = () => {
   const [isNameEdit, setIsNameEdit] = useState(false);
   const [isContactEdit, setIsContactEdit] = useState(false);
   const [isPasswordEdit, setIsPasswordEdit] = useState(false);
+  const { onOpen } = useModal();
 
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleOld, setIsVisibleOld] = useState(false);
@@ -499,25 +501,21 @@ export const ClientSettings = () => {
             <div className="flex items-center justify-between">
               <h5 className="font-medium text-lg">Hapus Akun</h5>
             </div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full gap-4 flex flex-col"
-              >
-                <div className="w-full justify-between flex dark:bg-red-800/60 rounded md:px-3 px-2 py-1 items-center bg-red-100 flex-col gap-3 md:gap-0">
-                  <p className="text-sm dark:text-red-200">
-                    Tindakan bersifat permanen. Tidak dapat diulang
-                  </p>
-                  <Button
-                    type="submit"
-                    className="bg-transparent hover:bg-transparent dark:text-white hover:underline font-normal text-red-500"
-                  >
-                    <Trash2 className="w-4 h-4  mr-2" />
-                    HAPUS AKUN ANDA
-                  </Button>
-                </div>
-              </form>
-            </Form>
+            <div className="w-full gap-4 flex flex-col">
+              <div className="w-full justify-between flex dark:bg-red-800/60 rounded md:px-3 px-2 py-1 items-center bg-red-100 flex-col md:flex-row gap-3 md:gap-0">
+                <p className="text-sm dark:text-red-200">
+                  Tindakan bersifat permanen. Tidak dapat diulang
+                </p>
+                <Button
+                  type="button"
+                  onClick={() => onOpen("delete-label")}
+                  className="bg-transparent hover:bg-transparent dark:text-white hover:underline font-normal text-red-500"
+                >
+                  <Trash2 className="w-4 h-4  mr-2" />
+                  HAPUS AKUN ANDA
+                </Button>
+              </div>
+            </div>
           </Card>
         </div>
       </Card>

@@ -5,12 +5,16 @@ import { Separator } from "@/components/ui/separator";
 import { useModal } from "@/hooks/use-modal";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Headset, Moon, MoreHorizontal, Sun } from "lucide-react";
+import { Headset, LogOut, Moon, MoreHorizontal, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ButtonSidebar } from "../button-sidebar";
+import axios from "axios";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useCookies } from "next-client-cookies";
 
 const MenuAkun = ({
   isExpand,
@@ -23,6 +27,8 @@ const MenuAkun = ({
 }) => {
   const { setTheme, theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
+  const cookies = useCookies();
+  const router = useRouter();
   const { onOpen } = useModal();
 
   const buttonWidthVariant = {
@@ -34,11 +40,36 @@ const MenuAkun = ({
     isShrink: { display: "none" },
   };
 
+  const buttonOpacityVariant = {
+    isExpand: { display: "flex" },
+    isShrink: { display: "none" },
+  };
+
   const onChangeTheme = () => {
     if (theme === "light") {
       setTheme("dark");
     } else if (theme === "dark") {
       setTheme("light");
+    }
+  };
+
+  const handleLogOut = async () => {
+    try {
+      await axios.post(
+        "https://koderesi.raventech.my.id/api/auth/logout",
+        {},
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${cookies.get("accessToken")}`,
+          },
+        }
+      );
+      toast.success("Logout berhasil");
+      cookies.remove("accessToken");
+      router.push("/auth/login");
+    } catch (error) {
+      console.log("ERROR_LOGOUT");
     }
   };
 
@@ -83,16 +114,8 @@ const MenuAkun = ({
           {theme}
         </motion.p>
       </motion.button>
-      <Separator className="bg-gray-500 dark:bg-white" />
-      <ButtonSidebar
-        label="Contact Support"
-        icon={<Headset className="w-5 h-5" />}
-        href={isAdmin ? "/admin/contacts" : "/contacts"}
-        active={pathname.startsWith(!isAdmin ? "/contacts" : "/admin/contacts")}
-        expand={isExpand}
-      />
       <Link
-        href={isAdmin ? "/admin/settings" : "/settings"}
+        href={isAdmin ? "/admin/account" : "/account"}
         className="relative flex justify-center w-full group"
       >
         <motion.button
@@ -161,6 +184,37 @@ const MenuAkun = ({
           </motion.div>
         </motion.button>
       </Link>
+      <Separator className="bg-gray-500 dark:bg-white" />
+      <motion.button
+        type="button"
+        className={cn(
+          "flex items-center leading-none h-10 bg-transparent hover:bg-red-50 dark:hover:bg-red-700/30  transition-all text-sm font-medium rounded-md text-red-500",
+          isExpand
+            ? "justify-start px-4 gap-4"
+            : "justify-center hover:rounded-[20px]"
+        )}
+        onClick={handleLogOut}
+        initial="isShrink"
+        animate={isExpand ? "isExpand" : "isShrink"}
+        variants={buttonWidthVariant}
+        transition={{ duration: 0.5 }}
+      >
+        <span className="w-5 h-5 stroke-gray-900 dark:stroke-white">
+          <LogOut className="w-5 h-5" />
+        </span>
+        <motion.p
+          initial="isShrink"
+          animate={isExpand ? "isExpand" : "isShrink"}
+          variants={buttonOpacityVariant}
+          transition={
+            isExpand
+              ? { delay: 0.5, duration: 0.5 }
+              : { delay: 0, duration: 0.5 }
+          }
+        >
+          Logout
+        </motion.p>
+      </motion.button>
     </div>
   );
 };
