@@ -1,15 +1,15 @@
 import React, { Suspense } from "react";
-import { ClientSettings } from "./_components/client-settings";
 import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { ButtonLogout } from "./_components/button-logout";
+import { ClientSettings } from "./_components/client-settings";
 
 export const metadata: Metadata = {
-  title: "Contact Support",
+  title: "Account Support",
 };
 
-const ContactPage = () => {
+const AccountPage = () => {
   return (
     <div className="p-4 sm:px-6 sm:py-8 gap-4 md:gap-6 flex flex-col bg-gray-50 dark:bg-black">
       <div className="flex w-full border-b border-gray-500 pb-4 justify-between items-center">
@@ -28,4 +28,4 @@ const ContactPage = () => {
   );
 };
 
-export default ContactPage;
+export default AccountPage;

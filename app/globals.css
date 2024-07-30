@@ -105,3 +105,25 @@ select:-webkit-autofill:focus {
   background-color: transparent !important;
   -webkit-box-shadow: 0 0 0 50px white inset;
 } */
+
+/* #poster.swiper {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+#poster .swiper-wrapper {
+  width: 100%;
+  display: flex;
+}
+
+#poster .swiper-wrapper .swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  width: 100%;
+
+  Center slide text vertically
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */

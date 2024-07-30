@@ -19,6 +19,9 @@ import {
   Search,
   CheckCircle2,
   CircleDot,
+  XCircle,
+  CircleFadingPlus,
+  CircleSlash,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -42,21 +45,22 @@ import Link from "next/link";
 import { useDebounce } from "@/hooks/use-debounce";
 import { formatDistance, formatDistanceStrict, parse } from "date-fns";
 import { id as indonesia } from "date-fns/locale";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ContactProps {
   id: string;
+  ticket: string;
   user_id: string;
   title: string;
-  message: string;
+  desc: string;
+  name: string;
+  email: string;
   status: string;
+  type: null;
   created_at: string;
   updated_at: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    phone_number: string | null;
-  };
 }
 
 export const ClientContact = () => {
@@ -108,11 +112,11 @@ export const ClientContact = () => {
     [params, router]
   );
 
-  const getReportList = async () => {
+  const getContactList = async () => {
     try {
       setIsGetList(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/contact${
+        `https://koderesi.raventech.my.id/api/superadmin/support${
           filter !== "" ? "?f=" + filter : ""
         }`,
         {
@@ -132,16 +136,16 @@ export const ClientContact = () => {
 
   useEffect(() => {
     handleCurrentId(searchValue, filter);
-    getReportList();
+    getContactList();
   }, [searchValue]);
 
   useEffect(() => {
-    getReportList();
+    getContactList();
   }, [params.get("f")]);
 
   useEffect(() => {
     setIsMounted(true);
-    getReportList();
+    getContactList();
   }, []);
 
   if (!isMounted) {
@@ -150,14 +154,9 @@ export const ClientContact = () => {
   return (
     <div className="flex h-full gap-4 md:gap-6 flex-col lg:flex-row max-w-7xl w-full mx-auto">
       <div className="w-full lg:1/2">
-        <Card className="p-2 md:p-4 min-h-[200px] relative">
-          {isGetList && (
-            <div className="w-full h-full absolute bg-gray-500/20 backdrop-blur-sm top-0 left-0 z-10 flex items-center justify-center rounded-md">
-              <Loader2 className="w-10 h-10 animate-spin text-gray-700 dark:text-white" />
-            </div>
-          )}
-          <div className="flex justify-between w-full items-center mb-4 gap-3">
-            <div className="w-full relative flex items-center">
+        <Card className="p-2 md:p-4">
+          <div className="flex w-full md:items-center mb-4 gap-3 lg:flex-row flex-col-reverse">
+            <div className="w-full relative flex items-center lg:max-w-2xl">
               <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />
               {dataSearch && (
                 <Button
@@ -175,119 +174,133 @@ export const ClientContact = () => {
                 placeholder="Pencarian menurut judul, tiket dan pengguna..."
               />
             </div>
-            <Popover onOpenChange={setIsFilter} open={isFilter}>
-              <PopoverTrigger asChild>
-                <Button className="p-0 w-8 h-8 bg-transparent md:hidden hover:bg-transparent border border-black/80 text-black hover:border-black dark:border-white/50 dark:hover:border-white dark:text-white flex-none">
-                  <ListFilter className="w-4 h-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0 w-[150px]" align="end">
-                <Command>
-                  <CommandGroup>
-                    <CommandList>
-                      <CommandItem
-                        onSelect={() => {
-                          setIsFilter(false);
+            <div className="flex items-center gap-3">
+              <Popover open={isFilter} onOpenChange={setIsFilter}>
+                <PopoverTrigger asChild>
+                  <Button className="border-green-400/80 dark:border-green-400/70 border text-black dark:text-white bg-transparent border-dashed hover:bg-transparent hover:dark:bg-transparent flex px-3 hover:border-green-400 dark:hover:border-green-400">
+                    <CircleFadingPlus className="h-4 w-4 mr-2" />
+                    Status
+                    {filter && (
+                      <Separator
+                        orientation="vertical"
+                        className="mx-2 bg-gray-500 dark:bg-gray-300 w-[1.5px]"
+                      />
+                    )}
+                    {filter && (
+                      <Badge
+                        className={cn(
+                          "rounded w-16 px-0 justify-center text-black font-normal capitalize",
                           filter === "closed"
-                            ? handleCurrentId("", "")
-                            : handleCurrentId("", "closed");
-                        }}
+                            ? "bg-yellow-400 hover:bg-yellow-400 dark:hover:bg-yellow-500 dark:bg-yellow-500"
+                            : "bg-green-400 hover:bg-green-400 dark:hover:bg-green-400 dark:bg-green-400"
+                        )}
                       >
-                        <Check
-                          className={cn(
-                            "w-4 h-4 mr-2 opacity-0",
-                            params.get("f") === "closed" && "opacity-100"
-                          )}
-                        />
-                        <CheckCircle2 className="w-4 h-4 mr-2" />
-                        Closed
-                      </CommandItem>
-                      <CommandItem
-                        onSelect={() => {
-                          setIsFilter(false);
-                          filter === "open"
-                            ? handleCurrentId("", "")
-                            : handleCurrentId("", "open");
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            "w-4 h-4 mr-2 opacity-0",
-                            params.get("f") === "open" && "opacity-100"
-                          )}
-                        />
-                        <CircleDot className="w-4 h-4 mr-2" />
-                        Open
-                      </CommandItem>
-                    </CommandList>
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            <div className="md:flex items-center gap-3 hidden">
-              <Button
-                size={"sm"}
-                className={cn(
-                  "text-xs md:text-sm h-10 bg-transparent text-black border flex items-center border-green-300 hover:bg-transparent hover:border-green-400 hover:text-green-800 dark:text-white hover:dark:text-green-300",
-                  filter === "closed" &&
-                    "bg-green-300 hover:bg-green-400 hover:text-black dark:text-black dark:hover:text-black"
-                )}
-                onClick={() =>
-                  filter === "closed"
-                    ? handleCurrentId("", "")
-                    : handleCurrentId("", "closed")
-                }
-              >
-                <CheckCircle2 className="w-4 h-4 mr-2" />
-                Closed
-              </Button>
-              <Button
-                className={cn(
-                  "text-xs md:text-sm h-10 bg-transparent text-black border border-yellow-300 hover:bg-transparent hover:border-yellow-400 hover:text-yellow-800 dark:text-white hover:dark:text-yellow-300",
-                  filter === "open" &&
-                    "bg-yellow-300 hover:bg-yellow-400 hover:text-black dark:text-black dark:hover:text-black"
-                )}
-                size={"sm"}
-                onClick={() =>
-                  filter === "open"
-                    ? handleCurrentId("", "")
-                    : handleCurrentId("", "open")
-                }
-              >
-                <CircleDot className="w-4 h-4 mr-2" />
-                Open
-              </Button>
+                        {filter === "closed" ? "Closed" : "Open"}
+                      </Badge>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0 w-52" align="start">
+                  <Command>
+                    <CommandGroup>
+                      <CommandList>
+                        <CommandItem
+                          onSelect={() => {
+                            handleCurrentId(dataSearch, "opened");
+                            setIsFilter(false);
+                          }}
+                        >
+                          <Checkbox
+                            className="w-4 h-4 mr-2"
+                            checked={filter === "opened"}
+                            onCheckedChange={() => {
+                              handleCurrentId(dataSearch, "opened");
+                              setIsFilter(false);
+                            }}
+                          />
+                          <CircleDot className="w-4 h-4 mr-2" />
+                          Open
+                        </CommandItem>
+                        <CommandItem
+                          onSelect={() => {
+                            handleCurrentId(dataSearch, "closed");
+                            setIsFilter(false);
+                          }}
+                        >
+                          <Checkbox
+                            className="w-4 h-4 mr-2"
+                            checked={filter === "closed"}
+                            onCheckedChange={() => {
+                              handleCurrentId(dataSearch, "closed");
+                              setIsFilter(false);
+                            }}
+                          />
+                          <CheckCircle2 className="w-4 h-4 mr-2" />
+                          Closed
+                        </CommandItem>
+                      </CommandList>
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {filter && (
+                <Button
+                  variant={"ghost"}
+                  className="flex px-3"
+                  onClick={() => {
+                    handleCurrentId(dataSearch, "");
+                  }}
+                >
+                  Reset
+                  <XCircle className="h-4 w-4 ml-2" />
+                </Button>
+              )}
             </div>
           </div>
-          <ul className="space-y-2 flex flex-col">
+          <ul className="space-y-2 flex flex-col relative w-full min-h-[160px]">
+            {isGetList && (
+              <div className="w-full h-full absolute bg-gray-500/20 backdrop-blur-sm top-0 left-0 z-10 flex items-center justify-center rounded-md">
+                <Loader2 className="w-10 h-10 animate-spin text-gray-700 dark:text-white" />
+              </div>
+            )}
             {reportList?.map((item) => (
               <li className="capitalize" key={item.id}>
                 <Link
-                  href={`/admin/contacts/${item.id}`}
+                  href={`/admin/contacts/${item.ticket}`}
                   className="md:py-3 md:px-5 px-3 py-2 rounded-sm text-xs md:text-sm flex gap-1 justify-between md:items-center w-full text-start text-black dark:text-white bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:border dark:border-gray-700/70 dark:hover:bg-gray-700/70"
                 >
                   <div className="w-full">
                     <div className="flex gap-2 items-start w-full">
-                      <CircleDot className="w-5 h-5 text-green-500 mt-0.5" />
+                      {item.status === "opened" ? (
+                        <CircleDot className="w-5 h-6 md:h-7 text-green-500" />
+                      ) : null}
+                      {item.status === "closeWithoutPlan" ? (
+                        <CircleSlash className="w-5 h-6 md:h-7 text-gray-400" />
+                      ) : null}
+                      {item.status === "closeWithPlan" ? (
+                        <CheckCircle2 className="w-5 h-6 md:h-7 text-indigo-500" />
+                      ) : null}
                       <div className="flex flex-col md:flex-row w-full gap-1 md:items-center capitalize">
                         <div className="flex-col w-full flex md:gap-1">
                           <p className="text-base md:text-lg font-medium w-full line-clamp-2 flex-1">
                             {item.title}
                           </p>
-                          <p className="text-xs font-light w-full flex-wrap gap-1 flex dark:text-white/70 lowercase">
-                            #33601
-                            <p>dibuka</p>
-                            {item.created_at &&
-                              formatDistanceStrict(
-                                item.created_at,
-                                new Date(),
-                                {
-                                  addSuffix: true,
-                                  locale: indonesia,
-                                }
-                              )}
-                            <p>oleh</p>
-                            {item.user.name}
+                          <p className="text-xs font-light w-full flex-wrap gap-1 flex dark:text-white/70 uppercase">
+                            #{item.ticket}
+                            <p className="lowercase">dibuka</p>
+                            <p className="lowercase">
+                              {item.created_at &&
+                                formatDistanceStrict(
+                                  item.created_at,
+                                  new Date(),
+                                  {
+                                    addSuffix: true,
+                                    locale: indonesia,
+                                  }
+                                )}
+                            </p>
+                            <p className="lowercase">oleh</p>
+                            <p className="capitalize">{item.name}</p>
                           </p>
                         </div>
                       </div>

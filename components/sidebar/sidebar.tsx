@@ -8,6 +8,8 @@ import { ChevronRightIcon } from "../svg";
 
 import { MotionConfig, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { ButtonSidebar } from "./button-sidebar";
+import { Headset, Settings } from "lucide-react";
 
 interface SidebarProps {
   isAdmin?: boolean;
@@ -67,6 +69,25 @@ export const Sidebar = ({ isAdmin = false }: SidebarProps) => {
             isExpand={isExpand}
             isAdmin={isAdmin}
           />
+          <Separator className="bg-gray-500 dark:bg-white" />
+          <ButtonSidebar
+            label="Contact Support"
+            icon={<Headset className="w-5 h-5" />}
+            href={isAdmin ? "/admin/contacts" : "/contacts"}
+            active={pathname.startsWith(
+              !isAdmin ? "/contacts" : "/admin/contacts"
+            )}
+            expand={isExpand}
+          />
+          {isAdmin && (
+            <ButtonSidebar
+              label="Settings"
+              icon={<Settings className="w-5 h-5" />}
+              href={"/admin/settings"}
+              active={pathname.startsWith("/settings")}
+              expand={isExpand}
+            />
+          )}
         </div>
         <div className="w-full">
           <MenuAkun isExpand={isExpand} isAdmin={isAdmin} pathname={pathname} />

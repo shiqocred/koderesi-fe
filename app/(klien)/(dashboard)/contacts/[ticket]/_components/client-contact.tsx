@@ -8,12 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useModal } from "@/hooks/use-modal";
-import { cn } from "@/lib/utils";
 import {
   Check,
   CheckCircle2,
@@ -23,14 +20,29 @@ import {
   Edit3,
   Images,
   MessageSquare,
+  Plus,
   PlusCircle,
   RefreshCcwDot,
   Trash2,
 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { BubbleChat, ChatProps } from "./bubble-chat";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
 
@@ -176,13 +188,13 @@ const chats: ChatProps[] = [
 
 export const ClientContact = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const [inputChat, setInputChat] = useState<FileList | null>(null);
   const { onOpen } = useModal();
+  const [inputLampiran, setInputLampiran] = useState<FileList | null>(null);
+  const [isExpand, setIsExpand] = useState(false);
+  const params = useParams();
   const router = useRouter();
   const cookies = useCookies();
   const token = cookies.get("accessToken");
-
-  const params = useParams();
 
   const [input, setInput] = useState<{
     judul: string;
@@ -198,8 +210,7 @@ export const ClientContact = () => {
     e.preventDefault();
     const body = {
       title: input.judul,
-      desc: input.chat,
-      type: "error",
+      description: input.chat,
     };
 
     try {
@@ -319,7 +330,28 @@ export const ClientContact = () => {
               <div className="md:sticky md:top-10 w-full flex flex-col-reverse md:flex-col gap-4 text-xs">
                 <div className="flex flex-col gap-1.5">
                   <h5 className="font-semibold text-gray-500">Label</h5>
-                  <p>Tidak ada</p>
+                  <div className="flex justify-between w-full items-center">
+                    <p>Tidak ada</p>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button className="p-0.5 border bg-transparent hover:bg-transparent border-black/30 hover:border-black dark:border-white/40 dark:hover:border-white text-black dark:text-white h-auto rounded-sm">
+                          <Plus className="w-3 h-3" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent align="end" className="p-0 w-40">
+                        <Command>
+                          <CommandGroup>
+                            <CommandList>
+                              <CommandItem className="pr-10 flex items-center">
+                                <span className="w-3 h-3 rounded-full bg-red-400 mr-2" />
+                                <span>item</span>
+                              </CommandItem>
+                            </CommandList>
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
                 <Separator className="bg-gray-300 dark:bg-gray-700" />
                 <div className="flex flex-col gap-1.5">
@@ -356,7 +388,28 @@ export const ClientContact = () => {
             <div className="md:sticky md:top-10 w-full flex flex-col-reverse md:flex-col gap-4 text-xs">
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Label</h5>
-                <p>Tidak ada</p>
+                <div className="flex justify-between w-full items-center">
+                  <p>Tidak ada</p>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button className="p-0.5 border bg-transparent hover:bg-transparent border-black/30 hover:border-black dark:border-white/40 dark:hover:border-white text-black dark:text-white h-auto rounded-sm">
+                        <Plus className="w-3 h-3" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="p-0 w-40">
+                      <Command>
+                        <CommandGroup>
+                          <CommandList>
+                            <CommandItem className="pr-10 flex items-center">
+                              <span className="w-3 h-3 rounded-full bg-red-400 mr-2" />
+                              <span>item</span>
+                            </CommandItem>
+                          </CommandList>
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
               <Separator className="bg-gray-300 dark:bg-gray-700" />
               <div className="flex flex-col gap-1.5">
@@ -389,9 +442,13 @@ export const ClientContact = () => {
     <div className="flex h-full gap-6 flex-col w-full max-w-7xl mx-auto">
       <div className="flex flex-col">
         <div className="flex md:justify-between md:items-center gap-2 flex-col-reverse md:flex-row">
-          <h1 className="text-xl md:text-3xl text-black dark:text-white">
-            Terjadi Masalah Jaringan{" "}
+          <h1 className="text-xl md:text-3xl text-black dark:text-white flex flex-wrap gap-1">
+            <span>Terjadi Masalah Jaringan</span>
             <span className="text-gray-500 dark:text-gray-400">#31212</span>
+            <Badge className="px-2 py-1 bg-green-400 hover:bg-green-400 text-black font-medium flex md:hidden">
+              <CircleDot className="w-4 h-4 mr-2" />
+              Open
+            </Badge>
           </h1>
           <div className="flex items-center gap-2">
             <Button
@@ -402,22 +459,18 @@ export const ClientContact = () => {
               Edit
             </Button>
             <Button
-              className="h-8 text-xs md:text-sm bg-green-400 hover:bg-green-500 text-black hover:underline"
-              onClick={() => router.push("/contacts/new")}
+              className="h-8 text-xs md:text-sm bg-transparent hover:bg-transparent text-red-500 hover:text-red-600 border border-red-500 hover:border-red-600 hover:underline dark:text-red-500 dark:border-red-400 dark:hover:border-red-500"
+              onClick={() => onOpen("delete-ticket")}
             >
-              <PlusCircle className="md:w-4 md:h-4 w-3 h-3 mr-1 md:mr-2" />
-              Ticket Baru
+              <Trash2 className="md:w-4 md:h-4 w-3 h-3 mr-1 md:mr-2" />
+              Hapus
             </Button>
           </div>
         </div>
-        <div className="flex flex-col gap-2 pt-2 md:hidden">
+        <div className="flex flex-col gap-2 md:hidden mt-4">
           <Separator className="bg-gray-300" />
-          <div className="flex items-center gap-2">
-            <Badge className="px-2 py-1 bg-green-400 hover:bg-green-400 text-black font-medium">
-              <CircleDot className="w-4 h-4 mr-2" />
-              Open
-            </Badge>
-            <p>|</p>
+          <div className="flex items-center gap-2 mt-5">
+            <p className="text-sm">Label:</p>
             <Badge className="py-0.5 font-normal bg-yellow-400 text-black">
               bug
             </Badge>
@@ -427,10 +480,7 @@ export const ClientContact = () => {
       <Separator className="bg-gray-300" />
       <div className="flex w-full h-full gap-6 flex-col md:flex-row">
         <div className="w-full">
-          {chats.map((item) => (
-            <BubbleChat key={item.id} {...item} />
-          ))}
-          <div className="border-t-2 pt-8 flex flex-col border-gray-300 dark:border-gray-700">
+          <div className="border-b-2 pb-8 flex flex-col border-gray-300 dark:border-gray-700">
             <div className="border rounded-md p-3 gap-4 flex flex-col border-gray-300">
               <div className="font-semibold flex items-center">
                 <div className="flex h-9 w-9 rounded-full border justify-center items-center mr-2 border-black dark:border-white">
@@ -439,28 +489,43 @@ export const ClientContact = () => {
                 Balas Percakapan
               </div>
               <Textarea className="bg-transparent border-gray-300" cols={4} />
-              {inputChat && inputChat.length > 0 && (
+              {inputLampiran && inputLampiran.length > 0 && (
                 <div className="flex flex-col gap-2">
-                  <Label className="text-gray-700 dark:text-white text-sm">
-                    Lampiran
-                  </Label>
-                  <div className="flex w-full p-3 border rounded-lg border-gray-300 dark:border-green-200/40 gap-3">
-                    {inputChat &&
-                      Array.from({ length: inputChat.length ?? 0 }, (_, i) => (
-                        <div
-                          key={i}
-                          className="w-24 h-24 relative rounded-md overflow-hidden border border-gray-300"
-                        >
-                          <Image
-                            alt=""
-                            src={
-                              inputChat ? URL.createObjectURL(inputChat[i]) : ""
-                            }
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                      ))}
+                  <div className="flex w-full justify-between items-center">
+                    <Label className="text-gray-700 dark:text-white text-sm">
+                      Lampiran
+                    </Label>
+                    <Button
+                      type="button"
+                      onClick={() => setInputLampiran(null)}
+                      className="p-0 h-auto text-red-400 bg-transparent text-xs hover:bg-transparent"
+                    >
+                      <Trash2 className="w-3 h-3 mr-1" />
+                      Hapus
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 w-full p-3 border rounded-lg border-gray-300 dark:text-white gap-3">
+                    {inputLampiran &&
+                      Array.from(
+                        { length: inputLampiran.length ?? 0 },
+                        (_, i) => (
+                          <div
+                            key={i}
+                            className="w-full aspect-square relative rounded-md overflow-hidden border border-gray-300 dark:text-white"
+                          >
+                            <Image
+                              alt=""
+                              src={
+                                inputLampiran
+                                  ? URL.createObjectURL(inputLampiran[i])
+                                  : ""
+                              }
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        )
+                      )}
                   </div>
                 </div>
               )}
@@ -471,8 +536,9 @@ export const ClientContact = () => {
                     Tambah Lampiran
                     <Input
                       type="file"
+                      multiple
                       className="absolute top-0 left-0 w-full h-full hidden"
-                      onChange={(e) => setInputChat(e.target.files)}
+                      onChange={(e) => setInputLampiran(e.target.files)}
                     />
                   </Label>
                 </div>
@@ -480,9 +546,32 @@ export const ClientContact = () => {
               </div>
             </div>
           </div>
+          <div
+            className={cn(
+              "relative overflow-hidden",
+              isExpand
+                ? "h-auto md:h-auto pb-[10vh] md:pb-0"
+                : "h-screen md:h-auto pb-0 md:pb-0"
+            )}
+          >
+            <div className="relative h-full">
+              {chats.map((item) => (
+                <BubbleChat key={item.id} {...item} />
+              ))}
+            </div>
+            <div className="absolute bottom-0 left-0 w-full h-[10vh] bg-gradient-to-b from-gray-50/0 via-gray-50/80 to-gray-50 dark:from-black/0 dark:via-black/80 dark:to-black flex items-center justify-center md:hidden">
+              <Button
+                type="button"
+                onClick={() => setIsExpand(!isExpand)}
+                className="bg-white hover:bg-gray-100 border border-black dark:bg-black dark:border-white text-black dark:text-white"
+              >
+                {isExpand ? "Collapse" : "Expand"}
+              </Button>
+            </div>
+          </div>
         </div>
         <div className="md:w-1/4 w-full md:flex-none md:relative">
-          <div className="md:sticky md:top-10 w-full flex flex-col-reverse md:flex-col gap-4 text-xs">
+          <div className="md:sticky md:top-20 lg:top-10 w-full flex flex-col-reverse md:flex-col gap-4 text-xs">
             <div className="flex flex-col gap-4">
               <Separator className="md:hidden" />
               <div className="flex flex-col gap-1.5">
@@ -492,7 +581,28 @@ export const ClientContact = () => {
               <Separator />
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Label</h5>
-                <p>Tidak ada</p>
+                <div className="flex justify-between w-full items-center">
+                  <p>Tidak ada</p>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button className="p-0.5 border bg-transparent hover:bg-transparent border-black/30 hover:border-black dark:border-white/40 dark:hover:border-white text-black dark:text-white h-auto rounded-sm">
+                        <Plus className="w-3 h-3" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="p-0 w-40">
+                      <Command>
+                        <CommandGroup>
+                          <CommandList>
+                            <CommandItem className="pr-10 flex items-center">
+                              <span className="w-3 h-3 rounded-full bg-red-400 mr-2" />
+                              <span>item</span>
+                            </CommandItem>
+                          </CommandList>
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
               <Separator />
               <div className="flex flex-col gap-1.5">

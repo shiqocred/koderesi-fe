@@ -19,7 +19,16 @@ export type ModalType =
   | "edit-chat"
   | "delete-chat"
   | "edit-ticket"
-  | "delete-ticket";
+  | "delete-ticket"
+  | "add-label"
+  | "edit-label"
+  | "delete-label";
+
+export interface LabelProps {
+  id: string;
+  name: string;
+  color: string;
+}
 export interface ManifestProps {
   note: string;
   status: string;
@@ -34,10 +43,12 @@ interface UseModalProps {
   onOpen: (
     type: ModalType,
     data?: string,
-    dataManifest?: ManifestProps
+    dataManifest?: ManifestProps,
+    dataLabel?: LabelProps
   ) => void;
   onClose: () => void;
   dataManifest?: ManifestProps;
+  dataLabel?: LabelProps;
 }
 
 export const useModal: UseBoundStore<StoreApi<UseModalProps>> =
@@ -51,7 +62,12 @@ export const useModal: UseBoundStore<StoreApi<UseModalProps>> =
       waybill_id: "",
       date_manifest: "",
     },
-    onOpen: (type, data, dataManifest) =>
-      set({ isOpen: true, type, data, dataManifest }),
+    dataLabel: {
+      id: "",
+      name: "",
+      color: "",
+    },
+    onOpen: (type, data, dataManifest, dataLabel) =>
+      set({ isOpen: true, type, data, dataManifest, dataLabel }),
     onClose: () => set({ isOpen: false, type: null }),
   }));

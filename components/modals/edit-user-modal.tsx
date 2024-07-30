@@ -80,7 +80,7 @@ export const EditUserModal = () => {
 
   useEffect(() => {
     data && getDetail();
-  }, [data]);
+  }, [isModalOpen]);
 
   return (
     <Modal
