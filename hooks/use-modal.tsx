@@ -37,12 +37,12 @@ export interface ManifestProps {
 }
 
 interface UseModalProps {
-  data: string;
+  data: any;
   type: ModalType | null;
   isOpen: boolean;
   onOpen: (
     type: ModalType,
-    data?: string,
+    data?: any,
     dataManifest?: ManifestProps,
     dataLabel?: LabelProps
   ) => void;

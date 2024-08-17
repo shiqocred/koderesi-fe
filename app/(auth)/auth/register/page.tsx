@@ -16,8 +16,16 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Eye, EyeOff, Moon, Sun } from "lucide-react";
+import { FormEvent, useEffect, useState } from "react";
+import {
+  Eye,
+  EyeOff,
+  Moon,
+  Sun,
+  RefreshCcw,
+  ShieldAlert,
+  ShieldCheck,
+} from "lucide-react";
 import Link from "next/link";
 import { LogoShrinkIcon } from "@/components/svg";
 import { cn } from "@/lib/utils";
@@ -30,43 +38,30 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useTheme } from "next-themes";
-
-const formSchema = z
-  .object({
-    name: z.string().min(1, {
-      message: "Name is required",
-    }),
-    email: z.string().email(),
-    password: z.string().min(8, {
-      message: "Password min length 8 required",
-    }),
-    whatsApp: z.string().min(10, {
-      message: "No. WhatsApp invalid",
-    }),
-  })
-  .required();
+import { Label } from "@/components/ui/label";
+import { useDebounce } from "@/hooks/use-debounce";
 
 const RegisterPage = () => {
   const [isMounted, setIsMounted] = useState(false);
   const { setTheme, theme } = useTheme();
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      whatsApp: "",
-    },
+  const [isValid, setIsValid] = useState("nothing");
+  const [input, setInput] = useState({
+    name: "",
+    email: "",
+    password: "",
   });
+  const debounceEmail = useDebounce(input.email);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const body = input;
     try {
       await axios
         .post(
           `https://koderesi.raventech.my.id/api/auth/registerFromAdmin`,
-          values
+          body
         )
         .then((res: any) => {
           toast.success("Register berhasil.");
@@ -78,6 +73,27 @@ const RegisterPage = () => {
     }
   };
 
+  const verifyEmail = async () => {
+    setIsValid("load");
+    try {
+      await axios
+        .get(
+          `https://koderesi.raventech.my.id/api/verifyEmail?email=${debounceEmail}`
+        )
+        .then((res: any) => {
+          console.log(res);
+          if (res.data.success) {
+            setIsValid("email");
+          } else {
+            setIsValid("wrong");
+          }
+        });
+    } catch (error) {
+      console.log("[ERROR_VERIFY]:", error);
+      setIsValid("wrong");
+    }
+  };
+
   const onChangeTheme = () => {
     if (theme === "light") {
       setTheme("dark");
@@ -85,6 +101,16 @@ const RegisterPage = () => {
       setTheme("light");
     }
   };
+
+  useEffect(() => {
+    if (debounceEmail.length > 0) {
+      verifyEmail();
+    }
+
+    if (debounceEmail.length === 0) {
+      setIsValid("nothing");
+    }
+  }, [debounceEmail]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -135,140 +161,116 @@ const RegisterPage = () => {
             </p>
           </div>
         </div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-3 md:gap-5 xl:gap-8"
-          >
-            <div className="flex flex-col gap-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem className="space-y-0.5 md:space-y-1 relative">
-                    <FormLabel
-                      className={cn(
-                        "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                        field.value.length === 0
-                          ? "translate-y-3.5 left-3 font-normal"
-                          : "-translate-y-3 left-0 font-medium"
-                      )}
-                    >
-                      Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+        <form
+          onSubmit={onSubmit}
+          className="flex flex-col gap-3 md:gap-5 xl:gap-8"
+        >
+          <div className="flex flex-col gap-6">
+            <div className="space-y-0.5 md:space-y-1 relative">
+              <Label
+                className={cn(
+                  "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                  input.name.length === 0
+                    ? "translate-y-3.5 left-3 font-normal"
+                    : "-translate-y-3 left-0 font-medium"
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="space-y-0.5 md:space-y-1 relative">
-                    <FormLabel
-                      className={cn(
-                        "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                        field.value.length === 0
-                          ? "translate-y-3.5 left-3 font-normal"
-                          : "-translate-y-3 left-0 font-semibold"
-                      )}
-                    >
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="whatsApp"
-                render={({ field }) => (
-                  <FormItem className="space-y-0.5 md:space-y-1 relative">
-                    <FormLabel
-                      className={cn(
-                        "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                        field.value.length === 0
-                          ? "translate-y-3.5 left-3 font-normal"
-                          : "-translate-y-3 left-0 font-semibold"
-                      )}
-                    >
-                      No. WhatsApp
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="space-y-0.5 md:space-y-1 relative">
-                    <FormLabel
-                      className={cn(
-                        "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                        field.value.length === 0
-                          ? "translate-y-3.5 left-3 font-normal"
-                          : "-translate-y-3 left-0 font-semibold"
-                      )}
-                    >
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative flex items-center peer">
-                        <Input
-                          {...field}
-                          type={!isVisible ? "password" : "text"}
-                          className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-                        />
-                        <Button
-                          type="button"
-                          className="h-auto p-1 rounded right-1.5 absolute hover:bg-transparent"
-                          variant={"ghost"}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setIsVisible(!isVisible);
-                          }}
-                        >
-                          {!isVisible ? (
-                            <Eye className="h-5 w-5" />
-                          ) : (
-                            <EyeOff className="h-5 w-5" />
-                          )}
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              >
+                Name
+              </Label>
+              <Input
+                value={input.email}
+                onChange={(e) =>
+                  setInput((prev) => ({ ...prev, email: e.target.value }))
+                }
+                className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
               />
             </div>
-            <Button
-              type="submit"
-              className="w-full bg-green-500 hover:bg-green-400 text-black"
-            >
-              Daftar
-            </Button>
-          </form>
-        </Form>
+            <div className="space-y-0.5 md:space-y-1 relative">
+              <Label
+                className={cn(
+                  "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                  input.email.length === 0
+                    ? "translate-y-3.5 left-3 font-normal"
+                    : "-translate-y-3 left-0 font-semibold"
+                )}
+              >
+                Email
+              </Label>
+              <Input
+                value={input.email}
+                onChange={(e) =>
+                  setInput((prev) => ({ ...prev, email: e.target.value }))
+                }
+                className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
+              />
+              <div className="font-semibold text-xs">
+                {isValid === "nothing" && ""}
+                {isValid === "load" && (
+                  <p className="flex items-center text-yellow-500">
+                    <RefreshCcw className="w-3 h-3 animate-spin mr-1" />
+                    Sedang Verifikasi Email...
+                  </p>
+                )}
+                {isValid === "email" && (
+                  <p className="flex items-center text-green-500">
+                    <ShieldCheck className="w-3 h-3 mr-1" />
+                    Email Terverifikasi
+                  </p>
+                )}
+                {isValid === "wrong" && (
+                  <p className="flex items-center text-red-500">
+                    <ShieldAlert className="w-3 h-3 mr-1" />
+                    Email Tidak Terverifikasi
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="space-y-0.5 md:space-y-1 relative">
+              <Label
+                className={cn(
+                  "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                  input.password.length === 0
+                    ? "translate-y-3.5 left-3 font-normal"
+                    : "-translate-y-3 left-0 font-semibold"
+                )}
+              >
+                Password
+              </Label>
+              <div className="relative flex items-center peer">
+                <Input
+                  value={input.password}
+                  onChange={(e) =>
+                    setInput((prev) => ({ ...prev, password: e.target.value }))
+                  }
+                  type={!isVisible ? "password" : "text"}
+                  className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
+                />
+                <Button
+                  type="button"
+                  className="h-auto p-1 rounded right-1.5 absolute hover:bg-transparent"
+                  variant={"ghost"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsVisible(!isVisible);
+                  }}
+                >
+                  {!isVisible ? (
+                    <Eye className="h-5 w-5" />
+                  ) : (
+                    <EyeOff className="h-5 w-5" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+          <Button
+            type="submit"
+            className="w-full bg-green-500 hover:bg-green-400 text-black"
+            disabled={isValid !== "email"}
+          >
+            Daftar
+          </Button>
+        </form>
         <div className="flex flex-col gap-1 items-center pt-4 pb-2 md:pb-0 md:pt-7 xl:pt-10">
           <p className="text-xs md:text-sm text-center">
             Sudah punya akun?

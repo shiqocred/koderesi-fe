@@ -20,8 +20,11 @@ export const DeleteChatModal = () => {
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.delete(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/destroy/${data}`,
+      await axios.put(
+        `https://koderesi.raventech.my.id/api/${
+          data.isAdmin ? "superadmin" : "admin"
+        }/support/deleteChat/${data.id}`,
+        {},
         {
           headers: {
             Accept: "application/json",
@@ -29,13 +32,13 @@ export const DeleteChatModal = () => {
           },
         }
       );
-      toast.success("User berhasil dihapus");
-      cookies.set("new", "added");
+      toast.success("Chat berhasil dihapus");
+      cookies.set("chat updated", "1");
       onClose();
       router.refresh();
     } catch (error) {
-      console.log("[ERROR_DELETE_USER]:", error);
-      toast.error("User gagal dihapus");
+      console.log("[ERROR_DELETE_Chat]:", error);
+      toast.error("Chat gagal dihapus");
     }
   };
 
