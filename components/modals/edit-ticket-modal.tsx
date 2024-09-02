@@ -55,8 +55,10 @@ export const EditTicketModal = () => {
   };
 
   useEffect(() => {
-    data.title && isModalOpen && setInput({ title: data.title });
-  }, [data.title]);
+    if (data) {
+      data.title && isModalOpen && setInput({ title: data.title });
+    }
+  }, [data]);
 
   return (
     <Modal

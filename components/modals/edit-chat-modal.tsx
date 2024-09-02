@@ -57,10 +57,10 @@ export const EditChatModal = () => {
   };
 
   useEffect(() => {
-    if (data.message) {
+    if (isModalOpen && data) {
       setInput({ message: data.message });
     }
-  }, [data.message]);
+  }, [data, isModalOpen]);
 
   return (
     <Modal

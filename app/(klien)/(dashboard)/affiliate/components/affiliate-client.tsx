@@ -117,10 +117,21 @@ export const AffiliateClient = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const body = {
+      type_promot: input.type_promot,
+      affiliate_webs: input.affiliate_webs,
+      affiliate_sosmed: {
+        fb: input.fb_link,
+        x: input.twt_link,
+        ig: input.ig_link,
+        yt: input.yt_link,
+      },
+    };
     try {
-      await axios.post(
+      const res: any = await axios.post(
         `https://koderesi.raventech.my.id/api/admin/affiliate/store`,
-        input,
+        body,
         {
           headers: {
             Accept: "application/json",
@@ -128,9 +139,13 @@ export const AffiliateClient = () => {
           },
         }
       );
-      toast.success("Data berhasil diajukan");
-      setStep("waiting");
+      if (res.data.data.status) {
+        toast.success("Data berhasil diajukan");
+      } else {
+        toast.error("Data gagal diajukan");
+      }
     } catch (error) {
+      toast.error("Data gagal diajukan");
       console.log("[ERROR_SUBMIT_DATA]:", error);
     }
   };

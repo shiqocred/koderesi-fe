@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/types";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
@@ -14,18 +14,79 @@ import Image from "next/image";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import { CardPrice } from "./card-price";
+import axios from "axios";
+import { useCookies } from "next-client-cookies";
+import { CardPromo } from "./card-promo";
+
+interface BannerProps {
+  id: string;
+  banner: string;
+}
+interface PromoProps {
+  id: string;
+  title: string;
+  total_credits: number;
+  before_discount: number;
+  after_discount: number;
+  date_start: string;
+  date_end: string;
+  descriptions: string[];
+}
 
 const Promotion = () => {
   const bannerRef = useRef<SwiperType>();
   const promoRef = useRef<SwiperType>();
   const progessRef = useRef<HTMLDivElement>(null);
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+  const [bannerList, setBannerList] = useState<BannerProps[]>([]);
+  const [promoList, setPromoList] = useState<PromoProps[]>([
+    {
+      id: "",
+      title: "",
+      total_credits: 0,
+      before_discount: 0,
+      after_discount: 0,
+      date_start: "",
+      date_end: "",
+      descriptions: [""],
+    },
+  ]);
 
   const onAutoplayTimeLeft = (s: any, time: any, progress: any) => {
     if (progessRef.current) {
       progessRef.current.style.width = `${100 - progress * 100}%`;
     }
   };
+
+  const handleGetPromo = async () => {
+    try {
+      const res = await axios.get(
+        `https://koderesi.raventech.my.id/api/admin/promo`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPromoList(res.data.data.promo);
+      setBannerList(res.data.data.banner);
+    } catch (error) {
+      console.log("[ERROR_PROMO_GET]:", error);
+    }
+  };
+
+  useEffect(() => {
+    setIsMounted(true);
+    handleGetPromo();
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div className="w-full flex flex-col px-2 sm:px-4 md:px-8">
@@ -67,54 +128,27 @@ const Promotion = () => {
             ref={progessRef}
             className="h-1 md:h-2 bg-green-500 absolute top-0 z-20 rounded-full scale-110"
           />
-          <SwiperSlide className="relative w-full aspect-[2/1] md:aspect-[4/1] rounded-md flex items-center justify-center overflow-hidden">
-            <Link href={`/posters`} className="w-full h-full">
-              <Card className="flex items-center w-full justify-center shadow-none flex-col h-full bg-transparent">
-                <div className="w-full h-full rounded-md overflow-hidden">
-                  <Image
-                    src={
-                      "https://images.unsplash.com/photo-1719937206168-f4c829152b91?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    }
-                    alt={""}
-                    fill
-                    className="object-cover pointer-events-none"
-                  />
-                </div>
-              </Card>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide className="relative w-full aspect-[2/1] md:aspect-[4/1] rounded-md flex items-center justify-center overflow-hidden">
-            <Link href={`/posters`} className="w-full h-full">
-              <Card className="flex items-center w-full justify-center shadow-none flex-col h-full bg-transparent">
-                <div className="w-full h-full rounded-md overflow-hidden">
-                  <Image
-                    src={
-                      "https://images.unsplash.com/photo-1722232778560-a56742074a31?w=3270&auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyM3x8fGVufDB8fHx8fA%3D%3D"
-                    }
-                    alt={""}
-                    fill
-                    className="object-cover pointer-events-none"
-                  />
-                </div>
-              </Card>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide className="relative w-full aspect-[2/1] md:aspect-[4/1] rounded-md flex items-center justify-center overflow-hidden">
-            <Link href={`/posters`} className="w-full h-full">
-              <Card className="flex items-center w-full justify-center shadow-none flex-col h-full bg-transparent">
-                <div className="w-full h-full rounded-md overflow-hidden">
-                  <Image
-                    src={
-                      "https://images.unsplash.com/photo-1721932423849-e9033192b190?w=3270&auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzOXx8fGVufDB8fHx8fA%3D%3D"
-                    }
-                    alt={""}
-                    fill
-                    className="object-cover pointer-events-none"
-                  />
-                </div>
-              </Card>
-            </Link>
-          </SwiperSlide>
+          {bannerList.map((item) => (
+            <SwiperSlide
+              key={item.id}
+              className="relative w-full aspect-[2/1] md:aspect-[4/1] rounded-md flex items-center justify-center overflow-hidden"
+            >
+              <Link href={`/posters`} className="w-full h-full">
+                <Card className="flex items-center w-full justify-center shadow-none flex-col h-full bg-transparent">
+                  <div className="w-full h-full rounded-md overflow-hidden">
+                    <Image
+                      src={
+                        "https://images.unsplash.com/photo-1719937206168-f4c829152b91?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      }
+                      alt={""}
+                      fill
+                      className="object-cover pointer-events-none"
+                    />
+                  </div>
+                </Card>
+              </Link>
+            </SwiperSlide>
+          ))}
         </Swiper>
         <div className="flex h-full w-full items-center flex-col lg:flex-row">
           <div className="h-full flex flex-col justify-center w-full lg:w-1/4 lg:mr-[30px] flex-none mb-5 md:mb-10 lg:mb-0">
@@ -145,6 +179,14 @@ const Promotion = () => {
                 },
               },
               1024: {
+                slidesPerView: 2,
+                autoplay: {
+                  delay: 2500,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
+                },
+              },
+              1440: {
                 slidesPerView: 3,
                 autoplay: {
                   delay: 2500,
@@ -178,29 +220,26 @@ const Promotion = () => {
                 <Button
                   className="w-8 h-8 md:w-10 md:h-10 p-0"
                   onClick={() => promoRef.current?.slidePrev()}
+                  disabled={promoList.length <= 3}
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </Button>
                 <Button
                   className="w-8 h-8 md:w-10 md:h-10 p-0"
                   onClick={() => promoRef.current?.slideNext()}
+                  disabled={promoList.length <= 3}
                 >
                   <ChevronRight className="w-5 h-5" />
                 </Button>
               </div>
             </div>
-            {Array.from({ length: 6 }, (_, i) => (
+            {promoList.map((item) => (
               <SwiperSlide
-                key={i}
-                className="relative w-full rounded-md flex items-center justify-center overflow-hidden"
+                key={item.id}
+                className="relative w-full h-full rounded-md flex items-center justify-center overflow-hidden"
               >
-                <Link href={`/posters/${i}`} className="w-full h-full">
-                  <CardPrice
-                    kredit={300}
-                    perKredit={350}
-                    price={35000}
-                    keterangan="normal"
-                  />
+                <Link href={`/top-up/${item.id}`} className="w-full h-full">
+                  <CardPromo {...item} />
                 </Link>
               </SwiperSlide>
             ))}
