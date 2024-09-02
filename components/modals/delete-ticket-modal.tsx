@@ -21,7 +21,7 @@ export const DeleteTicketModal = () => {
     e.preventDefault();
     try {
       await axios.delete(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/destroy/${data}`,
+        `https://koderesi.raventech.my.id/api/superadmin/support/destroy/${data}`,
         {
           headers: {
             Accept: "application/json",
@@ -29,13 +29,12 @@ export const DeleteTicketModal = () => {
           },
         }
       );
-      toast.success("User berhasil dihapus");
-      cookies.set("new", "added");
+      toast.success("Ticket berhasil dihapus");
       onClose();
-      router.refresh();
+      router.push("/admin/contacts");
     } catch (error) {
-      console.log("[ERROR_DELETE_USER]:", error);
-      toast.error("User gagal dihapus");
+      console.log("[ERROR_DELETE_TICKET]:", error);
+      toast.error("Ticket gagal dihapus");
     }
   };
 

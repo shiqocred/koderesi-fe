@@ -1,75 +1,68 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Edit3, Eye, EyeOff, Save, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useModal } from "@/hooks/use-modal";
-
-const formSchema = z
-  .object({
-    name: z.string().min(3, {
-      message: "Name minimal 3 huruf",
-    }),
-    username: z.string().min(3, {
-      message: "Username minimal 3 huruf",
-    }),
-    email: z.string().email(),
-    whatsapp: z.string().min(10, {
-      message: "Nomor WhatsApp minimal 10 angka",
-    }),
-    old_password: z.string(),
-    new_password: z.string().min(8, {
-      message: "Password Baru minimal 8 angka",
-    }),
-    confirm_password: z.string().min(8, {
-      message: "Konfirmasi Password Baru minimal 8 angka",
-    }),
-  })
-  .required();
+import axios from "axios";
+import { useCookies } from "next-client-cookies";
+import { Label } from "@/components/ui/label";
 
 export const ClientSettings = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const [isNameEdit, setIsNameEdit] = useState(false);
   const [isContactEdit, setIsContactEdit] = useState(false);
   const [isPasswordEdit, setIsPasswordEdit] = useState(false);
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
   const { onOpen } = useModal();
 
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleOld, setIsVisibleOld] = useState(false);
 
   const [isVisibleConfirmation, setIsVisibleConfirmation] = useState(false);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      username: "",
-      email: "",
-      whatsapp: "",
-      old_password: "",
-      new_password: "",
-      confirm_password: "",
-    },
+
+  const [data, setData] = useState({
+    username: "",
+    email: "",
+    whatsapp: "",
+    old_password: "",
+    new_password: "",
+    confirm_password: "",
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {};
+  console.log(data);
+
+  const handleGetProfile = async () => {
+    try {
+      const res = await axios.get(
+        "https://koderesi.raventech.my.id/api/admin/profile",
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setData((prev) => ({
+        ...prev,
+        username: res.data.data.name ?? "",
+        email: res.data.data.email ?? "",
+        whatsapp: res.data.data.phone_number ?? "",
+      }));
+    } catch (error) {
+      console.log("[ERROR_GET_Profile]:", error);
+    }
+  };
+
+  const formSubmit = async (e: FormEvent) => {};
 
   useEffect(() => {
     setIsMounted(true);
+    handleGetProfile();
   }, []);
 
   if (!isMounted) {
@@ -113,108 +106,7 @@ export const ClientSettings = () => {
           </Card>
           <Card className="md:p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border p-3">
             <div className="flex items-center justify-between">
-              <h5 className="font-medium text-lg">Atur Nama</h5>
-              {isNameEdit ? (
-                <Button
-                  type="button"
-                  onClick={() => setIsNameEdit(false)}
-                  className="bg-transparent hover:bg-transparent text-gray-700 dark:text-white hover:underline font-normal"
-                >
-                  <X className="w-4 h-4  mr-2" />
-                  Batal
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  onClick={() => setIsNameEdit(true)}
-                  className="bg-transparent hover:bg-transparent text-yellow-600 dark:text-yellow-400 hover:underline font-normal"
-                >
-                  <Edit3 className="w-4 h-4  mr-2" />
-                  Edit
-                </Button>
-              )}
-            </div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full gap-4 flex flex-col"
-              >
-                <div className="flex items-start flex-col gap-6 w-full">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
-                        <FormLabel
-                          className={cn(
-                            "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                            field.value.length === 0
-                              ? "translate-y-3.5 left-3 font-normal"
-                              : "-translate-y-3 left-0 font-light"
-                          )}
-                        >
-                          Nama Lengakp
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={!isNameEdit}
-                            className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                          />
-                        </FormControl>
-                        <FormMessage className="dark:text-red-400 font-light text-xs before:content-['*']" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
-                        <FormLabel
-                          className={cn(
-                            "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                            field.value.length === 0
-                              ? "translate-y-3.5 left-3 font-normal"
-                              : "-translate-y-3 left-0 font-light"
-                          )}
-                        >
-                          Username
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={!isNameEdit}
-                            className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                          />
-                        </FormControl>
-                        <FormMessage className="dark:text-red-400 font-light text-xs before:content-['*']" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="w-full justify-between flex dark:bg-gray-800 rounded md:px-3 py-1 md:items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 px-2">
-                  <p className="text-sm dark:text-gray-300">
-                    Periksa terlebih dahulu sebelum konfirmasi.
-                  </p>
-                  <Button
-                    type="submit"
-                    disabled={!isNameEdit}
-                    className="bg-transparent hover:bg-transparent dark:text-green-400 hover:underline font-normal text-green-700"
-                  >
-                    <Save className="w-4 h-4  mr-2" />
-                    Simpan
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </Card>
-          <Card className="md:p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border p-3">
-            <div className="flex items-center justify-between">
-              <h5 className="font-medium text-lg">
-                Atur Email dan No. WhatsApp
-              </h5>
+              <h5 className="font-medium text-lg">Atur Data Diri Anda</h5>
               {isContactEdit ? (
                 <Button
                   type="button"
@@ -235,81 +127,72 @@ export const ClientSettings = () => {
                 </Button>
               )}
             </div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full gap-4 flex flex-col"
-              >
-                <div className="flex items-start flex-col gap-6 w-full">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
-                        <FormLabel
-                          className={cn(
-                            "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                            field.value.length === 0
-                              ? "translate-y-3.5 left-3 font-normal"
-                              : "-translate-y-3 left-0 font-light"
-                          )}
-                        >
-                          Email
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={!isContactEdit}
-                            className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                          />
-                        </FormControl>
-                        <FormMessage className="dark:text-red-400 font-light text-xs before:content-['*']" />
-                      </FormItem>
+            <form onSubmit={formSubmit} className="w-full gap-4 flex flex-col">
+              <div className="flex items-start flex-col gap-6 w-full">
+                <div className="space-y-0.5 md:space-y-1 relative w-full">
+                  <Label
+                    className={cn(
+                      "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                      data.username.length === 0
+                        ? "translate-y-3.5 left-3 font-normal"
+                        : "-translate-y-3 left-0 font-light"
                     )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="whatsapp"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
-                        <FormLabel
-                          className={cn(
-                            "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                            field.value.length === 0
-                              ? "translate-y-3.5 left-3 font-normal"
-                              : "-translate-y-3 left-0 font-light"
-                          )}
-                        >
-                          Nomor WhatsApp
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={!isContactEdit}
-                            className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                          />
-                        </FormControl>
-                        <FormMessage className="dark:text-red-400 font-light text-xs before:content-['*']" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="w-full justify-between flex dark:bg-gray-800 rounded md:px-3 py-1 md:items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 px-2">
-                  <p className="text-sm dark:text-gray-300">
-                    Periksa terlebih dahulu sebelum konfirmasi.
-                  </p>
-                  <Button
-                    type="submit"
-                    disabled={!isContactEdit}
-                    className="bg-transparent hover:bg-transparent dark:text-green-400 hover:underline font-normal text-green-700"
                   >
-                    <Save className="w-4 h-4  mr-2" />
-                    Simpan
-                  </Button>
+                    Name
+                  </Label>
+                  <Input
+                    disabled={!isContactEdit}
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                  />
                 </div>
-              </form>
-            </Form>
+                <div className="space-y-0.5 md:space-y-1 relative w-full">
+                  <Label
+                    className={cn(
+                      "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                      data.email.length === 0
+                        ? "translate-y-3.5 left-3 font-normal"
+                        : "-translate-y-3 left-0 font-light"
+                    )}
+                  >
+                    Email
+                  </Label>
+                  <Input
+                    disabled={!isContactEdit}
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                  />
+                </div>
+                <div className="space-y-0.5 md:space-y-1 relative w-full">
+                  <Label
+                    className={cn(
+                      "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                      data.whatsapp.length === 0
+                        ? "translate-y-3.5 left-3 font-normal"
+                        : "-translate-y-3 left-0 font-light"
+                    )}
+                  >
+                    WhatsApp
+                  </Label>
+                  <Input
+                    disabled={!isContactEdit}
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="w-full justify-between flex dark:bg-gray-800 rounded md:px-3 py-1 md:items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 px-2">
+                <p className="text-sm dark:text-gray-300">
+                  Periksa terlebih dahulu sebelum konfirmasi.
+                </p>
+                <Button
+                  type="submit"
+                  disabled={!isContactEdit}
+                  className="bg-transparent hover:bg-transparent dark:text-green-400 hover:underline font-normal text-green-700"
+                >
+                  <Save className="w-4 h-4  mr-2" />
+                  Simpan
+                </Button>
+              </div>
+            </form>
           </Card>
           <Card className="md:p-5 flex flex-col gap-6 w-full bg-transparent border-gray-300 dark:border-gray-700 border p-3">
             <div className="flex items-center justify-between">
@@ -334,168 +217,129 @@ export const ClientSettings = () => {
                 </Button>
               )}
             </div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full gap-4 flex flex-col"
-              >
-                <div className="flex items-start flex-col gap-6 w-full">
-                  <FormField
-                    control={form.control}
-                    name="old_password"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
-                        <FormLabel
-                          className={cn(
-                            "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                            field.value.length === 0
-                              ? "translate-y-3.5 left-3 font-normal"
-                              : "-translate-y-3 left-0 font-semibold"
-                          )}
-                        >
-                          Paswword Lama
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative flex items-center peer w-full">
-                            <Input
-                              disabled={!isPasswordEdit}
-                              {...field}
-                              type={!isVisibleOld ? "password" : "text"}
-                              className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                            />
-                            <Button
-                              type="button"
-                              className="h-auto p-1 rounded right-1.5 absolute hover:bg-transparent"
-                              disabled={!isPasswordEdit}
-                              variant={"ghost"}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setIsVisibleOld(!isVisibleOld);
-                              }}
-                            >
-                              {!isVisibleOld ? (
-                                <Eye className="h-5 w-5" />
-                              ) : (
-                                <EyeOff className="h-5 w-5" />
-                              )}
-                            </Button>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+            <form onSubmit={formSubmit} className="w-full gap-4 flex flex-col">
+              <div className="flex items-start flex-col gap-6 w-full">
+                <div className="space-y-0.5 md:space-y-1 relative w-full">
+                  <Label
+                    className={cn(
+                      "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                      data.old_password.length === 0
+                        ? "translate-y-3.5 left-3 font-normal"
+                        : "-translate-y-3 left-0 font-semibold"
                     )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="new_password"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
-                        <FormLabel
-                          className={cn(
-                            "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                            field.value.length === 0
-                              ? "translate-y-3.5 left-3 font-normal"
-                              : "-translate-y-3 left-0 font-semibold"
-                          )}
-                        >
-                          Paswword Baru
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative flex items-center peer w-full">
-                            <Input
-                              disabled={!isPasswordEdit}
-                              {...field}
-                              type={!isVisible ? "password" : "text"}
-                              className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                            />
-                            <Button
-                              type="button"
-                              className="h-auto p-1 rounded right-1.5 absolute hover:bg-transparent"
-                              disabled={!isPasswordEdit}
-                              variant={"ghost"}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setIsVisible(!isVisible);
-                              }}
-                            >
-                              {!isVisible ? (
-                                <Eye className="h-5 w-5" />
-                              ) : (
-                                <EyeOff className="h-5 w-5" />
-                              )}
-                            </Button>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="confirm_password"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0.5 md:space-y-1 relative w-full">
-                        <FormLabel
-                          className={cn(
-                            "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                            field.value.length === 0
-                              ? "translate-y-3.5 left-3 font-normal"
-                              : "-translate-y-3 left-0 font-semibold"
-                          )}
-                        >
-                          Konfirmasi Paswword Baru
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative flex items-center peer w-full">
-                            <Input
-                              disabled={!isPasswordEdit}
-                              {...field}
-                              type={
-                                !isVisibleConfirmation ? "password" : "text"
-                              }
-                              className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                            />
-                            <Button
-                              type="button"
-                              className="h-auto p-1 rounded right-1.5 absolute hover:bg-transparent"
-                              disabled={!isPasswordEdit}
-                              variant={"ghost"}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setIsVisibleConfirmation(
-                                  !isVisibleConfirmation
-                                );
-                              }}
-                            >
-                              {!isVisibleConfirmation ? (
-                                <Eye className="h-5 w-5" />
-                              ) : (
-                                <EyeOff className="h-5 w-5" />
-                              )}
-                            </Button>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="w-full justify-between flex dark:bg-gray-800 rounded md:px-3 py-1 md:items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 px-2">
-                  <p className="text-sm dark:text-gray-300">
-                    Periksa terlebih dahulu sebelum konfirmasi.
-                  </p>
-                  <Button
-                    type="submit"
-                    disabled={!isPasswordEdit}
-                    className="bg-transparent hover:bg-transparent dark:text-green-400 hover:underline font-normal text-green-700"
                   >
-                    <Save className="w-4 h-4  mr-2" />
-                    Simpan
-                  </Button>
+                    Paswword Lama
+                  </Label>
+                  <div className="relative flex items-center peer w-full">
+                    <Input
+                      disabled={!isPasswordEdit}
+                      type={!isVisibleOld ? "password" : "text"}
+                      className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                    />
+                    <Button
+                      type="button"
+                      className="h-auto p-1 rounded right-1.5 absolute hover:bg-transparent"
+                      disabled={!isPasswordEdit}
+                      variant={"ghost"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsVisibleOld(!isVisibleOld);
+                      }}
+                    >
+                      {!isVisibleOld ? (
+                        <Eye className="h-5 w-5" />
+                      ) : (
+                        <EyeOff className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
-              </form>
-            </Form>
+                <div className="space-y-0.5 md:space-y-1 relative w-full">
+                  <Label
+                    className={cn(
+                      "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                      data.new_password.length === 0
+                        ? "translate-y-3.5 left-3 font-normal"
+                        : "-translate-y-3 left-0 font-semibold"
+                    )}
+                  >
+                    Paswword Baru
+                  </Label>
+                  <div className="relative flex items-center peer w-full">
+                    <Input
+                      disabled={!isPasswordEdit}
+                      type={!isVisible ? "password" : "text"}
+                      className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                    />
+                    <Button
+                      type="button"
+                      className="h-auto p-1 rounded right-1.5 absolute hover:bg-transparent"
+                      disabled={!isPasswordEdit}
+                      variant={"ghost"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsVisible(!isVisible);
+                      }}
+                    >
+                      {!isVisible ? (
+                        <Eye className="h-5 w-5" />
+                      ) : (
+                        <EyeOff className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <div className="space-y-0.5 md:space-y-1 relative w-full">
+                  <Label
+                    className={cn(
+                      "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                      data.confirm_password.length === 0
+                        ? "translate-y-3.5 left-3 font-normal"
+                        : "-translate-y-3 left-0 font-semibold"
+                    )}
+                  >
+                    Konfirmasi Paswword Baru
+                  </Label>
+                  <div className="relative flex items-center peer w-full">
+                    <Input
+                      disabled={!isPasswordEdit}
+                      type={!isVisibleConfirmation ? "password" : "text"}
+                      className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                    />
+                    <Button
+                      type="button"
+                      className="h-auto p-1 rounded right-1.5 absolute hover:bg-transparent"
+                      disabled={!isPasswordEdit}
+                      variant={"ghost"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsVisibleConfirmation(!isVisibleConfirmation);
+                      }}
+                    >
+                      {!isVisibleConfirmation ? (
+                        <Eye className="h-5 w-5" />
+                      ) : (
+                        <EyeOff className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full justify-between flex dark:bg-gray-800 rounded md:px-3 py-1 md:items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 px-2">
+                <p className="text-sm dark:text-gray-300">
+                  Periksa terlebih dahulu sebelum konfirmasi.
+                </p>
+                <Button
+                  type="submit"
+                  disabled={!isPasswordEdit}
+                  className="bg-transparent hover:bg-transparent dark:text-green-400 hover:underline font-normal text-green-700"
+                >
+                  <Save className="w-4 h-4  mr-2" />
+                  Simpan
+                </Button>
+              </div>
+            </form>
           </Card>
           <Card className="md:p-5 p-3 flex flex-col gap-6 w-full bg-transparent border-red-300 dark:border-red-700 border bg-red-50 dark:bg-red-800/20">
             <div className="flex items-center justify-between">

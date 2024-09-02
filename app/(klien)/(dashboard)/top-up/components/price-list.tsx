@@ -2,8 +2,80 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CardPrice } from "./card-price";
+import axios from "axios";
+import { useCookies } from "next-client-cookies";
+import { useEffect, useState } from "react";
+
+interface PriceProps {
+  id: string;
+  total_credits: number;
+  price_credit: number;
+  price_one_credit: number;
+  is_popular: boolean;
+  descriptions: string[];
+}
 
 export const PriceList = () => {
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
+  const [isMounted, setIsMounted] = useState(false);
+  const [onceList, setOnceList] = useState<PriceProps[]>([
+    {
+      id: "",
+      total_credits: 0,
+      price_credit: 0,
+      price_one_credit: 0,
+      is_popular: false,
+      descriptions: [""],
+    },
+  ]);
+  const [monthlyList, setMonthlyList] = useState<PriceProps[]>([
+    {
+      id: "",
+      total_credits: 0,
+      price_credit: 0,
+      price_one_credit: 0,
+      is_popular: false,
+      descriptions: [""],
+    },
+  ]);
+  const [yearlyList, setYearlyList] = useState<PriceProps[]>([
+    {
+      id: "",
+      total_credits: 0,
+      price_credit: 0,
+      price_one_credit: 0,
+      is_popular: false,
+      descriptions: [""],
+    },
+  ]);
+
+  const handleGetPrice = async () => {
+    try {
+      const res = await axios.get(
+        `https://koderesi.raventech.my.id/api/admin/price`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setOnceList(res.data.data.once);
+      setMonthlyList(res.data.data.monthly);
+      setYearlyList(res.data.data.yearly);
+    } catch (error) {
+      console.log("[ERROR_PRICE_GET]:", error);
+    }
+  };
+
+  useEffect(() => {
+    setIsMounted(true);
+    handleGetPrice();
+  }, []);
+  if (!isMounted) {
+    return null;
+  }
   return (
     <Tabs
       defaultValue="sekali"
@@ -16,89 +88,44 @@ export const PriceList = () => {
       </TabsList>
       <TabsContent value="sekali">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          <CardPrice
-            kredit={300}
-            perKredit={350}
-            price={35000}
-            keterangan="normal"
-          />
-          <CardPrice
-            kredit={500}
-            perKredit={330}
-            price={165000}
-            keterangan="normal"
-            isPopular
-          />
-          <CardPrice
-            kredit={1000}
-            perKredit={300}
-            price={300000}
-            keterangan="normal"
-          />
-          <CardPrice
-            kredit={5000}
-            perKredit={290}
-            price={1450000}
-            keterangan="normal"
-          />
+          {onceList.map((item) => (
+            <CardPrice
+              key={item.id}
+              kredit={item.total_credits}
+              perKredit={item.price_one_credit}
+              price={item.price_credit}
+              keterangan={item.descriptions}
+              isPopular={item.is_popular}
+            />
+          ))}
         </div>
       </TabsContent>
       <TabsContent value="bulanan">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          <CardPrice
-            kredit={300}
-            perKredit={350}
-            price={11550}
-            keterangan="lebih hemat 5%"
-          />
-          <CardPrice
-            kredit={500}
-            perKredit={330}
-            price={54450}
-            keterangan="lebih hemat 5%"
-            isPopular
-          />
-          <CardPrice
-            kredit={1000}
-            perKredit={300}
-            price={990000}
-            keterangan="lebih hemat 5%"
-          />
-          <CardPrice
-            kredit={5000}
-            perKredit={290}
-            price={478500}
-            keterangan="lebih hemat 5%"
-          />
+          {monthlyList.map((item) => (
+            <CardPrice
+              key={item.id}
+              kredit={item.total_credits}
+              perKredit={item.price_one_credit}
+              price={item.price_credit}
+              keterangan={item.descriptions}
+              isPopular={item.is_popular}
+            />
+          ))}
         </div>
       </TabsContent>
       <TabsContent value="tahunan">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          <CardPrice
-            kredit={300}
-            perKredit={350}
-            price={110880}
-            keterangan="lebih hemat 20%"
-          />
-          <CardPrice
-            kredit={500}
-            perKredit={330}
-            price={522720}
-            keterangan="lebih hemat 20%"
-            isPopular
-          />
-          <CardPrice
-            kredit={1000}
-            perKredit={300}
-            price={950400}
-            keterangan="lebih hemat 20%"
-          />
-          <CardPrice
-            kredit={5000}
-            perKredit={290}
-            price={4593600}
-            keterangan="lebih hemat 20%"
-          />
+          {yearlyList.map((item) => (
+            <CardPrice
+              key={item.id}
+              kredit={item.total_credits}
+              perKredit={item.price_one_credit}
+              price={item.price_credit}
+              keterangan={item.descriptions}
+              isPopular={item.is_popular}
+            />
+          ))}
         </div>
       </TabsContent>
     </Tabs>

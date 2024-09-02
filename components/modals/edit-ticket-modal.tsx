@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 export const EditTicketModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const [input, setInput] = useState({
-    judul: "",
+    title: "",
   });
   const router = useRouter();
 
@@ -26,36 +26,17 @@ export const EditTicketModal = () => {
 
   const handleReset = () => {
     setInput({
-      judul: "",
+      title: "",
     });
   };
 
-  const getDetail = async () => {
-    try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/show/${data}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const dataDetail = res.data.data;
-      setInput((prev) => ({
-        ...prev,
-        name: dataDetail?.name,
-        email: dataDetail?.email,
-      }));
-    } catch (error) {
-      console.log("[ERROR_GET_DETAIL_USER]:", error);
-    }
-  };
-
   const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/update/${data}`,
+        `https://koderesi.raventech.my.id/api/${
+          data.isAdmin ? "superadmin" : "admin"
+        }/support/updateTitle/${data.id}`,
         input,
         {
           headers: {
@@ -64,22 +45,25 @@ export const EditTicketModal = () => {
           },
         }
       );
-      toast.success("User added.");
+      toast.success("Ticket berhasil diedit.");
+      cookies.set("chat updated", "1");
       onClose();
-      router.refresh();
     } catch (error) {
-      console.log("[ERROR_ADD_USER]:", error);
+      toast.success("Ticket gagal diedit.");
+      console.log("[ERROR_EDITED_TICKET]:", error);
     }
   };
 
   useEffect(() => {
-    data && getDetail();
+    if (data) {
+      data.title && isModalOpen && setInput({ title: data.title });
+    }
   }, [data]);
 
   return (
     <Modal
       title="Edit Ticket"
-      description="Edit judul ticket"
+      description="Edit title ticket"
       isOpen={isModalOpen}
       onClose={() => {
         onClose();
@@ -91,7 +75,7 @@ export const EditTicketModal = () => {
           <Label
             className={cn(
               "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-              input.judul.length === 0
+              input.title.length === 0
                 ? "translate-y-3.5 left-3 font-normal"
                 : "-translate-y-3 left-0 font-semibold"
             )}
@@ -100,9 +84,9 @@ export const EditTicketModal = () => {
           </Label>
           <Input
             className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-            value={input.judul}
+            value={input.title}
             onChange={(e) =>
-              setInput((prev) => ({ ...prev, judul: e.target.value }))
+              setInput((prev) => ({ ...prev, title: e.target.value }))
             }
           />
         </div>

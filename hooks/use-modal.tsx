@@ -1,6 +1,25 @@
 import { StoreApi, UseBoundStore, create } from "zustand";
 
+type PriceType =
+  | "add-credit"
+  | "edit-credit"
+  | "delete-credit"
+  | "add-promo"
+  | "edit-promo"
+  | "delete-promo";
+
+type SupportType =
+  | "edit-chat"
+  | "delete-chat"
+  | "edit-ticket"
+  | "delete-ticket"
+  | "add-label"
+  | "edit-label"
+  | "delete-label";
+
 export type ModalType =
+  | PriceType
+  | SupportType
   | "add-resi"
   | "delete-akun"
   | "save-manifest"
@@ -15,14 +34,7 @@ export type ModalType =
   | "unarchive-resi"
   | "delete-user"
   | "edit-user"
-  | "delete-manifest"
-  | "edit-chat"
-  | "delete-chat"
-  | "edit-ticket"
-  | "delete-ticket"
-  | "add-label"
-  | "edit-label"
-  | "delete-label";
+  | "delete-manifest";
 
 export interface LabelProps {
   id: string;
@@ -37,12 +49,12 @@ export interface ManifestProps {
 }
 
 interface UseModalProps {
-  data: string;
+  data: any;
   type: ModalType | null;
   isOpen: boolean;
   onOpen: (
     type: ModalType,
-    data?: string,
+    data?: any,
     dataManifest?: ManifestProps,
     dataLabel?: LabelProps
   ) => void;

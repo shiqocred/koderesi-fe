@@ -210,7 +210,7 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
               <CommandGroup>
                 <Link
                   href={
-                    pathname.includes("admin") ? "/admin/settings" : "/settings"
+                    pathname.includes("admin") ? "/admin/account" : "/account"
                   }
                 >
                   <CommandItem

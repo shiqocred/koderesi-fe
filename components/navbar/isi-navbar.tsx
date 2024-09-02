@@ -13,6 +13,7 @@ import {
   Moon,
   Plus,
   Rocket,
+  Settings,
   Sparkles,
   Sun,
   Truck,
@@ -135,6 +136,14 @@ export const IsiNavbar = ({
                   icon={<Headset className="w-5 h-5" />}
                   href="/admin/contacts"
                   active={pathname.startsWith("/admin/contacts")}
+                  expand
+                  onClick={() => onOpenChange(false)}
+                />
+                <ButtonSidebar
+                  label="Settings"
+                  icon={<Settings className="w-5 h-5" />}
+                  href="/admin/settings"
+                  active={pathname.startsWith("/admin/settings")}
                   expand
                   onClick={() => onOpenChange(false)}
                 />

@@ -17,7 +17,7 @@ import { Textarea } from "../ui/textarea";
 export const EditChatModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const [input, setInput] = useState({
-    chat: "",
+    message: "",
   });
   const router = useRouter();
 
@@ -27,36 +27,17 @@ export const EditChatModal = () => {
 
   const handleReset = () => {
     setInput({
-      chat: "",
+      message: "",
     });
   };
 
-  const getDetail = async () => {
-    try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/show/${data}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const dataDetail = res.data.data;
-      setInput((prev) => ({
-        ...prev,
-        name: dataDetail?.name,
-        email: dataDetail?.email,
-      }));
-    } catch (error) {
-      console.log("[ERROR_GET_DETAIL_USER]:", error);
-    }
-  };
-
   const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/update/${data}`,
+        `https://koderesi.raventech.my.id/api/${
+          data.isAdmin ? "superadmin" : "admin"
+        }/support/updateChat/${data.id}`,
         input,
         {
           headers: {
@@ -65,17 +46,21 @@ export const EditChatModal = () => {
           },
         }
       );
-      toast.success("User added.");
+      toast.success("Chat edited successed.");
+      cookies.set("chat updated", "1");
       onClose();
       router.refresh();
     } catch (error) {
-      console.log("[ERROR_ADD_USER]:", error);
+      toast.success("Chat edited failed.");
+      console.log("[ERROR_EDITED_CHAT]:", error);
     }
   };
 
   useEffect(() => {
-    data && getDetail();
-  }, [data]);
+    if (isModalOpen && data) {
+      setInput({ message: data.message });
+    }
+  }, [data, isModalOpen]);
 
   return (
     <Modal
@@ -92,7 +77,7 @@ export const EditChatModal = () => {
           <Label
             className={cn(
               "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-              input.chat.length === 0
+              input.message.length === 0
                 ? "translate-y-2.5 left-3 font-normal"
                 : "-translate-y-6 left-0 font-semibold"
             )}
@@ -102,9 +87,9 @@ export const EditChatModal = () => {
           <Textarea
             cols={3}
             className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 rounded bg-transparent dark:bg-transparent"
-            value={input.chat}
+            value={input.message}
             onChange={(e) =>
-              setInput((prev) => ({ ...prev, chat: e.target.value }))
+              setInput((prev) => ({ ...prev, message: e.target.value }))
             }
           />
         </div>

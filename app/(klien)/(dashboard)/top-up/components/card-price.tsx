@@ -17,7 +17,7 @@ interface CardPriceProps {
   kredit: number;
   perKredit: number;
   price: number;
-  keterangan: string;
+  keterangan: string[];
   isPopular?: boolean;
 }
 
@@ -54,12 +54,14 @@ export const CardPrice = ({
           </div>
           Harga<span className="ml-1">{formatRupiah(perKredit)}/kredit</span>
         </div>
-        <div className="flex items-center text-sm">
-          <div className="bg-gray-900 w-4 h-4 flex justify-center items-center rounded-full mr-2">
-            <Check className="w-2.5 h-2.w-2.5 stroke-[3] text-white" />
+        {keterangan.map((item) => (
+          <div key={item} className="flex items-center text-sm">
+            <div className="bg-gray-900 w-4 h-4 flex justify-center items-center rounded-full mr-2">
+              <Check className="w-2.5 h-2.w-2.5 stroke-[3] text-white" />
+            </div>
+            {item}
           </div>
-          Harga {keterangan}
-        </div>
+        ))}
       </CardContent>
       <CardFooter className="flex-col items-start w-full">
         <Separator className="mb-4 bg-gray-300" />
