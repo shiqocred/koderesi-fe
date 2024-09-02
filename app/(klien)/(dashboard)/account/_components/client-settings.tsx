@@ -11,6 +11,7 @@ import { useModal } from "@/hooks/use-modal";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 export const ClientSettings = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -34,8 +35,6 @@ export const ClientSettings = () => {
     confirm_password: "",
   });
 
-  console.log(data);
-
   const handleGetProfile = async () => {
     try {
       const res = await axios.get(
@@ -58,8 +57,43 @@ export const ClientSettings = () => {
     }
   };
 
-  const formSubmit = async (e: FormEvent) => {};
+  const formSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const body = {
+      name: data.username,
+      email: data.email,
+      phone_number: data.whatsapp,
+    };
+    try {
+      const res = await axios.post(
+        "https://koderesi.raventech.my.id/api/admin/profile/update-profile",
+        body,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      cookies.set("update profile", "1");
+      toast.success("Profile berhasil diupdate");
+    } catch (error: any) {
+      toast.success(
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-semibold">Profile gagal diupdate:</p>
+          <p className="text-xs">{error.data.message}</p>
+        </div>
+      );
+      console.log("[ERROR_UPDATE_PROFILE]:", error);
+    }
+  };
 
+  useEffect(() => {
+    if (cookies.get("update profile")) {
+      handleGetProfile();
+      return cookies.remove("update profile");
+    }
+  }, [cookies.get("update profile")]);
   useEffect(() => {
     setIsMounted(true);
     handleGetProfile();
@@ -142,7 +176,11 @@ export const ClientSettings = () => {
                   </Label>
                   <Input
                     disabled={!isContactEdit}
-                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                    value={data.username}
+                    onChange={(e) =>
+                      setData((prev) => ({ ...prev, username: e.target.value }))
+                    }
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full disabled:opacity-100"
                   />
                 </div>
                 <div className="space-y-0.5 md:space-y-1 relative w-full">
@@ -158,7 +196,12 @@ export const ClientSettings = () => {
                   </Label>
                   <Input
                     disabled={!isContactEdit}
-                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                    value={data.email}
+                    onChange={(e) =>
+                      setData((prev) => ({ ...prev, email: e.target.value }))
+                    }
+                    type="email"
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full disabled:opacity-100"
                   />
                 </div>
                 <div className="space-y-0.5 md:space-y-1 relative w-full">
@@ -174,7 +217,12 @@ export const ClientSettings = () => {
                   </Label>
                   <Input
                     disabled={!isContactEdit}
-                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                    value={data.whatsapp}
+                    onChange={(e) =>
+                      setData((prev) => ({ ...prev, whatsapp: e.target.value }))
+                    }
+                    type="number"
+                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full disabled:opacity-100"
                   />
                 </div>
               </div>
@@ -352,7 +400,7 @@ export const ClientSettings = () => {
                 </p>
                 <Button
                   type="button"
-                  onClick={() => onOpen("delete-label")}
+                  onClick={() => onOpen("delete-account")}
                   className="bg-transparent hover:bg-transparent dark:text-white hover:underline font-normal text-red-500"
                 >
                   <Trash2 className="w-4 h-4  mr-2" />

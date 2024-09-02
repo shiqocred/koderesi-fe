@@ -11,6 +11,7 @@ import { ApproveWithdrawModal } from "@/components/modals/approve-withdraw-modal
 import { ArchiveResiModal } from "@/components/modals/archive-resi-modal";
 import { DeleteChatModal } from "@/components/modals/delete-chat-modal";
 import { DeleteKreditModal } from "@/components/modals/delete-kredit-modal";
+import { DeleteAccountModal } from "@/components/modals/delete-label-account";
 import { DeleteLabelModal } from "@/components/modals/delete-label-modal";
 import { DeleteManifestModal } from "@/components/modals/delete-manifest-modal";
 import { DeletePromoModal } from "@/components/modals/delete-promo-modal";
@@ -60,6 +61,7 @@ const ModalProvider = () => {
       <AddPromoModal />
       <EditPromoModal />
       <DeletePromoModal />
+      <DeleteAccountModal />
     </>
   );
 };

@@ -930,7 +930,7 @@ export const ClientContact = () => {
                   )}
                   {changeButton === "open" && (
                     <>
-                      <CheckCircle2 className="w-4 h-4 mr-2 text-indigo-500" />
+                      <RefreshCcwDot className="w-4 h-4 mr-2 text-green-700 dark:text-green-400" />
                       Buka Kembali
                     </>
                   )}
