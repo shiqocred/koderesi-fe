@@ -65,7 +65,7 @@ export const ArchiveClient = () => {
     getArchive();
   }, []);
   return (
-    <Card className="flex flex-col text-sm text-center lg:p-4 p-2">
+    <Card className="flex flex-col text-sm text-center lg:p-4 p-2 shadow">
       <DataTable columns={columns} data={dataArchive} />
     </Card>
   );

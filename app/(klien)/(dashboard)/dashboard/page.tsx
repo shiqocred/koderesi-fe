@@ -83,7 +83,7 @@ const DashboardPage = () => {
       <Separator className="dark:bg-white bg-gray-500" />
       <div className="w-full transition-all flex flex-col gap-4">
         <div className="w-full gap-4 grid-cols-2 md:grid-cols-3 grid">
-          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4 col-span-2 md:col-span-1">
+          <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4 col-span-2 md:col-span-1 shadow">
             <div className="flex justify-between pb-2 border-b border-gray-500">
               <h5>Total Resi</h5>
               <Package className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
@@ -94,7 +94,7 @@ const DashboardPage = () => {
             </p>
           </Card>
           <div className="flex w-full col-span-2 grid-cols-2 gap-4">
-            <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
+            <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4 shadow">
               <div className="flex justify-between pb-2 border-b border-gray-500">
                 <h5>On Progress</h5>
                 <Truck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
@@ -104,7 +104,7 @@ const DashboardPage = () => {
                 <span className="font-semibold text-xs sm:text-base">Resi</span>
               </p>
             </Card>
-            <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4">
+            <Card className="w-full text-xs sm:text-sm justify-center flex flex-col p-2 sm:p-4 lg:p-6 gap-4 shadow">
               <div className="flex justify-between pb-2 border-b border-gray-500">
                 <h5>Delivered</h5>
                 <PackageCheck className="sm:w-5 sm:h-5 w-4 h-4 stroke-1" />
@@ -118,12 +118,12 @@ const DashboardPage = () => {
         </div>
         <div className="flex xl:flex-row flex-col gap-4">
           <div className="w-full xl:w-7/12 ">
-            <Card className="pr-2 pt-2 md:p-2 lg:p-4 rounded-md flex flex-col gap-y-4 h-[200px] sm:h-[250px] lg:h-[350px] md:h-[300px]">
+            <Card className="pr-2 pt-2 md:p-2 lg:p-4 rounded-md flex flex-col gap-y-4 h-[200px] sm:h-[250px] lg:h-[350px] md:h-[300px] shadow">
               <ChartClient />
             </Card>
           </div>
           <div className="w-full xl:w-5/12 ">
-            <Card className="p-4 rounded-md flex flex-col gap-y-4 h-auto">
+            <Card className="p-4 rounded-md flex flex-col gap-y-4 h-auto shadow">
               <div>
                 <p className="sm:text-xl text-lg font-semibold">
                   Manifest Terbaru

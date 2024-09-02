@@ -34,7 +34,8 @@ export type ModalType =
   | "unarchive-resi"
   | "delete-user"
   | "edit-user"
-  | "delete-manifest";
+  | "delete-manifest"
+  | "delete-account";
 
 export interface LabelProps {
   id: string;

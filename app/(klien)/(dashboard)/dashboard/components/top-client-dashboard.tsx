@@ -14,7 +14,7 @@ export const TopClientDashboard = () => {
   const cookies = useCookies();
   return (
     <div className="w-full transition-all flex flex-col md:flex-row gap-4 xl:gap-8">
-      <Card className="w-full lg:w-2/5 xl:w-full px-4 py-2 xl:px-7 xl:py-4 flex justify-between items-center">
+      <Card className="w-full lg:w-2/5 xl:w-full px-4 py-2 xl:px-7 xl:py-4 flex justify-between items-center shadow">
         <div>
           <h3 className="text-base md:text-xl font-bold">Lacak Resi Anda!</h3>
           <p className="text-xs md:text-sm text-gray-500 dark:text-gray-300 font-light">
@@ -29,7 +29,7 @@ export const TopClientDashboard = () => {
           <Plus className="w-4 h-4" />
         </Button>
       </Card>
-      <Card className="w-full lg:w-3/5 xl:w-full px-4 py-2 xl:px-7 xl:py-4 flex justify-between items-center">
+      <Card className="w-full lg:w-3/5 xl:w-full px-4 py-2 xl:px-7 xl:py-4 flex justify-between items-center shadow">
         <div>
           <h3 className="text-base md:text-xl font-bold">Kredit Habis?</h3>
           <p className="text-xs md:text-sm text-gray-500 dark:text-gray-300 font-light">

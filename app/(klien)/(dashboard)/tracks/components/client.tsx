@@ -145,7 +145,7 @@ const TracksAdminClient = () => {
     setDataSearch(params.get("search") ?? "");
   }, []);
   return (
-    <Card className="flex flex-col p-2 md:p-4 gap-4">
+    <Card className="flex flex-col p-2 md:p-4 gap-4 shadow">
       <div className="flex gap-4 w-full flex-col lg:flex-row">
         <div className="w-full relative flex items-center">
           <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />

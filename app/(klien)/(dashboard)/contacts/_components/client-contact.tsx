@@ -140,7 +140,7 @@ export const ClientContact = () => {
   return (
     <div className="flex h-full gap-4 md:gap-6 flex-col lg:flex-row max-w-7xl w-full mx-auto">
       <div className="w-full lg:1/2">
-        <Card className="p-2 md:p-4 min-h-[200px] relative">
+        <Card className="p-2 md:p-4 min-h-[200px] relative shadow">
           <div className="flex justify-between w-full items-center mb-4 gap-3 lg:flex-row flex-col-reverse">
             <div className="w-full relative flex items-center lg:max-w-2xl">
               <Search className="w-5 h-5 peer absolute left-3 text-gray-500" />

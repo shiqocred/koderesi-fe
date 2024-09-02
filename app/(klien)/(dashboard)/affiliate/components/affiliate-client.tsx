@@ -88,7 +88,6 @@ export const AffiliateClient = () => {
 
   const [input, setInput] = useState({
     type_promot: "",
-    affiliate_webs: formFields,
     ig_link: "",
     fb_link: "",
     twt_link: "",
@@ -120,7 +119,7 @@ export const AffiliateClient = () => {
 
     const body = {
       type_promot: input.type_promot,
-      affiliate_webs: input.affiliate_webs,
+      affiliate_webs: formFields,
       affiliate_sosmed: {
         fb: input.fb_link,
         x: input.twt_link,
@@ -361,7 +360,7 @@ export const AffiliateClient = () => {
     );
   }
   return (
-    <Card className="flex flex-col text-sm text-center p-4 space-y-6">
+    <Card className="flex flex-col text-sm text-center p-4 space-y-6 shadow">
       <form onSubmit={handleSubmit} className="flex flex-col space-y-8 py-4">
         <div className="flex justify-start border-b border-gray-500 dark:border-gray-300 pb-1">
           <h3 className="text-xl font-semibold">
