@@ -178,9 +178,9 @@ const RegisterPage = () => {
                 Name
               </Label>
               <Input
-                value={input.email}
+                value={input.name}
                 onChange={(e) =>
-                  setInput((prev) => ({ ...prev, email: e.target.value }))
+                  setInput((prev) => ({ ...prev, name: e.target.value }))
                 }
                 className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
               />
