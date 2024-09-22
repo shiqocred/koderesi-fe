@@ -25,7 +25,14 @@ import {
   RefreshCcwDot,
   Trash2,
 } from "lucide-react";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import {
+  FormEvent,
+  MouseEvent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { BubbleChat, ChatProps } from "./bubble-chat";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -373,6 +380,31 @@ export const ClientContact = () => {
     }
   };
 
+  const divRef = useRef<HTMLDivElement>(null); // Referensi untuk elemen div
+  const [divHeight, setDivHeight] = useState<number | null>(null);
+  const [viewportHeight, setViewportHeight] = useState<number>(0);
+
+  // Mengukur tinggi div setelah data diperbarui
+  useEffect(() => {
+    const measureHeight = () => {
+      if (divRef.current) {
+        const divH = divRef.current.offsetHeight;
+        setDivHeight(divH);
+      }
+    };
+
+    // Delay 100ms untuk memastikan rendering selesai
+    const timer = setTimeout(measureHeight, 100);
+
+    // Bersihkan timer jika komponen di-unmount
+    return () => clearTimeout(timer);
+  }, [chatsSupport, viewportHeight]); // Efek dijalankan setiap kali data diperbarui
+
+  // Dapatkan tinggi layar (viewport)
+  useEffect(() => {
+    setViewportHeight(window.innerHeight);
+  }, []);
+
   useEffect(() => {
     handleGetTickets();
 
@@ -474,7 +506,7 @@ export const ClientContact = () => {
                       Hapus
                     </Button>
                   </div>
-                  <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 w-full p-3 border rounded-lg border-gray-300 dark:text-white gap-3">
+                  <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 w-full dark:text-white gap-3">
                     {dataChat.file &&
                       Array.from(
                         { length: dataChat.file.length ?? 0 },
@@ -533,12 +565,14 @@ export const ClientContact = () => {
           <div
             className={cn(
               "relative overflow-hidden",
-              isExpand
-                ? "h-auto md:h-auto pb-[10vh] md:pb-0"
-                : "h-screen md:h-auto pb-0 md:pb-0"
+              (divHeight ?? 0) > viewportHeight
+                ? isExpand
+                  ? "h-auto md:h-auto pb-[10vh] md:pb-0"
+                  : "h-screen md:h-auto pb-0 md:pb-0"
+                : "h-auto md:h-auto pb-[10vh] md:pb-0"
             )}
           >
-            <div className="relative h-full">
+            <div ref={divRef} className="relative h-full">
               {chatsSupport.map((item) => (
                 <BubbleChat key={item.id} {...item} />
               ))}

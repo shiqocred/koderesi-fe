@@ -72,6 +72,11 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
         }
       );
       setDetailAuth(response.data.data);
+      if (response.data.data.name) {
+        cookies.set("nameProfile", response.data.data.name);
+      } else if (!response.data.data.name && cookies.get("nameProfile")) {
+        cookies.remove("nameProfile");
+      }
       if (response.data.data.total_tokens) {
         cookies.set("totalCreadits", response.data.data.total_tokens);
       } else if (

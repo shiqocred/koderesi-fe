@@ -105,9 +105,7 @@ export const AffiliateClient = () => {
           },
         }
       );
-      setStep(
-        res.data.data.status ? (res.data.data.status as string) : "false"
-      );
+      setStep(res.data.status ? (res.data.status as string) : "");
       console.log(res.data);
     } catch (error) {
       console.log("[ERROR_GET_DATA]:", error);
@@ -138,7 +136,7 @@ export const AffiliateClient = () => {
           },
         }
       );
-      if (res.data.data.status) {
+      if (res.data.status) {
         toast.success("Data berhasil diajukan");
       } else {
         toast.error("Data gagal diajukan");
@@ -236,7 +234,7 @@ export const AffiliateClient = () => {
     getData();
   }, []);
 
-  if (step.toLowerCase() === "waiting") {
+  if (step.toLowerCase() === "pending") {
     return (
       <div className="flex flex-col gap-y-2">
         <Alert className="bg-yellow-300 text-black">

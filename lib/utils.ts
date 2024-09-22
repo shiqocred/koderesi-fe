@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { format as formatDateFns } from "date-fns";
 import { id as indonesia } from "date-fns/locale";
+import { ExternalToast, toast } from "sonner";
 
 export const formatNumber = (number: number) => {
   const formatter = new Intl.NumberFormat("id-ID"); // Atur kode bahasa dan negara sesuai kebutuhan Anda
@@ -44,6 +45,21 @@ export function formatRupiah(rupiah: number) {
   });
   return formatter.format(rupiah);
 }
+
+export const optionToast: ExternalToast = {
+  duration: 30000,
+  classNames: {
+    toast:
+      "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
+  },
+};
+
+// Fungsi sederhana untuk memformat nomor telepon
+const formatPhoneNumber = (phoneNumber: number): string => {
+  return phoneNumber.toString().replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3");
+};
+
+export default formatPhoneNumber;
 
 export const data: ArchiveDataProps[] = [
   {

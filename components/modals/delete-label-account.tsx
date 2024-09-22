@@ -16,7 +16,7 @@ export const DeleteAccountModal = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isModalOpen = isOpen && type === "delete-label";
+  const isModalOpen = isOpen && type === "delete-account";
 
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
@@ -48,10 +48,10 @@ export const DeleteAccountModal = () => {
       onClose={onClose}
     >
       <div className="w-full flex flex-col gap-4">
-        <p>
-          Seluruh data termasuk kredit akan dihapus secara permanen, apakah anda
-          yakin ingin menghapus label ini?
-        </p>
+        <p>Apakah andayakin ingin menghapus label ini?</p>
+        <ul>
+          <li>Data Pribadi</li>
+        </ul>
         <div className="flex w-full gap-2">
           <Button
             className="w-full bg-transparent hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent text-black dark:text-white border border-green-200 hover:border-green-400 dark:border-green-200/40 dark:hover:border-green-400"

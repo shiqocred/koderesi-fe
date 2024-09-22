@@ -28,12 +28,14 @@ import { useCookies } from "next-client-cookies";
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import React, { FormEvent, useEffect, useState } from "react";
 import {
+  AlertCircle,
   ArrowLeft,
   CalendarIcon,
   Check,
   ChevronDown,
   Loader2,
   Trash2,
+  X,
 } from "lucide-react";
 
 import { cn, formatTanggal } from "@/lib/utils";
@@ -130,9 +132,42 @@ const EditClient = () => {
         }
       );
       toast.success("Data Resi Diperbarui");
-    } catch (error) {
-      toast.success("Data Resi Gagal Diperbarui");
+      cookies.set("new", "1");
+    } catch (error: any) {
       console.log("[ERROR_UPDATE_DETAIL_RESI]:", error);
+      toast.custom(
+        (t) => (
+          <div className="flex gap-3 relative w-full items-center">
+            <div className="flex gap-3 w-full">
+              <AlertCircle className="w-4 h-4 dark:fill-white dark:text-red-800 text-red-500" />
+              <div className="flex flex-col gap-1">
+                <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
+                  Data Resi gagal diperbarui.
+                </h5>
+                {error.response.data.error && (
+                  <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                    <li>{error.response.data.error}</li>
+                  </ul>
+                )}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toast.dismiss(t)}
+              className="w-5 h-5 text-white flex-none bg-red-500 ml-auto flex items-center justify-center rounded-full hover:scale-110 transition-all shadow"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        ),
+        {
+          duration: 30000,
+          classNames: {
+            toast:
+              "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
+          },
+        }
+      );
     } finally {
       setIsUpdatingManifest(false);
     }
@@ -158,9 +193,42 @@ const EditClient = () => {
       );
       setIsUpdatingManifest(true);
       toast.success("Manifest Resi Diperbarui");
-    } catch (error) {
-      toast.success("Manifest Resi Gagal Diperbarui");
+      cookies.set("new", "1");
+    } catch (error: any) {
       console.log("[ERROR_UPDATE_MANIFEST_RESI]:", error);
+      toast.custom(
+        (t) => (
+          <div className="flex gap-3 relative w-full items-center">
+            <div className="flex gap-3 w-full">
+              <AlertCircle className="w-4 h-4 dark:fill-white dark:text-red-800 text-red-500" />
+              <div className="flex flex-col gap-1">
+                <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
+                  Manifest resi gagal diperbarui.
+                </h5>
+                {error.response.data.message && (
+                  <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                    <li>{error.response.data.message}</li>
+                  </ul>
+                )}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toast.dismiss(t)}
+              className="w-5 h-5 text-white flex-none bg-red-500 ml-auto flex items-center justify-center rounded-full hover:scale-110 transition-all shadow"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        ),
+        {
+          duration: 30000,
+          classNames: {
+            toast:
+              "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
+          },
+        }
+      );
     } finally {
       setIsUpdatingManifest(false);
     }
@@ -183,10 +251,10 @@ const EditClient = () => {
 
   useEffect(() => {
     setIsUpdating(true);
-    setTimeout(() => {
+    if (cookies.get("new")) {
       getResiDetail();
-    }, 500);
-  }, [isUpdatingManifest]);
+    }
+  }, [cookies.get("new")]);
 
   useEffect(() => {
     getResiDetail();

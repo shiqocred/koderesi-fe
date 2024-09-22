@@ -164,9 +164,9 @@ const MenuAkun = ({
                   ? { delay: 0.5, duration: 0.5 }
                   : { delay: 0, duration: 0.5 }
               }
-              className="font-medium group-hover:text-xs transition-all"
+              className="font-medium group-hover:text-xs transition-all capitalize"
             >
-              Anthonio Nerf
+              {cookies.get("nameProfile")}
             </motion.p>
           </div>
           <motion.div

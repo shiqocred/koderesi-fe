@@ -1,24 +1,79 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Modal } from "./modal";
 import { ManifestProps, useModal } from "@/hooks/use-modal";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { data, formatTanggal, formatWaktu } from "@/lib/utils";
+import axios from "axios";
+import { useCookies } from "next-client-cookies";
+import { toast } from "sonner";
+import { AlertCircle, X } from "lucide-react";
 
 export const SaveManifestModal = () => {
   const { isOpen, onClose, type, dataManifest } = useModal();
 
   const isModalOpen = isOpen && type === "save-manifest";
 
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
+
   const [kode, setKode] = useState<string | string[]>("");
   const [dataResi, setDataResi] = useState<ManifestProps>();
 
-  // const handleSearch = () => {
-  //   setDataResi(data.find((item) => item.kode_resi === dataManifest?.resiKode));
-  // };
+  const handleSearch = async (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.get(
+        `/api/superadmin/waybill/check-resi/${kode}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res.data);
+      toast.success(`Resi ${kode} ditemukan`);
+    } catch (error: any) {
+      console.log("[ERROR_GET_DETAIL]:", error);
+      toast.custom(
+        (t) => (
+          <div className="flex gap-3 relative w-full items-center">
+            <div className="flex gap-3 w-full">
+              <AlertCircle className="w-4 h-4 dark:fill-white dark:text-red-800 text-red-500" />
+              <div className="flex flex-col gap-1">
+                <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
+                  Resi {kode} tidak ditemukan.
+                </h5>
+                {error.response.data.error && (
+                  <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                    <li>{error.response.data.error}</li>
+                  </ul>
+                )}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toast.dismiss(t)}
+              className="w-5 h-5 text-white flex-none bg-red-500 ml-auto flex items-center justify-center rounded-full hover:scale-110 transition-all shadow"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        ),
+        {
+          duration: 30000,
+          classNames: {
+            toast:
+              "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
+          },
+        }
+      );
+    }
+  };
 
   useEffect(() => {
     if (dataManifest) {
@@ -50,9 +105,7 @@ export const SaveManifestModal = () => {
           </div>
         </div>
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
+          onSubmit={handleSearch}
           className="mt-4 flex items-end gap-x-4 w-full"
         >
           <div className="flex flex-col gap-y-2 w-full">

@@ -100,11 +100,13 @@ export const BubbleChat = ({
                 : "bg-gray-100 border-gray-300 dark:bg-gray-900 dark:border-gray-700"
             )}
           >
-            <div className="flex md:items-center gap-2 flex-col md:flex-row">
-              <h5 className="flex items-center gap-1">
-                <span className="font-semibold capitalize">{name}</span>
-                <span>membalas pada</span>
-                <span>{created_diff}</span>
+            <div className="flex md:items-center md:gap-2 flex-col md:flex-row">
+              <h5 className="flex items-center gap-1 whitespace-pre-wrap">
+                <p className="font-semibold capitalize whitespace-nowrap">
+                  {name}
+                </p>
+                <p className="whitespace-nowrap">membalas pada</p>
+                <p className="whitespace-nowrap">{created_diff}</p>
               </h5>
               <div className="flex items-center gap-2">
                 {attachments && attachments.length > 0 && (

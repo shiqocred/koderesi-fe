@@ -30,7 +30,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Moon, Sun } from "lucide-react";
+import { AlertCircle, MailCheck, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
 
 const formSchema = z
@@ -41,6 +41,7 @@ const formSchema = z
 
 const ForgotPasswordPage = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const [isSend, setIsSend] = useState(false);
   const { setTheme, theme } = useTheme();
   const router = useRouter();
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -54,6 +55,10 @@ const ForgotPasswordPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      await axios.post(
+        `https://koderesi.raventech.my.id/api/forgot-password`,
+        values
+      );
       const expires = new Date(Date.now() + 59 * 1000);
       cookies.set(
         "resetCountdown",
@@ -62,9 +67,41 @@ const ForgotPasswordPage = () => {
       );
       setCountdown(59);
       toast.success("Tautan berhasil dikirim.");
-    } catch (error) {
-      console.log("[SEND_LINK_RESET_PASS]:", error);
-      toast.error("Tautan gagal dikirim.");
+      setIsSend(true);
+      form.reset();
+    } catch (error: any) {
+      console.log("[ERROR_FORGOT_PASSWORD]:", error);
+      toast.custom(
+        (t) => (
+          <div className="flex gap-3 relative w-full items-center">
+            <div className="flex gap-3 w-full">
+              <AlertCircle className="w-4 h-4 dark:fill-white dark:text-red-800 text-red-500" />
+              <div className="flex flex-col gap-1">
+                <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
+                  Permintaan gagal.
+                </h5>
+                <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                  <li>{error.response.data.message}</li>
+                </ul>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toast.dismiss(t)}
+              className="w-5 h-5 text-white flex-none bg-red-500 ml-auto flex items-center justify-center rounded-full hover:scale-110 transition-all shadow"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        ),
+        {
+          duration: 30000,
+          classNames: {
+            toast:
+              "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
+          },
+        }
+      );
     }
   };
 
@@ -144,17 +181,25 @@ const ForgotPasswordPage = () => {
           )}
         </Button>
       </div>
-      <div className=" dark:bg-white/5 bg-white/30 dark:text-white backdrop-filter backdrop-blur-xl border border-gray-500 dark:border-white p-6 md:p-8 xl:p-12 w-full rounded-md flex flex-col gap-7 md:gap-10 xl:gap-16">
-        <div className="flex flex-col items-center gap-4 xl:gap-6 pt-5 md:pt-8 xl:pt-10">
-          <div className="flex flex-col items-center gap-2">
-            <h1 className="text-2xl md:text-3xl font-black leading-none text-center">
-              Kesulitan Login?
-            </h1>
-            <p className="text-sm md:text-base text-center">
-              Masukkan email dan kami akan mengirimi Anda tautan untuk kembali
-              ke akun Anda.
-            </p>
+      <div className=" dark:bg-white/5 bg-white/30 dark:text-white backdrop-filter backdrop-blur-xl border border-gray-500 dark:border-white p-6 md:p-8 xl:p-12 w-full rounded-md flex flex-col gap-7 md:gap-10 xl:gap-14">
+        <div className="flex w-full flex-col gap-7">
+          <div className="flex flex-col items-center gap-4 xl:gap-6 pt-5 md:pt-8 xl:pt-10">
+            <div className="flex flex-col items-center gap-2">
+              <h1 className="text-2xl md:text-3xl font-black leading-none text-center">
+                Kesulitan Login?
+              </h1>
+              <p className="text-sm md:text-base text-center">
+                Masukkan email dan kami akan mengirimi Anda tautan untuk kembali
+                ke akun Anda.
+              </p>
+            </div>
           </div>
+          {isSend && (
+            <div className="w-full flex items-center gap-4 rounded-md px-5 py-3 border border-green-500 bg-green-50 text-sm">
+              <MailCheck className="w-5 h-5 mr-1 text-green-700" />
+              <p>Tautan berhasil terkirim ke email anda</p>
+            </div>
+          )}
         </div>
         <Form {...form}>
           <form

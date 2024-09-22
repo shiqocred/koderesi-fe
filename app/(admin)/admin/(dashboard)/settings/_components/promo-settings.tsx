@@ -131,7 +131,7 @@ export const PromoSettings = () => {
           </AccordionTrigger>
           <AccordionContent className="p-0">
             <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
-              {promoActiveList.map((item) => (
+              {/* {promoActiveList.map((item) => (
                 <div
                   key={item.id}
                   className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700 relative overflow-hidden"
@@ -259,7 +259,7 @@ export const PromoSettings = () => {
                     </button>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -279,7 +279,7 @@ export const PromoSettings = () => {
           </AccordionTrigger>
           <AccordionContent className="p-0">
             <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
-              {promoInactiveList.map((item) => (
+              {/* {promoInactiveList.map((item) => (
                 <div
                   key={item.id}
                   className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700 relative overflow-hidden"
@@ -407,7 +407,7 @@ export const PromoSettings = () => {
                     </button>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </AccordionContent>
         </AccordionItem>

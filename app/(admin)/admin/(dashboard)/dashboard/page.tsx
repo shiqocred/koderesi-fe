@@ -306,14 +306,14 @@ const AdminDashboardpage = () => {
           </div>
         </div>
         <div className="flex lg:flex-row flex-col gap-4">
-          <div className="w-full">
+          <div className="w-full lg:w-1/3">
             <UserCurrentCard
               label="User Terbaru"
               data={newUser}
               href="/admin/users"
             />
           </div>
-          <div className="w-full ">
+          <div className="w-full lg:w-2/3">
             <ResiCurrentCard
               label="Manifest Terbaru"
               data={newManifest}
