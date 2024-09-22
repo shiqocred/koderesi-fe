@@ -90,40 +90,6 @@ const paymentVA = [
     image: "/images/payment-method/bss.png",
   },
 ];
-const paymentDebit = [
-  {
-    id: 1,
-    label: "Bank BRI",
-    value: "bri",
-    image: "/images/payment-method/bri.png",
-  },
-  {
-    id: 2,
-    label: "Bank Mandiri",
-    value: "mandiri",
-    image: "/images/payment-method/mandiri.png",
-  },
-];
-const paymentPaylater = [
-  {
-    id: 1,
-    label: "Akulaku",
-    value: "akulaku",
-    image: "/images/payment-method/akulaku.png",
-  },
-  {
-    id: 2,
-    label: "Kredivo",
-    value: "kredivo",
-    image: "/images/payment-method/kredivo.png",
-  },
-  {
-    id: 3,
-    label: "Indodana",
-    value: "indodana",
-    image: "/images/payment-method/indodana.png",
-  },
-];
 const paymentOTC = [
   {
     id: 1,
@@ -153,7 +119,7 @@ const paymentEWallet = [
   },
   {
     id: 2,
-    label: "Ovo",
+    label: "OVO",
     value: "ovo",
     image: "/images/payment-method/ovo.png",
   },
@@ -352,203 +318,7 @@ const PaymentCheckout = () => {
                   </RadioGroup>
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem
-                value="credit-card"
-                className="border border-gray-500 rounded overflow-hidden"
-              >
-                <AccordionTrigger
-                  className={cn(
-                    "px-5",
-                    typeMethod === "creditCard"
-                      ? "bg-green-100"
-                      : "bg-transparent"
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    {typeMethod === "creditCard" ? (
-                      <CheckCircle2 className="w-4 h-4" />
-                    ) : (
-                      <Circle className="w-4 h-4" />
-                    )}
-                    <p>Kartu Kredit</p>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pt-5 px-5 border-t border-gray-500">
-                  <RadioGroup
-                    className="flex items-center w-full gap-4"
-                    value={method}
-                    onValueChange={(e) => {
-                      setMethod(e);
-                      setTypeMethod("creditCard");
-                    }}
-                  >
-                    <div className="flex items-center w-full">
-                      <RadioGroupItem
-                        value={"credit-card"}
-                        id={"credit-card"}
-                        className="hidden"
-                      />
-                      <Label
-                        htmlFor={"credit-card"}
-                        className={cn(
-                          "w-full px-4 flex flex-col rounded justify-center",
-                          method === "credit-card"
-                            ? "border-green-500 border-2"
-                            : "border-gray-500 border",
-                          typeMethod === "creditCard" &&
-                            method === "credit-card"
-                            ? "h-full py-2"
-                            : "h-14 py-0"
-                        )}
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-semibold">Kartu Kredit</p>
-                          <div className="flex items-center gap-2">
-                            <div className="relative w-12 h-12 overflow-hidden">
-                              <Image
-                                fill
-                                alt=""
-                                src={"/images/payment-method/visa.png"}
-                                className="object-contain pointer-events-none"
-                              />
-                            </div>
-                            <div className="relative w-10 h-10 overflow-hidden">
-                              <Image
-                                fill
-                                alt=""
-                                src={"/images/payment-method/jcb.png"}
-                                className="object-contain pointer-events-none"
-                              />
-                            </div>
-                            <div className="relative w-10 h-10 overflow-hidden">
-                              <Image
-                                fill
-                                alt=""
-                                src={"/images/payment-method/mastercard.png"}
-                                className="object-contain pointer-events-none"
-                              />
-                            </div>
-                            <div className="relative w-10 h-10 overflow-hidden">
-                              <Image
-                                fill
-                                alt=""
-                                src={
-                                  "/images/payment-method/americanexpress.png"
-                                }
-                                className="object-contain pointer-events-none"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        {typeMethod === "creditCard" &&
-                          method === "credit-card" && (
-                            <div className="w-full flex flex-col gap-6 py-6 border-t border-gray-500">
-                              <div className="flex flex-col gap-0.5 md:gap-1 relative">
-                                <Label
-                                  className={cn(
-                                    "absolute transition-all text-gray-700 dark:text-white/70 text-sm after:content-['*'] after:text-red-500 after:pl-1",
-                                    creditCard.name.length === 0
-                                      ? "translate-y-3.5 left-3 font-normal"
-                                      : "-translate-y-3 left-0 font-semibold"
-                                  )}
-                                >
-                                  Nama
-                                </Label>
-                                <Input
-                                  value={creditCard.name}
-                                  onChange={(e) =>
-                                    setCreditCard((prev) => ({
-                                      ...prev,
-                                      name: e.target.value,
-                                    }))
-                                  }
-                                  required
-                                  className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-                                />
-                              </div>
-                              <div className="flex flex-col gap-0.5 md:gap-1 relative">
-                                <Label
-                                  className={cn(
-                                    "absolute transition-all text-gray-700 dark:text-white/70 text-sm after:content-['*'] after:text-red-500 after:pl-1",
-                                    creditCard.numberCard.length === 0
-                                      ? "translate-y-3.5 left-3 font-normal"
-                                      : "-translate-y-3 left-0 font-semibold"
-                                  )}
-                                >
-                                  Nomor Kartu
-                                </Label>
-                                <Input
-                                  value={creditCard.numberCard}
-                                  onChange={(e) =>
-                                    setCreditCard((prev) => ({
-                                      ...prev,
-                                      numberCard: e.target.value,
-                                    }))
-                                  }
-                                  type="number"
-                                  required
-                                  className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-                                />
-                              </div>
-                              <div className="flex w-full justify-between items-center">
-                                <div className="flex flex-col gap-2 relative">
-                                  <Label className="transition-all text-gray-700 dark:text-white/70 text-sm after:content-['*'] after:text-red-500 after:pl-1">
-                                    Tanggal EXP (MM/YY)
-                                  </Label>
-                                  <InputOTP maxLength={4}>
-                                    <InputOTPGroup>
-                                      <InputOTPSlot
-                                        className="border-gray-500 w-9 h-9"
-                                        index={0}
-                                      />
-                                      <InputOTPSlot
-                                        className="border-gray-500 w-9 h-9"
-                                        index={1}
-                                      />
-                                    </InputOTPGroup>
-                                    <Slash className="w-4 h-4 mx-1 -rotate-[20deg]" />
-                                    <InputOTPGroup>
-                                      <InputOTPSlot
-                                        className="border-gray-500 w-9 h-9"
-                                        index={2}
-                                      />
-                                      <InputOTPSlot
-                                        className="border-gray-500 w-9 h-9"
-                                        index={3}
-                                      />
-                                    </InputOTPGroup>
-                                  </InputOTP>
-                                </div>
-                                <div className="flex flex-col gap-2 relative">
-                                  <Label className="transition-all text-gray-700 dark:text-white/70 text-sm after:content-['*'] after:text-red-500 after:pl-1">
-                                    CVV
-                                  </Label>
-                                  <InputOTP maxLength={3}>
-                                    <InputOTPGroup>
-                                      <InputOTPSlot
-                                        className="border-gray-500 w-9 h-9"
-                                        index={0}
-                                      />
-                                      <InputOTPSlot
-                                        className="border-gray-500 w-9 h-9"
-                                        index={1}
-                                      />
-                                      <InputOTPSlot
-                                        className="border-gray-500 w-9 h-9"
-                                        index={2}
-                                      />
-                                    </InputOTPGroup>
-                                  </InputOTP>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
+              {/* <AccordionItem
                 value="over-counter"
                 className="border border-gray-500 rounded overflow-hidden"
               >
@@ -626,7 +396,7 @@ const PaymentCheckout = () => {
                     ))}
                   </RadioGroup>
                 </AccordionContent>
-              </AccordionItem>
+              </AccordionItem> */}
               <AccordionItem
                 value="e-wallet"
                 className="border border-gray-500 rounded overflow-hidden"
@@ -761,163 +531,6 @@ const PaymentCheckout = () => {
                   </RadioGroup>
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem
-                value="debit"
-                className="border border-gray-500 rounded overflow-hidden"
-              >
-                <AccordionTrigger
-                  className={cn(
-                    "px-5",
-                    typeMethod === "debit" ? "bg-green-100" : "bg-transparent"
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    {typeMethod === "debit" ? (
-                      <CheckCircle2 className="w-4 h-4" />
-                    ) : (
-                      <Circle className="w-4 h-4" />
-                    )}
-                    <p>Kartu Debit</p>
-                    <p
-                      className={cn(
-                        "bg-green-300 text-black text-xs px-3 py-0.5 rounded-full",
-                        typeMethod === "debit" &&
-                          !!method &&
-                          paymentDebit.find((item) => item.value === method)
-                            ?.label
-                          ? "flex"
-                          : "hidden"
-                      )}
-                    >
-                      {typeMethod === "debit" &&
-                      !!method &&
-                      paymentDebit.find((item) => item.value === method)?.label
-                        ? paymentDebit.find((item) => item.value === method)
-                            ?.label
-                        : null}
-                    </p>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pt-5 px-5 border-t border-gray-500">
-                  <RadioGroup
-                    className="grid grid-cols-4 w-full gap-4"
-                    value={method}
-                    onValueChange={(e) => {
-                      setMethod(e);
-                      setTypeMethod("debit");
-                    }}
-                  >
-                    {paymentDebit.map((item) => (
-                      <div key={item.id} className="flex items-center w-full">
-                        <RadioGroupItem
-                          value={item.value}
-                          id={item.value}
-                          className="hidden"
-                        />
-                        <Label
-                          htmlFor={item.value}
-                          className={cn(
-                            "h-24 w-full px-4 gap-2 flex flex-col items-center justify-center rounded",
-                            method === item.value
-                              ? "border-green-500 border-2"
-                              : "border-gray-500 border"
-                          )}
-                        >
-                          <div className="relative w-full h-8 overflow-hidden">
-                            <Image
-                              fill
-                              alt=""
-                              src={item.image}
-                              className="object-contain pointer-events-none"
-                            />
-                          </div>
-                          <p className="text-sm font-semibold">{item.label}</p>
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
-                value="paylater"
-                className="border border-gray-500 rounded overflow-hidden"
-              >
-                <AccordionTrigger
-                  className={cn(
-                    "px-5",
-                    typeMethod === "paylater"
-                      ? "bg-green-100"
-                      : "bg-transparent"
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    {typeMethod === "paylater" ? (
-                      <CheckCircle2 className="w-4 h-4" />
-                    ) : (
-                      <Circle className="w-4 h-4" />
-                    )}
-                    <p>Paylater</p>
-                    <p
-                      className={cn(
-                        "bg-green-300 text-black text-xs px-3 py-0.5 rounded-full",
-                        typeMethod === "paylater" &&
-                          !!method &&
-                          paymentPaylater.find((item) => item.value === method)
-                            ?.label
-                          ? "flex"
-                          : "hidden"
-                      )}
-                    >
-                      {typeMethod === "paylater" &&
-                      !!method &&
-                      paymentPaylater.find((item) => item.value === method)
-                        ?.label
-                        ? paymentPaylater.find((item) => item.value === method)
-                            ?.label
-                        : null}
-                    </p>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pt-5 px-5 border-t border-gray-500">
-                  <RadioGroup
-                    className="grid grid-cols-4 w-full gap-4"
-                    value={method}
-                    onValueChange={(e) => {
-                      setMethod(e);
-                      setTypeMethod("paylater");
-                    }}
-                  >
-                    {paymentPaylater.map((item) => (
-                      <div key={item.id} className="flex items-center w-full">
-                        <RadioGroupItem
-                          value={item.value}
-                          id={item.value}
-                          className="hidden"
-                        />
-                        <Label
-                          htmlFor={item.value}
-                          className={cn(
-                            "h-24 w-full px-4 gap-2 flex flex-col items-center justify-center rounded",
-                            method === item.value
-                              ? "border-green-500 border-2"
-                              : "border-gray-500 border"
-                          )}
-                        >
-                          <div className="relative w-full h-8 overflow-hidden">
-                            <Image
-                              fill
-                              alt=""
-                              src={item.image}
-                              className="object-contain pointer-events-none"
-                            />
-                          </div>
-                          <p className="text-sm font-semibold">{item.label}</p>
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </AccordionContent>
-              </AccordionItem>
             </Accordion>
             <div>
               <Button
@@ -956,10 +569,6 @@ const PaymentCheckout = () => {
             </div>
           </div>
           <div className="mt-8 flex flex-col gap-4">
-            <Button className="justify-between bg-transparent hover:bg-transparent text-black dark:text-white w-full border border-black">
-              <p>Ganti Paket</p>
-              <ChevronDown className="h-4 w-4" />
-            </Button>
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
                 <p>Category</p>

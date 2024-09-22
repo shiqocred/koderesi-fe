@@ -8,6 +8,7 @@ import Image from "next/image";
 import qs from "query-string";
 import axios from "axios";
 import {
+  AlertCircle,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -134,12 +135,44 @@ export const CreditsClient = () => {
           },
         }
       );
-      toast.success(`Kredit ${current.name} berhasi diperbarui`);
+      toast.success(`Kredit berhasi diperbarui`);
       cookies.set("updated", "updated");
       setEditedKredit(false);
-    } catch (error) {
+    } catch (error: any) {
       console.log("[ERROR_UPDATE_KREDIT]:", error);
-      toast.error(`Kredit ${current.name} gagal diperbarui`);
+      toast.custom(
+        (t) => (
+          <div className="flex gap-3 relative w-full items-center">
+            <div className="flex gap-3 w-full">
+              <AlertCircle className="w-4 h-4 dark:fill-white dark:text-red-800 text-red-500" />
+              <div className="flex flex-col gap-1">
+                <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
+                  Kredit gagal diperbarui
+                </h5>
+                {error.response.data.message && (
+                  <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                    <li>{error.response.data.message}</li>
+                  </ul>
+                )}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toast.dismiss(t)}
+              className="w-5 h-5 text-white flex-none bg-red-500 ml-auto flex items-center justify-center rounded-full hover:scale-110 transition-all shadow"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        ),
+        {
+          duration: 3000,
+          classNames: {
+            toast:
+              "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
+          },
+        }
+      );
     } finally {
       setIsUpdatingList(false);
     }
@@ -253,9 +286,10 @@ export const CreditsClient = () => {
       setIsUpdatingBar(true);
       getBarKredit(current.id, "");
       getKreditList();
-      cookies.remove("updated");
+      return cookies.remove("updated");
     }
   }, [cookies.get("updated")]);
+
   useEffect(() => {
     getKreditList();
   }, [params.get("q")]);

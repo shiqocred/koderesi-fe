@@ -1,14 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { MouseEvent } from "react";
 import { Modal } from "./modal";
 import { useModal } from "@/hooks/use-modal";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
+import axios from "axios";
+import { useCookies } from "next-client-cookies";
+import { AlertCircle, X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 export const ApproveAffiliateModal = () => {
   const { isOpen, onClose, type } = useModal();
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
+  const params = useSearchParams();
 
   const isModalOpen = isOpen && type === "approve-affiliate";
+
+  const onApprove = async (e: MouseEvent) => {
+    e.preventDefault();
+    const body = {
+      status: "approved",
+    };
+    try {
+      await axios.put(
+        `https://koderesi.raventech.my.id/api/superadmin/affiliate/update/${params.get(
+          "ca"
+        )}`,
+        body,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Affiliate berhasil di approve");
+      cookies.set("affiliateReq", "added");
+      onClose();
+    } catch (error: any) {
+      console.log("[ERROR_APRV_AFFILIATE]:", error);
+      toast.custom(
+        (t) => (
+          <ToastError label="Affiliate gagal di approve" error={error} t={t} />
+        ),
+        optionToast
+      );
+    }
+  };
 
   return (
     <Modal
@@ -25,7 +67,7 @@ export const ApproveAffiliateModal = () => {
           Batal
         </Button>
         <Button
-          onClick={onClose}
+          onClick={onApprove}
           className="w-full bg-green-400 hover:bg-green-300 text-black"
         >
           Approve

@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import { cn } from "@/lib/utils";
+import { AlertCircle, X } from "lucide-react";
 
 export const AddUserModal = () => {
   const { isOpen, onClose, type } = useModal();
@@ -51,9 +52,41 @@ export const AddUserModal = () => {
       toast.success("User added.");
       onClose();
       cookies.set("new", "added");
-      router.refresh();
-    } catch (error) {
+    } catch (error: any) {
       console.log("[ERROR_ADD_USER]:", error);
+      toast.custom(
+        (t) => (
+          <div className="flex gap-3 relative w-full items-center">
+            <div className="flex gap-3 w-full">
+              <AlertCircle className="w-4 h-4 dark:fill-white dark:text-red-800 text-red-500" />
+              <div className="flex flex-col gap-1">
+                <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
+                  User gagal ditambahkan.
+                </h5>
+                {error.response.data.message && (
+                  <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                    <li>{error.response.data.message}</li>
+                  </ul>
+                )}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toast.dismiss(t)}
+              className="w-5 h-5 text-white flex-none bg-red-500 ml-auto flex items-center justify-center rounded-full hover:scale-110 transition-all shadow"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        ),
+        {
+          duration: 30000,
+          classNames: {
+            toast:
+              "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
+          },
+        }
+      );
     }
   };
 

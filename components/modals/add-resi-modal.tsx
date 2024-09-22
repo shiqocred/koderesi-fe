@@ -26,7 +26,14 @@ import {
   CommandList,
   CommandSeparator,
 } from "../ui/command";
-import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import {
+  AlertCircle,
+  AlertTriangle,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+} from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -221,11 +228,47 @@ export const AddResiModal = () => {
         router.refresh();
       } else {
         console.log("[ERROR_ADD_RESI]:", res.data.message);
-        toast.error(res.data.message);
+        toast(
+          <div className="flex gap-3">
+            <AlertCircle className="w-5 h-5 dark:fill-white dark:text-red-800" />
+            <div className="flex flex-col gap-1">
+              <h5 className="font-medium dark:text-white text-sm leading-tight">
+                Resi gagal ditambahkan.
+              </h5>
+              <ul className="*:before:content-['-'] *:before:pr-3 text-red-200 text-xs">
+                <li>{res.data.message}</li>
+              </ul>
+            </div>
+          </div>,
+          {
+            duration: 5000,
+            classNames: {
+              toast: "toast-custom",
+            },
+          }
+        );
       }
     } catch (error: any) {
       console.log("[ERROR_ADD_RESI]:", error);
-      toast.error("Resi gagal ditambahkan");
+      toast(
+        <div className="flex gap-3">
+          <AlertCircle className="w-5 h-5 dark:fill-white dark:text-red-800" />
+          <div className="flex flex-col gap-1">
+            <h5 className="font-medium dark:text-white text-sm leading-tight">
+              Resi gagal ditambahkan.
+            </h5>
+            <ul className="*:before:content-['-'] *:before:pr-3 text-red-200 text-xs">
+              <li>{error.response.data.error}</li>
+            </ul>
+          </div>
+        </div>,
+        {
+          duration: 5000,
+          classNames: {
+            toast: "toast-custom",
+          },
+        }
+      );
     }
   };
 

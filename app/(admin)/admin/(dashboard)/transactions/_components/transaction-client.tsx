@@ -226,9 +226,9 @@ export const CreditsClient = () => {
   }, [params.get("q")]);
 
   useEffect(() => {
-    if (addedTrasaction === "added") {
-      cookies.remove("transaction");
+    if (addedTrasaction) {
       getTransactionList();
+      return cookies.remove("transaction");
     }
     if (params.get("currentId")) {
       getDetailTransaction(params.get("currentId") ?? "");

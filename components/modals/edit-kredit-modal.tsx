@@ -227,7 +227,7 @@ export const EditKreditModal = () => {
           </Popover>
         </div>
         <form onSubmit={handleCreate} className="w-full gap-6 flex flex-col">
-          <div className="flex gap-6 w-full flex-col md:flow-row">
+          <div className="flex gap-6 w-full flex-col md:flex-row">
             <div className="flex flex-col gap-6 items-start w-full">
               <div className="space-y-0.5 md:space-y-1 relative w-full">
                 <Label

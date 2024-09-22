@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/popover";
 import axios from "axios";
 import {
+  AlertCircle,
   ArrowDown,
   ChevronDown,
   ChevronLeft,
@@ -37,10 +38,13 @@ import {
   PackageCheck,
   Save,
   Search,
+  TextSearch,
+  X,
 } from "lucide-react";
 import { useCookies } from "next-client-cookies";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface DataCheckingProps {
   waybill_id: string;
@@ -134,20 +138,60 @@ export const CheckResiIdClient = () => {
           },
         }
       );
+      toast.success("Resi ditemukan");
       setDataResi(res.data.data);
     } catch (error: any) {
       console.log("[ERROR_GET_DETAIL]:", error);
+      toast.custom(
+        (t) => (
+          <div className="flex gap-3 relative w-full items-center">
+            <div className="flex gap-3 w-full">
+              <AlertCircle className="w-4 h-4 dark:fill-white dark:text-red-800 text-red-500" />
+              <div className="flex flex-col gap-1">
+                <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
+                  Resi tidak ditemukan.
+                </h5>
+                <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                  <li>{error.response.data.error}</li>
+                </ul>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toast.dismiss(t)}
+              className="w-5 h-5 text-white flex-none bg-red-500 ml-auto flex items-center justify-center rounded-full hover:scale-110 transition-all shadow"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        ),
+        {
+          duration: Infinity,
+          classNames: {
+            toast:
+              "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
+          },
+        }
+      );
     }
   };
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     router.push(`/admin/check-resi/${resi.resi}?courier=${resi.courier}`);
+    cookies.set("update resi", "1");
   };
 
   useEffect(() => {
     handleGetDetail();
   }, [trackId, params.get("courier")]);
+
+  useEffect(() => {
+    if (cookies.get("update resi")) {
+      handleGetDetail();
+      return cookies.remove("update resi");
+    }
+  }, [cookies.get("update resi")]);
 
   useEffect(() => {
     getCourier();
@@ -375,7 +419,16 @@ export const CheckResiIdClient = () => {
           </div>
         </div>
       ) : (
-        <div>Data not found.</div>
+        <div className="w-full flex justify-center h-[300px] items-center text-gray-700 dark:text-gray-400">
+          <div className="flex gap-3 items-center flex-col justify-center">
+            <div className="w-14 h-14 flex items-center justify-center rounded-full bg-gray-100">
+              <TextSearch className="w-8 h-8" />
+            </div>
+            <h5 className="text-lg font-medium">
+              Resi yang anda cari tidak ditemukan atau terjadi kesalahan.
+            </h5>
+          </div>
+        </div>
       )}
     </Card>
     // <Card className="p-4 flex flex-col w-full gap-6 h-full">

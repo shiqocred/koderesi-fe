@@ -81,6 +81,13 @@ body,
   }
 }
 
+.toast-custom {
+  @apply group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-100 group-[.toaster]:dark:text-white;
+}
+.desc-custom {
+  @apply group-[.toast]:text-red-500 group-[.toast]:dark:text-red-100 before:group-[.toast]:content-['-'] before:group-[.toast]:pr-2;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
