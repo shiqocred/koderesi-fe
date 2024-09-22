@@ -161,7 +161,10 @@ const DetailAffiliate = ({
           <p className="text-base font-semibold">Website url:</p>
           <ul className="before:*:content-['-'] before:*:pr-2 text-sm relative *:pl-4">
             {url.website.map((item: any) => (
-              <li className="py-2 border-b first:border-t border-gray-500 dark:border-gray-700">
+              <li
+                key={item}
+                className="py-2 border-b first:border-t border-gray-500 dark:border-gray-700"
+              >
                 {item}
               </li>
             ))}
@@ -409,7 +412,10 @@ const DetailAffiliate = ({
         <p className="text-base font-semibold">Website url:</p>
         <ul className="before:*:content-['-'] before:*:pr-2 text-sm relative *:pl-4">
           {url.website.map((item: any) => (
-            <li className="py-2 border-b first:border-t border-gray-500 dark:border-gray-700">
+            <li
+              key={item}
+              className="py-2 border-b first:border-t border-gray-500 dark:border-gray-700"
+            >
               {item}
             </li>
           ))}
