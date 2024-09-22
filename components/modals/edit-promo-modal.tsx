@@ -24,12 +24,15 @@ import {
 } from "@/components/ui/command";
 import { Checkbox } from "../ui/checkbox";
 import {
+  ArrowDown,
+  ArrowUp,
   CalendarIcon,
   ChevronDown,
   Minus,
   Plus,
   Save,
   Trash2,
+  X,
 } from "lucide-react";
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
@@ -163,6 +166,27 @@ export const EditPromoModal = () => {
     }
   };
 
+  const moveUp = (index: number) => {
+    if (index <= 0) return; // Jika elemen sudah di atas, tidak bisa naik lagi
+    const newItems = [...inputNew.keterangan];
+    [newItems[index - 1], newItems[index]] = [
+      newItems[index],
+      newItems[index - 1],
+    ]; // Swap
+    setInputNew((prev) => ({ ...prev, keterangan: newItems }));
+  };
+
+  // Fungsi untuk mengubah urutan elemen turun
+  const moveDown = (index: number) => {
+    if (index >= inputNew.keterangan.length - 1) return; // Jika elemen sudah di bawah, tidak bisa turun lagi
+    const newItems = [...inputNew.keterangan];
+    [newItems[index + 1], newItems[index]] = [
+      newItems[index],
+      newItems[index + 1],
+    ]; // Swap
+    setInputNew((prev) => ({ ...prev, keterangan: newItems }));
+  };
+
   useEffect(() => {
     if (isModalOpen && data) {
       setInputNew(data);
@@ -209,12 +233,12 @@ export const EditPromoModal = () => {
               {bannerURL &&
                 (!inputNew.image || inputNew.image.length === 0) && (
                   <Label className="w-full aspect-[4/1] bg-transparent rounded overflow-hidden border border-green-400 hover:border-green-500 flex items-center justify-center group flex-col relative">
-                    <div className="w-full h-full group-hover:backdrop-blur-sm flex items-center justify-center flex-col">
-                      <div className="items-center mt-2 group-hover:text-black group-hover:flex hidden transition-all text-black/80 group-hover:dark:text-white dark:text-white/80">
+                    <div className="z-20 w-full h-full group-hover:backdrop-blur-sm flex items-center justify-center flex-col group-hover:bg-white/30">
+                      <div className="items-center mt-2 group-hover:text-black group-hover:flex hidden transition-all group-hover:dark:text-white dark:text-white/80">
                         <Plus className="w-5 h-5 mr-2" />
                         <p className="text-lg">Add Banner</p>
                       </div>
-                      <p className="text-xs font-light italic text-gray-500 group-hover:flex hidden transition-all">
+                      <p className="text-xs font-light italic text-gray-800 group-hover:flex hidden transition-all">
                         (Rekomendasi Resolusi 4:1)
                       </p>
                     </div>
@@ -430,45 +454,62 @@ export const EditPromoModal = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full flex flex-col gap-6">
+              <div className="w-full flex flex-col gap-6 relative">
                 {inputNew.keterangan.map((keterangan, index) => (
-                  <div
-                    className="space-y-0.5 md:space-y-1 relative w-full group"
-                    key={`cell-${index}`}
-                  >
-                    <Label
-                      className={cn(
-                        "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                        inputNew.keterangan[0].length === 0
-                          ? "translate-y-3.5 left-3 font-normal"
-                          : "-translate-y-3 left-0 font-light"
-                      )}
+                  <div className="w-full flex " key={`cell-${index}`}>
+                    <Button
+                      onClick={() => moveUp(index)}
+                      type="button"
+                      disabled={index === 0}
+                      className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent p-0 h-9 w-9 flex-none hover:bg-gray-100"
                     >
-                      Keterangan
-                    </Label>
-                    <div className="flex items-end gap-2">
-                      <Input
-                        value={inputNew.keterangan[index]}
-                        onChange={(e) => onChangeNewKeterangan(index, e)}
-                        className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                      />
-                      <Button
-                        onClick={() => removeKeterangan(index)}
-                        type="button"
-                        className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent py-0 h-9 group-last:hidden"
+                      <ArrowUp className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      onClick={() => moveDown(index)}
+                      disabled={index === inputNew.keterangan.length - 1}
+                      type="button"
+                      className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent p-0 h-9 w-9 flex-none hover:bg-gray-100 mr-2"
+                    >
+                      <ArrowDown className="w-4 h-4" />
+                    </Button>
+                    <div className="space-y-0.5 md:space-y-1 relative w-full">
+                      <Label
+                        className={cn(
+                          "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                          keterangan.length === 0
+                            ? "translate-y-3.5 left-3 font-normal"
+                            : "-translate-y-3 left-0 font-light"
+                        )}
                       >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        onClick={addKeterangan}
-                        type="button"
-                        className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent py-0 h-9 hidden group-last:flex"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
+                        Keterangan
+                      </Label>
+                      <div className="flex items-end gap-2">
+                        <Input
+                          value={keterangan}
+                          onChange={(e) => onChangeNewKeterangan(index, e)}
+                          className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                        />
+                        <Button
+                          onClick={() => removeKeterangan(index)}
+                          disabled={inputNew.keterangan.length === 1}
+                          type="button"
+                          className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent py-0 h-9"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
+                <Button
+                  onClick={addKeterangan}
+                  type="button"
+                  className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent py-0 h-9 flex border border-gray-400 dark:border-gray-600"
+                >
+                  <Plus className="w-4 h-4 mr-2 -ml-4" />
+                  Tambah Keterangan
+                </Button>
               </div>
             </div>
           </div>
@@ -477,7 +518,15 @@ export const EditPromoModal = () => {
             <p className="text-sm dark:text-gray-300">
               Periksa terlebih dahulu sebelum konfirmasi.
             </p>
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                onClick={() => onClose()}
+                className="transition-all bg-transparent hover:bg-transparent dark:text-gray-400 hover:underline font-normal text-gray-700"
+              >
+                <X className="w-4 h-4  mr-2" />
+                Batal
+              </Button>
               <Button
                 type="submit"
                 className="transition-all bg-transparent hover:bg-transparent dark:text-green-400 hover:underline font-normal text-green-700"

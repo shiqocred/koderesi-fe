@@ -17,14 +17,15 @@ export async function middleware(request: NextRequest) {
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
   const isAdminPageRequested = isAdminPages(nextUrl.pathname);
 
-  const res = await fetch("https://koderesi.raventech.my.id/api/auth/page", {
-    method: "GET",
-    headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
-  });
+  const res = await fetch(
+    new URL("https://koderesi.raventech.my.id/api/auth/page").href,
+    {
+      method: "GET",
+      headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+    }
+  );
 
   const data = await res.json().then((res) => res.data?.role);
-
-  console.log(data);
 
   if (data) {
     if (data === "superadmin") {

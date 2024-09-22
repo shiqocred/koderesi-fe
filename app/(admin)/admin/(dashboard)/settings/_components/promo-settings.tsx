@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit3, Percent, PlusCircle, Trash2 } from "lucide-react";
+import { Edit3, Percent, PlusCircle, TextSelect, Trash2 } from "lucide-react";
 import { cn, formatRupiah } from "@/lib/utils";
 import {
   Accordion,
@@ -130,14 +130,109 @@ export const PromoSettings = () => {
             </div>
           </AccordionTrigger>
           <AccordionContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
-              {/* {promoActiveList.map((item) => (
-                <div
-                  key={item.id}
-                  className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700 relative overflow-hidden"
-                >
-                  <div className="lg:flex -right-4 absolute -top-8 z-10 h-32 w-32 hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all hover:backdrop-blur-sm items-center justify-center rounded-full hidden">
-                    <div className="flex gap-2">
+            {promoActiveList.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
+                {promoActiveList.map((item) => (
+                  <div
+                    key={item.id}
+                    className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700 relative overflow-hidden"
+                  >
+                    <div className="lg:flex -right-4 absolute -top-8 z-10 h-32 w-32 hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all hover:backdrop-blur-sm items-center justify-center rounded-full hidden">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            onOpen("edit-promo", {
+                              judul: item.title,
+                              kredit: item.total_credits,
+                              harga: item.before_discount,
+                              hargaPromo: item.after_discount,
+                              date: {
+                                from: new Date(item.date_start),
+                                to: new Date(item.date_end),
+                              },
+                              keterangan: item.descriptions,
+                              banner: item.banner,
+                              id: item.id,
+                            })
+                          }
+                          className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
+                        >
+                          <Edit3 className="h-3 w-3 text-black" />
+                        </button>
+                        <button
+                          onClick={() => onOpen("delete-promo", item.id)}
+                          className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
+                        >
+                          <Trash2 className="h-3 w-3 text-black" />
+                        </button>
+                      </div>
+                    </div>
+                    {item.banner ? (
+                      <div className="relative w-full aspect-[4/1] rounded overflow-hidden">
+                        <Image
+                          src={item.banner}
+                          fill
+                          alt=""
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="relative w-full aspect-[4/1] rounded overflow-hidden border shadow-sm">
+                        <Image
+                          src={"/images/no_image.webp"}
+                          fill
+                          alt=""
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="flex w-full flex-col justify-center">
+                      <div className="flex flex-col my-5 w-full text-center capitalize justify-center items-center">
+                        <h3 className="text-lg font-semibold ">{item.title}</h3>
+                        <p className="text-sm">
+                          {item.date_start
+                            ? format(
+                                new Date(item.date_start),
+                                "dd MMMM yyyy",
+                                {
+                                  locale: id,
+                                }
+                              )
+                            : ""}{" "}
+                          -{" "}
+                          {item.date_end
+                            ? format(new Date(item.date_end), "dd MMMM yyyy", {
+                                locale: id,
+                              })
+                            : ""}
+                        </p>
+                      </div>
+                      <div className="flex w-full bg-gray-200 dark:bg-gray-700 px-5 py-1.5 rounded-sm flex-col lg:flex-row items-center">
+                        <div className="w-full flex flex-col">
+                          <p className="text-xs">Total Kredit</p>
+                          <p className="font-semibold">
+                            {item.total_credits.toLocaleString()} Kredit
+                          </p>
+                        </div>
+                        <div className="w-full flex flex-col lg:items-end mt-2 pt-2 border-t lg:border-none lg:m-0 lg:p-0 border-gray-300">
+                          <p className="text-xs">Harga</p>
+                          <div className="flex gap-2 items-center lg:flex-row-reverse">
+                            <p className="font-semibold">
+                              {formatRupiah(item.after_discount)}
+                            </p>
+                            <p className="text-xs line-through text-gray-500 dark:text-gray-300">
+                              {formatRupiah(item.before_discount)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <ul className="w-full grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 *:list-['-'] *:pl-2 px-3 mt-6 mb-3">
+                        {item.descriptions.map((v) => (
+                          <li key={v}>{v}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="flex gap-2 w-full mt-5 lg:hidden">
                       <button
                         onClick={() =>
                           onOpen("edit-promo", {
@@ -154,113 +249,31 @@ export const PromoSettings = () => {
                             id: item.id,
                           })
                         }
-                        className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
+                        className="h-8 w-full flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded group"
                       >
                         <Edit3 className="h-3 w-3 text-black" />
+                        <p className="flex lg:hidden ml-2 text-sm text-black">
+                          Edit
+                        </p>
                       </button>
                       <button
                         onClick={() => onOpen("delete-promo", item.id)}
-                        className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
+                        className="h-8 w-8 flex-none flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded group"
                       >
                         <Trash2 className="h-3 w-3 text-black" />
                       </button>
                     </div>
                   </div>
-                  {item.banner ? (
-                    <div className="relative w-full aspect-[4/1] rounded overflow-hidden">
-                      <Image
-                        src={item.banner}
-                        fill
-                        alt=""
-                        className="object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="relative w-full aspect-[4/1] rounded overflow-hidden border shadow-sm">
-                      <Image
-                        src={"/images/no_image.webp"}
-                        fill
-                        alt=""
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="flex w-full flex-col justify-center">
-                    <div className="flex flex-col my-5 w-full text-center capitalize justify-center items-center">
-                      <h3 className="text-lg font-semibold ">{item.title}</h3>
-                      <p className="text-sm">
-                        {item.date_start
-                          ? format(new Date(item.date_start), "dd MMMM yyyy", {
-                              locale: id,
-                            })
-                          : ""}{" "}
-                        -{" "}
-                        {item.date_end
-                          ? format(new Date(item.date_end), "dd MMMM yyyy", {
-                              locale: id,
-                            })
-                          : ""}
-                      </p>
-                    </div>
-                    <div className="flex w-full bg-gray-200 dark:bg-gray-700 px-5 py-1.5 rounded-sm flex-col lg:flex-row items-center">
-                      <div className="w-full flex flex-col">
-                        <p className="text-xs">Total Kredit</p>
-                        <p className="font-semibold">
-                          {item.total_credits.toLocaleString()} Kredit
-                        </p>
-                      </div>
-                      <div className="w-full flex flex-col lg:items-end mt-2 pt-2 border-t lg:border-none lg:m-0 lg:p-0 border-gray-300">
-                        <p className="text-xs">Harga</p>
-                        <div className="flex gap-2 items-center lg:flex-row-reverse">
-                          <p className="font-semibold">
-                            {formatRupiah(item.after_discount)}
-                          </p>
-                          <p className="text-xs line-through text-gray-500 dark:text-gray-300">
-                            {formatRupiah(item.before_discount)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <ul className="w-full grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 *:list-['-'] *:pl-2 px-3 mt-6 mb-3">
-                      {item.descriptions.map((v) => (
-                        <li key={v}>{v}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="flex gap-2 w-full mt-5 lg:hidden">
-                    <button
-                      onClick={() =>
-                        onOpen("edit-promo", {
-                          judul: item.title,
-                          kredit: item.total_credits,
-                          harga: item.before_discount,
-                          hargaPromo: item.after_discount,
-                          date: {
-                            from: new Date(item.date_start),
-                            to: new Date(item.date_end),
-                          },
-                          keterangan: item.descriptions,
-                          banner: item.banner,
-                          id: item.id,
-                        })
-                      }
-                      className="h-8 w-full flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded group"
-                    >
-                      <Edit3 className="h-3 w-3 text-black" />
-                      <p className="flex lg:hidden ml-2 text-sm text-black">
-                        Edit
-                      </p>
-                    </button>
-                    <button
-                      onClick={() => onOpen("delete-promo", item.id)}
-                      className="h-8 w-8 flex-none flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded group"
-                    >
-                      <Trash2 className="h-3 w-3 text-black" />
-                    </button>
-                  </div>
-                </div>
-              ))} */}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="w-full h-[200px] flex flex-col items-center mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 justify-center border-t border-gray-300 dark:border-gray-700">
+                <TextSelect className="w-16 h-16 " />
+                <h3 className="text-2xl font-bold mt-2 text-gray-500">
+                  No data viewed.
+                </h3>
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem
@@ -278,14 +291,109 @@ export const PromoSettings = () => {
             </div>
           </AccordionTrigger>
           <AccordionContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
-              {/* {promoInactiveList.map((item) => (
-                <div
-                  key={item.id}
-                  className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700 relative overflow-hidden"
-                >
-                  <div className="lg:flex -right-4 absolute -top-8 z-10 h-32 w-32 hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all hover:backdrop-blur-sm items-center justify-center rounded-full hidden">
-                    <div className="flex gap-2">
+            {promoInactiveList.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
+                {promoInactiveList.map((item) => (
+                  <div
+                    key={item.id}
+                    className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700 relative overflow-hidden"
+                  >
+                    <div className="lg:flex -right-4 absolute -top-8 z-10 h-32 w-32 hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all hover:backdrop-blur-sm items-center justify-center rounded-full hidden">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            onOpen("edit-promo", {
+                              judul: item.title,
+                              kredit: item.total_credits,
+                              harga: item.before_discount,
+                              hargaPromo: item.after_discount,
+                              date: {
+                                from: new Date(item.date_start),
+                                to: new Date(item.date_end),
+                              },
+                              keterangan: item.descriptions,
+                              banner: item.banner,
+                              id: item.id,
+                            })
+                          }
+                          className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
+                        >
+                          <Edit3 className="h-3 w-3 text-black" />
+                        </button>
+                        <button
+                          onClick={() => onOpen("delete-promo", item.id)}
+                          className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
+                        >
+                          <Trash2 className="h-3 w-3 text-black" />
+                        </button>
+                      </div>
+                    </div>
+                    {item.banner ? (
+                      <div className="relative w-full aspect-[4/1] rounded overflow-hidden">
+                        <Image
+                          src={item.banner}
+                          fill
+                          alt=""
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="relative w-full aspect-[4/1] rounded overflow-hidden border shadow-sm">
+                        <Image
+                          src={"/images/no_image.webp"}
+                          fill
+                          alt=""
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="flex w-full flex-col justify-center">
+                      <div className="flex flex-col my-5 w-full text-center capitalize justify-center items-center">
+                        <h3 className="text-lg font-semibold ">{item.title}</h3>
+                        <p className="text-xs md:text-sm">
+                          {item.date_start
+                            ? format(
+                                new Date(item.date_start),
+                                "dd MMMM yyyy",
+                                {
+                                  locale: id,
+                                }
+                              )
+                            : ""}{" "}
+                          -{" "}
+                          {item.date_end
+                            ? format(new Date(item.date_end), "dd MMMM yyyy", {
+                                locale: id,
+                              })
+                            : ""}
+                        </p>
+                      </div>
+                      <div className="flex w-full bg-gray-200 dark:bg-gray-700 px-5 py-1.5 rounded-sm flex-col lg:flex-row items-center">
+                        <div className="w-full flex flex-col">
+                          <p className="text-xs md:text-sm">Total Kredit</p>
+                          <p className="font-semibold text-xs md:text-sm">
+                            {item.total_credits.toLocaleString()} Kredit
+                          </p>
+                        </div>
+                        <div className="w-full flex flex-col lg:items-end mt-2 pt-2 border-t lg:border-none lg:m-0 lg:p-0 border-gray-300">
+                          <p className="text-xs md:text-sm">Harga</p>
+                          <div className="flex gap-2 items-center lg:flex-row-reverse text-xs md:text-sm">
+                            <p className="font-semibold">
+                              {formatRupiah(item.after_discount)}
+                            </p>
+                            <p className="line-through text-gray-500 dark:text-gray-300">
+                              {formatRupiah(item.before_discount)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <ul className="w-full grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 *:list-['-'] *:pl-2 px-3 mt-6 mb-3">
+                        {item.descriptions.map((v) => (
+                          <li key={v}>{v}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="flex gap-2 w-full mt-5 lg:hidden">
                       <button
                         onClick={() =>
                           onOpen("edit-promo", {
@@ -302,113 +410,31 @@ export const PromoSettings = () => {
                             id: item.id,
                           })
                         }
-                        className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
+                        className="h-8 w-full flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded group"
                       >
                         <Edit3 className="h-3 w-3 text-black" />
+                        <p className="flex lg:hidden ml-2 text-sm text-black">
+                          Edit
+                        </p>
                       </button>
                       <button
                         onClick={() => onOpen("delete-promo", item.id)}
-                        className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
+                        className="h-8 w-8 flex-none flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded group"
                       >
                         <Trash2 className="h-3 w-3 text-black" />
                       </button>
                     </div>
                   </div>
-                  {item.banner ? (
-                    <div className="relative w-full aspect-[4/1] rounded overflow-hidden">
-                      <Image
-                        src={item.banner}
-                        fill
-                        alt=""
-                        className="object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="relative w-full aspect-[4/1] rounded overflow-hidden border shadow-sm">
-                      <Image
-                        src={"/images/no_image.webp"}
-                        fill
-                        alt=""
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="flex w-full flex-col justify-center">
-                    <div className="flex flex-col my-5 w-full text-center capitalize justify-center items-center">
-                      <h3 className="text-lg font-semibold ">{item.title}</h3>
-                      <p className="text-sm">
-                        {item.date_start
-                          ? format(new Date(item.date_start), "dd MMMM yyyy", {
-                              locale: id,
-                            })
-                          : ""}{" "}
-                        -{" "}
-                        {item.date_end
-                          ? format(new Date(item.date_end), "dd MMMM yyyy", {
-                              locale: id,
-                            })
-                          : ""}
-                      </p>
-                    </div>
-                    <div className="flex w-full bg-gray-200 dark:bg-gray-700 px-5 py-1.5 rounded-sm flex-col lg:flex-row items-center">
-                      <div className="w-full flex flex-col">
-                        <p className="text-xs">Total Kredit</p>
-                        <p className="font-semibold">
-                          {item.total_credits.toLocaleString()} Kredit
-                        </p>
-                      </div>
-                      <div className="w-full flex flex-col lg:items-end mt-2 pt-2 border-t lg:border-none lg:m-0 lg:p-0 border-gray-300">
-                        <p className="text-xs">Harga</p>
-                        <div className="flex gap-2 items-center lg:flex-row-reverse">
-                          <p className="font-semibold">
-                            {formatRupiah(item.after_discount)}
-                          </p>
-                          <p className="text-xs line-through text-gray-500 dark:text-gray-300">
-                            {formatRupiah(item.before_discount)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <ul className="w-full grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 *:list-['-'] *:pl-2 px-3 mt-6 mb-3">
-                      {item.descriptions.map((v) => (
-                        <li key={v}>{v}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="flex gap-2 w-full mt-5 lg:hidden">
-                    <button
-                      onClick={() =>
-                        onOpen("edit-promo", {
-                          judul: item.title,
-                          kredit: item.total_credits,
-                          harga: item.before_discount,
-                          hargaPromo: item.after_discount,
-                          date: {
-                            from: new Date(item.date_start),
-                            to: new Date(item.date_end),
-                          },
-                          keterangan: item.descriptions,
-                          banner: item.banner,
-                          id: item.id,
-                        })
-                      }
-                      className="h-8 w-full flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded group"
-                    >
-                      <Edit3 className="h-3 w-3 text-black" />
-                      <p className="flex lg:hidden ml-2 text-sm text-black">
-                        Edit
-                      </p>
-                    </button>
-                    <button
-                      onClick={() => onOpen("delete-promo", item.id)}
-                      className="h-8 w-8 flex-none flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded group"
-                    >
-                      <Trash2 className="h-3 w-3 text-black" />
-                    </button>
-                  </div>
-                </div>
-              ))} */}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="w-full h-[200px] flex flex-col items-center mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 justify-center border-t border-gray-300 dark:border-gray-700">
+                <TextSelect className="w-16 h-16 " />
+                <h3 className="text-2xl font-bold mt-2 text-gray-500">
+                  No data viewed.
+                </h3>
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
       </Accordion>
