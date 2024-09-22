@@ -23,7 +23,14 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Checkbox } from "../ui/checkbox";
-import { ChevronDown, Minus, Plus, Save } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ChevronDown,
+  Minus,
+  Plus,
+  Save,
+} from "lucide-react";
 
 interface InputNewProps {
   kredit?: number;
@@ -130,6 +137,27 @@ export const AddKreditModal = () => {
       toast.success("Kredit Gagal Dibuat");
       console.log("[ERROR_KREDIT_CREATE]:", error);
     }
+  };
+
+  const moveUp = (index: number) => {
+    if (index <= 0) return; // Jika elemen sudah di atas, tidak bisa naik lagi
+    const newItems = [...inputNew.keterangan];
+    [newItems[index - 1], newItems[index]] = [
+      newItems[index],
+      newItems[index - 1],
+    ]; // Swap
+    setInputNew((prev) => ({ ...prev, keterangan: newItems }));
+  };
+
+  // Fungsi untuk mengubah urutan elemen turun
+  const moveDown = (index: number) => {
+    if (index >= inputNew.keterangan.length - 1) return; // Jika elemen sudah di bawah, tidak bisa turun lagi
+    const newItems = [...inputNew.keterangan];
+    [newItems[index + 1], newItems[index]] = [
+      newItems[index],
+      newItems[index + 1],
+    ]; // Swap
+    setInputNew((prev) => ({ ...prev, keterangan: newItems }));
   };
 
   return (
@@ -303,44 +331,63 @@ export const AddKreditModal = () => {
                 </p>
               </div>
             </div>
-            {inputNew.keterangan.map((keterangan, index) => (
-              <div
-                className="space-y-0.5 md:space-y-1 relative w-full group"
-                key={index}
-              >
-                <Label
-                  className={cn(
-                    "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                    inputNew.keterangan[0].length === 0
-                      ? "translate-y-3.5 left-3 font-normal"
-                      : "-translate-y-3 left-0 font-light"
-                  )}
-                >
-                  Keterangan
-                </Label>
-                <div className="flex items-end gap-2">
-                  <Input
-                    value={inputNew.keterangan[index]}
-                    onChange={(e) => onChangeNewKeterangan(index, e)}
-                    className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
-                  />
+            <div className="w-full flex flex-col gap-6 relative">
+              {inputNew.keterangan.map((keterangan, index) => (
+                <div className="w-full flex " key={`cell-${index}`}>
                   <Button
-                    onClick={() => removeKeterangan(index)}
+                    onClick={() => moveUp(index)}
                     type="button"
-                    className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white hover:bg-transparent py-0 h-9 group-last:hidden"
+                    disabled={index === 0}
+                    className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent p-0 h-9 w-9 flex-none hover:bg-gray-100"
                   >
-                    <Minus className="w-4 h-4" />
+                    <ArrowUp className="w-4 h-4" />
                   </Button>
                   <Button
-                    onClick={addKeterangan}
+                    onClick={() => moveDown(index)}
+                    disabled={index === inputNew.keterangan.length - 1}
                     type="button"
-                    className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white hover:bg-transparent py-0 h-9 hidden group-last:flex"
+                    className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent p-0 h-9 w-9 flex-none hover:bg-gray-100 mr-2"
                   >
-                    <Plus className="w-4 h-4" />
+                    <ArrowDown className="w-4 h-4" />
                   </Button>
+                  <div className="space-y-0.5 md:space-y-1 relative w-full">
+                    <Label
+                      className={cn(
+                        "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                        keterangan.length === 0
+                          ? "translate-y-3.5 left-3 font-normal"
+                          : "-translate-y-3 left-0 font-light"
+                      )}
+                    >
+                      Keterangan
+                    </Label>
+                    <div className="flex items-end gap-2">
+                      <Input
+                        value={keterangan}
+                        onChange={(e) => onChangeNewKeterangan(index, e)}
+                        className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                      />
+                      <Button
+                        onClick={() => removeKeterangan(index)}
+                        disabled={inputNew.keterangan.length === 1}
+                        type="button"
+                        className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent py-0 h-9"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+              <Button
+                onClick={addKeterangan}
+                type="button"
+                className="bg-transparent text-black/80 hover:text-black dark:text-white/80 dark:hover:text-black hover:bg-transparent py-0 h-9 flex border border-gray-400 dark:border-gray-600"
+              >
+                <Plus className="w-4 h-4 mr-2 -ml-4" />
+                Tambah Keterangan
+              </Button>
+            </div>
           </div>
 
           <div className="w-full justify-between flex dark:bg-gray-800 rounded px-3 py-1 items-center bg-gray-100 flex-col md:flex-row gap-3 md:gap-0 mt-5">

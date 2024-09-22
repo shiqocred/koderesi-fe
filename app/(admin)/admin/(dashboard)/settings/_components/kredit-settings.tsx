@@ -9,6 +9,7 @@ import {
   MoreHorizontal,
   PlusCircle,
   Star,
+  TextSelect,
   Trash2,
 } from "lucide-react";
 import axios from "axios";
@@ -136,59 +137,70 @@ export const KreditSettings = () => {
             </div>
           </AccordionTrigger>
           <AccordionContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
-              {onceList.map((item) => (
-                <div
-                  key={item.id}
-                  className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700"
-                >
-                  <div className="flex w-full justify-between">
-                    <button className="h-6 w-6 flex items-center justify-center dark:bg-gray-700/80 dark:hover:bg-gray-700 bg-gray-300/80 hover:bg-gray-300 rounded-full group">
-                      <Star className="h-3 w-3 dark:group-hover:fill-white group-hover:fill-black" />
-                    </button>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() =>
-                          onOpen("edit-credit", {
-                            jenis: "once",
-                            kredit: item.total_credits,
-                            harga: item.price_credit,
-                            hargaSatuan: item.price_one_credit,
-                            keterangan: item.descriptions,
-                            id: item.id,
-                            is_popular: item.is_popular,
-                          })
-                        }
-                        className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
-                      >
-                        <Edit3 className="h-3 w-3 text-black" />
+            {onceList.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
+                {onceList.map((item) => (
+                  <div
+                    key={item.id}
+                    className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700"
+                  >
+                    <div className="flex w-full justify-between">
+                      <button className="h-6 w-6 flex items-center justify-center dark:bg-gray-700/80 dark:hover:bg-gray-700 bg-gray-300/80 hover:bg-gray-300 rounded-full group">
+                        <Star className="h-3 w-3 dark:group-hover:fill-white group-hover:fill-black" />
                       </button>
-                      <button
-                        onClick={() => onOpen("delete-credit", item.id)}
-                        className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
-                      >
-                        <Trash2 className="h-3 w-3 text-black" />
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            onOpen("edit-credit", {
+                              jenis: "once",
+                              kredit: item.total_credits,
+                              harga: item.price_credit,
+                              hargaSatuan: item.price_one_credit,
+                              keterangan: item.descriptions,
+                              id: item.id,
+                              is_popular: item.is_popular,
+                            })
+                          }
+                          className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
+                        >
+                          <Edit3 className="h-3 w-3 text-black" />
+                        </button>
+                        <button
+                          onClick={() => onOpen("delete-credit", item.id)}
+                          className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
+                        >
+                          <Trash2 className="h-3 w-3 text-black" />
+                        </button>
+                      </div>
                     </div>
+                    <div className="flex justify-center flex-col items-center pb-3">
+                      <p className="text-base md:text-lg lg:text-xl font-medium">
+                        {item.total_credits}
+                        <span className=" ml-1">Kredit</span>
+                      </p>
+                      <p className="font-light px-5 md:px-6 lg:px-7 xl:px-8 py-0.5 dark:bg-green-500 bg-green-300 text-black rounded-full text-xs md:text-sm lg:text-base">
+                        {formatRupiah(item.price_credit)}
+                      </p>
+                    </div>
+                    <ul className="mt-3 border-t dark:border-gray-700 border-gray-300 pt-3 text-sm *:list-['-'] *:px-2 px-3 flex flex-col gap-1">
+                      <li>
+                        Harga {formatRupiah(item.price_one_credit)}/kredit
+                      </li>
+                      {item.descriptions.map((v) => (
+                        <li key={v}>{v}</li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="flex justify-center flex-col items-center pb-3">
-                    <p className="text-base md:text-lg lg:text-xl font-medium">
-                      {item.total_credits}
-                      <span className=" ml-1">Kredit</span>
-                    </p>
-                    <p className="font-light px-5 md:px-6 lg:px-7 xl:px-8 py-0.5 dark:bg-green-500 bg-green-300 text-black rounded-full text-xs md:text-sm lg:text-base">
-                      {formatRupiah(item.price_credit)}
-                    </p>
-                  </div>
-                  <ul className="mt-3 border-t dark:border-gray-700 border-gray-300 pt-3 text-sm *:list-['-'] *:px-2 px-3 flex flex-col gap-1">
-                    <li>Harga {formatRupiah(item.price_one_credit)}/kredit</li>
-                    {item.descriptions.map((v) => (
-                      <li key={v}>{v}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="w-full h-[200px] flex flex-col items-center mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 justify-center border-t border-gray-300 dark:border-gray-700">
+                <TextSelect className="w-16 h-16 " />
+                <h3 className="text-2xl font-bold mt-2 text-gray-500">
+                  No data viewed.
+                </h3>
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem
@@ -206,59 +218,70 @@ export const KreditSettings = () => {
             </div>
           </AccordionTrigger>
           <AccordionContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
-              {monthlyList.map((item) => (
-                <div
-                  key={item.id}
-                  className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700"
-                >
-                  <div className="flex w-full justify-between">
-                    <button className="h-6 w-6 flex items-center justify-center dark:bg-gray-700/80 dark:hover:bg-gray-700 bg-gray-300/80 hover:bg-gray-300 rounded-full group">
-                      <Star className="h-3 w-3 dark:group-hover:fill-white group-hover:fill-black" />
-                    </button>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() =>
-                          onOpen("edit-credit", {
-                            jenis: "monthly",
-                            kredit: item.total_credits,
-                            harga: item.price_credit,
-                            hargaSatuan: item.price_one_credit,
-                            keterangan: item.descriptions,
-                            id: item.id,
-                            is_popular: item.is_popular,
-                          })
-                        }
-                        className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
-                      >
-                        <Edit3 className="h-3 w-3 text-black" />
+            {yearlyList.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
+                {monthlyList.map((item) => (
+                  <div
+                    key={item.id}
+                    className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700"
+                  >
+                    <div className="flex w-full justify-between">
+                      <button className="h-6 w-6 flex items-center justify-center dark:bg-gray-700/80 dark:hover:bg-gray-700 bg-gray-300/80 hover:bg-gray-300 rounded-full group">
+                        <Star className="h-3 w-3 dark:group-hover:fill-white group-hover:fill-black" />
                       </button>
-                      <button
-                        onClick={() => onOpen("delete-credit", item.id)}
-                        className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
-                      >
-                        <Trash2 className="h-3 w-3 text-black" />
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            onOpen("edit-credit", {
+                              jenis: "monthly",
+                              kredit: item.total_credits,
+                              harga: item.price_credit,
+                              hargaSatuan: item.price_one_credit,
+                              keterangan: item.descriptions,
+                              id: item.id,
+                              is_popular: item.is_popular,
+                            })
+                          }
+                          className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
+                        >
+                          <Edit3 className="h-3 w-3 text-black" />
+                        </button>
+                        <button
+                          onClick={() => onOpen("delete-credit", item.id)}
+                          className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
+                        >
+                          <Trash2 className="h-3 w-3 text-black" />
+                        </button>
+                      </div>
                     </div>
+                    <div className="flex justify-center flex-col items-center pb-3">
+                      <p className="text-base md:text-lg lg:text-xl font-medium">
+                        {item.total_credits}
+                        <span className=" ml-1">Kredit</span>
+                      </p>
+                      <p className="font-light px-5 md:px-6 lg:px-7 xl:px-8 py-0.5 dark:bg-green-500 bg-green-300 text-black rounded-full text-xs md:text-sm lg:text-base">
+                        {formatRupiah(item.price_credit)}
+                      </p>
+                    </div>
+                    <ul className="mt-3 border-t dark:border-gray-700 border-gray-300 pt-3 text-sm *:list-['-'] *:px-2 px-3 flex flex-col gap-1">
+                      <li>
+                        Harga {formatRupiah(item.price_one_credit)}/kredit
+                      </li>
+                      {item.descriptions.map((v) => (
+                        <li key={v}>{v}</li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="flex justify-center flex-col items-center pb-3">
-                    <p className="text-base md:text-lg lg:text-xl font-medium">
-                      {item.total_credits}
-                      <span className=" ml-1">Kredit</span>
-                    </p>
-                    <p className="font-light px-5 md:px-6 lg:px-7 xl:px-8 py-0.5 dark:bg-green-500 bg-green-300 text-black rounded-full text-xs md:text-sm lg:text-base">
-                      {formatRupiah(item.price_credit)}
-                    </p>
-                  </div>
-                  <ul className="mt-3 border-t dark:border-gray-700 border-gray-300 pt-3 text-sm *:list-['-'] *:px-2 px-3 flex flex-col gap-1">
-                    <li>Harga {formatRupiah(item.price_one_credit)}/kredit</li>
-                    {item.descriptions.map((v) => (
-                      <li key={v}>{v}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="w-full h-[200px] flex flex-col items-center mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 justify-center border-t border-gray-300 dark:border-gray-700">
+                <TextSelect className="w-16 h-16 " />
+                <h3 className="text-2xl font-bold mt-2 text-gray-500">
+                  No data viewed.
+                </h3>
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem
@@ -276,59 +299,70 @@ export const KreditSettings = () => {
             </div>
           </AccordionTrigger>
           <AccordionContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
-              {yearlyList.map((item) => (
-                <div
-                  key={item.id}
-                  className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700"
-                >
-                  <div className="flex w-full justify-between">
-                    <button className="h-6 w-6 flex items-center justify-center dark:bg-gray-700/80 dark:hover:bg-gray-700 bg-gray-300/80 hover:bg-gray-300 rounded-full group">
-                      <Star className="h-3 w-3 dark:group-hover:fill-white group-hover:fill-black" />
-                    </button>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() =>
-                          onOpen("edit-credit", {
-                            jenis: "yearly",
-                            kredit: item.total_credits,
-                            harga: item.price_credit,
-                            hargaSatuan: item.price_one_credit,
-                            keterangan: item.descriptions,
-                            id: item.id,
-                            is_popular: item.is_popular,
-                          })
-                        }
-                        className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
-                      >
-                        <Edit3 className="h-3 w-3 text-black" />
+            {yearlyList.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-3 mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 border-t border-gray-300 dark:border-gray-700">
+                {yearlyList.map((item) => (
+                  <div
+                    key={item.id}
+                    className="text-sm border p-3 w-full col-span-1 rounded-md border-gray-300 dark:border-gray-700"
+                  >
+                    <div className="flex w-full justify-between">
+                      <button className="h-6 w-6 flex items-center justify-center dark:bg-gray-700/80 dark:hover:bg-gray-700 bg-gray-300/80 hover:bg-gray-300 rounded-full group">
+                        <Star className="h-3 w-3 dark:group-hover:fill-white group-hover:fill-black" />
                       </button>
-                      <button
-                        onClick={() => onOpen("delete-credit", item.id)}
-                        className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
-                      >
-                        <Trash2 className="h-3 w-3 text-black" />
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            onOpen("edit-credit", {
+                              jenis: "yearly",
+                              kredit: item.total_credits,
+                              harga: item.price_credit,
+                              hargaSatuan: item.price_one_credit,
+                              keterangan: item.descriptions,
+                              id: item.id,
+                              is_popular: item.is_popular,
+                            })
+                          }
+                          className="h-6 w-6 flex items-center justify-center dark:bg-yellow-400/80 dark:hover:bg-yellow-400 bg-yellow-300/80 hover:bg-yellow-300 rounded-full group"
+                        >
+                          <Edit3 className="h-3 w-3 text-black" />
+                        </button>
+                        <button
+                          onClick={() => onOpen("delete-credit", item.id)}
+                          className="h-6 w-6 flex items-center justify-center dark:bg-red-400/80 dark:hover:bg-red-400 bg-red-300/80 hover:bg-red-300 rounded-full group"
+                        >
+                          <Trash2 className="h-3 w-3 text-black" />
+                        </button>
+                      </div>
                     </div>
+                    <div className="flex justify-center flex-col items-center pb-3">
+                      <p className="text-base md:text-lg lg:text-xl font-medium">
+                        {item.total_credits}
+                        <span className=" ml-1">Kredit</span>
+                      </p>
+                      <p className="font-light px-5 md:px-6 lg:px-7 xl:px-8 py-0.5 dark:bg-green-500 bg-green-300 text-black rounded-full text-xs md:text-sm lg:text-base">
+                        {formatRupiah(item.price_credit)}
+                      </p>
+                    </div>
+                    <ul className="mt-3 border-t dark:border-gray-700 border-gray-300 pt-3 text-sm *:list-['-'] *:px-2 px-3 flex flex-col gap-1">
+                      <li>
+                        Harga {formatRupiah(item.price_one_credit)}/kredit
+                      </li>
+                      {item.descriptions.map((v) => (
+                        <li key={v}>{v}</li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="flex justify-center flex-col items-center pb-3">
-                    <p className="text-base md:text-lg lg:text-xl font-medium">
-                      {item.total_credits}
-                      <span className=" ml-1">Kredit</span>
-                    </p>
-                    <p className="font-light px-5 md:px-6 lg:px-7 xl:px-8 py-0.5 dark:bg-green-500 bg-green-300 text-black rounded-full text-xs md:text-sm lg:text-base">
-                      {formatRupiah(item.price_credit)}
-                    </p>
-                  </div>
-                  <ul className="mt-3 border-t dark:border-gray-700 border-gray-300 pt-3 text-sm *:list-['-'] *:px-2 px-3 flex flex-col gap-1">
-                    <li>Harga {formatRupiah(item.price_one_credit)}/kredit</li>
-                    {item.descriptions.map((v) => (
-                      <li key={v}>{v}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="w-full h-[200px] flex flex-col items-center mt-2 pt-2 md:mt-3 md:pt-3 lg:pt-4 lg:mt-4 xl:pt-5 xl:mt-5 justify-center border-t border-gray-300 dark:border-gray-700">
+                <TextSelect className="w-16 h-16 " />
+                <h3 className="text-2xl font-bold mt-2 text-gray-500">
+                  No data viewed.
+                </h3>
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
       </Accordion>
