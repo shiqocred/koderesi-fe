@@ -22,7 +22,9 @@ export async function middleware(request: NextRequest) {
     headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
   });
 
-  const data = await res.json().then((res) => res.data.role);
+  const data = await res.json().then((res) => res.data?.role);
+
+  console.log(data);
 
   if (data) {
     if (data === "superadmin") {
