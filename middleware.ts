@@ -17,19 +17,12 @@ export async function middleware(request: NextRequest) {
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
   const isAdminPageRequested = isAdminPages(nextUrl.pathname);
 
-  const data = await fetch(
-    new URL("https://koderesi.raventech.my.id/api/auth/page").href,
-    {
-      method: "GET",
-      headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
-    }
-  )
-    .then(async (res) => {
-      return await res.json().then((res: any) => res.data.role);
-    })
-    .catch((err) => {
-      return;
-    });
+  const res = await fetch("https://koderesi.raventech.my.id/api/auth/page", {
+    method: "GET",
+    headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+  });
+
+  const data = await res.json().then((res) => res.data.role);
 
   if (data) {
     if (data === "superadmin") {

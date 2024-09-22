@@ -519,7 +519,7 @@ export const ClientContact = () => {
               <Label className="text-gray-700 dark:text-white/70 text-sm">
                 Lampiran
               </Label>
-              <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 w-full p-2 lg:p-3 border rounded-lg border-green-400 dark:border-green-200/40 gap-3">
+              <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 w-full gap-3">
                 {input.file &&
                   Array.from({ length: input.file.length ?? 0 }, (_, i) => (
                     <div

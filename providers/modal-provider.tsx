@@ -18,9 +18,13 @@ import { DeletePromoModal } from "@/components/modals/delete-promo-modal";
 import { DeleteResiModal } from "@/components/modals/delete-resi-modal";
 import { DeleteTicketModal } from "@/components/modals/delete-ticket-modal";
 import { DeleteUserModal } from "@/components/modals/delete-user-modal";
+import { EditAdminPasswordModal } from "@/components/modals/edit-admin-password-modal";
+import { EditAdminPersonalModal } from "@/components/modals/edit-admin-personal-modal";
 import { EditChatModal } from "@/components/modals/edit-chat-modal";
 import { EditKreditModal } from "@/components/modals/edit-kredit-modal";
 import { EditLabelModal } from "@/components/modals/edit-label-modal";
+import { EditPasswordModal } from "@/components/modals/edit-password-modal";
+import { EditPersonalModal } from "@/components/modals/edit-personal-modal";
 import { EditPromoModal } from "@/components/modals/edit-promo-modal";
 import { EditTicketModal } from "@/components/modals/edit-ticket-modal";
 import { EditUserModal } from "@/components/modals/edit-user-modal";
@@ -62,6 +66,10 @@ const ModalProvider = () => {
       <EditPromoModal />
       <DeletePromoModal />
       <DeleteAccountModal />
+      <EditPersonalModal />
+      <EditPasswordModal />
+      <EditAdminPersonalModal />
+      <EditAdminPasswordModal />
     </>
   );
 };
