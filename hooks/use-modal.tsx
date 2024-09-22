@@ -35,7 +35,11 @@ export type ModalType =
   | "delete-user"
   | "edit-user"
   | "delete-manifest"
-  | "delete-account";
+  | "delete-account"
+  | "edit-personal"
+  | "edit-password"
+  | "edit-admin-personal"
+  | "edit-admin-password";
 
 export interface LabelProps {
   id: string;
