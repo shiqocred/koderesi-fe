@@ -135,11 +135,11 @@ const DashboardPage = () => {
                   {newManifest.map((item) => (
                     <li
                       className="flex text-sm justify-between items-center py-2 w-full"
-                      key={item.id}
+                      key={item?.id}
                     >
                       <div className="flex gap-4 items-center w-full">
                         <div className="md:w-10 md:h-10 w-8 h-8 rounded-full border flex items-center justify-center border-gray-500 text-gray-500 dark:text-gray-300 flex-none">
-                          {item.status === "delivered" ? (
+                          {item?.status === "delivered" ? (
                             <PackageCheck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
                           ) : (
                             <Truck className="md:w-5 md:h-5 w-4 h-4 stroke-[1.5]" />
@@ -147,15 +147,15 @@ const DashboardPage = () => {
                         </div>
                         <div className="flex w-full justify-between flex-col md:flex-row overflow-hidden md:items-center md:gap-6">
                           <h5 className="font-semibold text-base sm:text-lg lg:text-xl">
-                            {item.waybill.waybill}
+                            {item?.waybill?.waybill}
                           </h5>
                           <div className="flex flex-col md:items-end border-t border-gray-500 md:border-none mt-1 pt-1 md:p-0 md:m-0 overflow-hidden whitespace-nowrap w-full">
                             <p className="sm:text-sm text-xs font-medium lg:text-base capitalize w-full md:text-end text-ellipsis overflow-hidden">
-                              {item.note}
+                              {item?.note}
                             </p>
                             <p className="lg:text-sm text-xs font-light">
                               {format(
-                                new Date(item.date_manifest),
+                                new Date(item?.date_manifest),
                                 "dd MMM yyyy - HH:mm:ss",
                                 { locale: id }
                               )}

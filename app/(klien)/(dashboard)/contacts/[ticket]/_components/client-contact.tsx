@@ -25,7 +25,7 @@ import {
   RefreshCcwDot,
   Trash2,
 } from "lucide-react";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { BubbleChat, ChatProps } from "./bubble-chat";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -422,6 +422,31 @@ export const ClientContact = () => {
     }
   };
 
+  const divRef = useRef<HTMLDivElement>(null); // Referensi untuk elemen div
+  const [divHeight, setDivHeight] = useState<number | null>(null);
+  const [viewportHeight, setViewportHeight] = useState<number>(0);
+
+  // Mengukur tinggi div setelah data diperbarui
+  useEffect(() => {
+    const measureHeight = () => {
+      if (divRef.current) {
+        const divH = divRef.current.offsetHeight;
+        setDivHeight(divH);
+      }
+    };
+
+    // Delay 100ms untuk memastikan rendering selesai
+    const timer = setTimeout(measureHeight, 100);
+
+    // Bersihkan timer jika komponen di-unmount
+    return () => clearTimeout(timer);
+  }, [chatsSupport, viewportHeight]); // Efek dijalankan setiap kali data diperbarui
+
+  // Dapatkan tinggi layar (viewport)
+  useEffect(() => {
+    setViewportHeight(window.innerHeight);
+  }, []);
+
   useEffect(() => {
     handleGetTickets();
 
@@ -794,9 +819,11 @@ export const ClientContact = () => {
           <div
             className={cn(
               "relative overflow-hidden",
-              isExpand
-                ? "h-auto md:h-auto pb-[10vh] md:pb-0"
-                : "h-screen md:h-auto pb-0 md:pb-0"
+              (divHeight ?? 0) > viewportHeight
+                ? isExpand
+                  ? "h-auto md:h-auto pb-[10vh] md:pb-0"
+                  : "h-screen md:h-auto pb-0 md:pb-0"
+                : "h-auto md:h-auto pb-[10vh] md:pb-0"
             )}
           >
             <div className="relative h-full">
@@ -804,15 +831,17 @@ export const ClientContact = () => {
                 <BubbleChat key={item.id} {...item} />
               ))}
             </div>
-            <div className="absolute bottom-0 left-0 w-full h-[10vh] bg-gradient-to-b from-gray-50/0 via-gray-50/80 to-gray-50 dark:from-black/0 dark:via-black/80 dark:to-black flex items-center justify-center md:hidden">
-              <Button
-                type="button"
-                onClick={() => setIsExpand(!isExpand)}
-                className="bg-white hover:bg-gray-100 border border-black dark:bg-black dark:border-white text-black dark:text-white"
-              >
-                {isExpand ? "Collapse" : "Expand"}
-              </Button>
-            </div>
+            {(divHeight ?? 0) > viewportHeight && (
+              <div className="absolute bottom-0 left-0 w-full h-[10vh] bg-gradient-to-b from-gray-50/0 via-gray-50/80 to-gray-50 dark:from-black/0 dark:via-black/80 dark:to-black flex items-center justify-center md:hidden">
+                <Button
+                  type="button"
+                  onClick={() => setIsExpand(!isExpand)}
+                  className="bg-white hover:bg-gray-100 border border-black dark:bg-black dark:border-white text-black dark:text-white"
+                >
+                  {isExpand ? "Collapse" : "Expand"}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
         <div className="md:w-1/4 w-full md:flex-none md:relative">
