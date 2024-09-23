@@ -32,6 +32,7 @@ import {
   Twitter,
   Unlink,
   X,
+  XCircle,
   Youtube,
 } from "lucide-react";
 import React, { FormEvent, MouseEvent, useEffect, useState } from "react";
@@ -263,13 +264,22 @@ export const AffiliateClient = () => {
   if (step.toLowerCase() === "rejected") {
     return (
       <div className="flex flex-col gap-y-2">
-        <Alert>
-          <AlertTriangleIcon className="w-4 h-4" />
-          <AlertTitle className="m-0 capitalize">{data?.reason}</AlertTitle>
-        </Alert>
         <Alert className="bg-red-300 dark:bg-red-500 text-black">
-          <X className="w-4 h-4 dark:text-black" />
+          <XCircle className="w-4 h-4 dark:text-black" />
           <AlertTitle className="m-0">Pengajuan anda ditolak</AlertTitle>
+        </Alert>
+        <Alert>
+          <div className="flex flex-col gap-4">
+            <div className="flex w-full gap-2">
+              <AlertTriangleIcon className="w-4 h-4" />
+              <AlertTitle className="m-0 capitalize font-medium">
+                Alasan Penolakan
+              </AlertTitle>
+            </div>
+            <div className="w-full px-5 py-2 rounded bg-gray-100">
+              <p className="font-light">{data?.reason}</p>
+            </div>
+          </div>
         </Alert>
       </div>
     );
