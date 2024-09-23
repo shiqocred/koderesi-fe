@@ -1,6 +1,6 @@
 "use client";
 
-import React, { MouseEvent } from "react";
+import React, { FormEvent, MouseEvent } from "react";
 import { Modal } from "./modal";
 import { useModal } from "@/hooks/use-modal";
 import { Button } from "../ui/button";
@@ -20,7 +20,7 @@ export const EditReasonModal = () => {
 
   const isModalOpen = isOpen && type === "edit-reason";
 
-  const onApprove = async (e: MouseEvent) => {
+  const onApprove = async (e: FormEvent) => {
     e.preventDefault();
     const body = {
       reason: data,
