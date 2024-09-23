@@ -83,6 +83,7 @@ export const AffiliateClient = () => {
   const [isYoutube, setIsYoutube] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [step, setStep] = useState<string>("false");
+  const [data, setData] = useState<any>();
 
   const cookies = useCookies();
   const token = cookies.get("accessToken");
@@ -107,7 +108,7 @@ export const AffiliateClient = () => {
         }
       );
       setStep(res.data.status ? (res.data.status as string) : "");
-      console.log(res.data);
+      setData(res.data.data);
     } catch (error) {
       console.log("[ERROR_GET_DATA]:", error);
     }
@@ -264,9 +265,7 @@ export const AffiliateClient = () => {
       <div className="flex flex-col gap-y-2">
         <Alert>
           <AlertTriangleIcon className="w-4 h-4" />
-          <AlertTitle className="m-0">
-            Anda telah melanggar ketentuan kami.
-          </AlertTitle>
+          <AlertTitle className="m-0 capitalize">{data?.reason}</AlertTitle>
         </Alert>
         <Alert className="bg-red-300 dark:bg-red-500 text-black">
           <X className="w-4 h-4 dark:text-black" />
