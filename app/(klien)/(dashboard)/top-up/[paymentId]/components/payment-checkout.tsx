@@ -130,12 +130,6 @@ const paymentEWallet = [
     image: "/images/payment-method/shopee-pay.png",
   },
   {
-    id: 4,
-    label: "AstraPay",
-    value: "astrapay",
-    image: "/images/payment-method/astrapay.png",
-  },
-  {
     id: 5,
     label: "LinkAja",
     value: "linkaja",
@@ -145,10 +139,7 @@ const paymentEWallet = [
 
 const PaymentCheckout = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const [personal, setPersonal] = useState({
-    email: "",
-    referralCode: "",
-  });
+  const [refferal, setRefferal] = useState("");
   const [creditCard, setCreditCard] = useState({
     name: "",
     numberCard: "",
@@ -171,67 +162,6 @@ const PaymentCheckout = () => {
         <div className="w-full bg-white p-5 rounded-md flex flex-col">
           <div className="flex w-full border-b border-gray-500 pb-2 flex-col">
             <h3 className="xl:text-lg text-base font-semibold">
-              Informasi Pembelian
-            </h3>
-          </div>
-          <form className="flex flex-col gap-6 mt-8">
-            <div className="flex flex-col gap-0.5 md:gap-1 relative">
-              <Label
-                className={cn(
-                  "absolute transition-all text-gray-700 dark:text-white/70 text-sm after:content-['*'] after:text-red-500 after:pl-1",
-                  personal.email.length === 0
-                    ? "translate-y-3.5 left-3 font-normal"
-                    : "-translate-y-3 left-0 font-semibold"
-                )}
-              >
-                Email
-              </Label>
-              <Input
-                value={personal.email}
-                onChange={(e) =>
-                  setPersonal((prev) => ({ ...prev, email: e.target.value }))
-                }
-                type="email"
-                required
-                className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-              />
-            </div>
-            <div className="flex flex-col gap-0.5 md:gap-1 relative">
-              <Label
-                className={cn(
-                  "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                  personal.referralCode.length === 0
-                    ? "translate-y-3.5 left-3 font-normal"
-                    : "-translate-y-3 left-0 font-semibold"
-                )}
-              >
-                Kode Referral
-              </Label>
-              <Input
-                value={personal.referralCode}
-                onChange={(e) =>
-                  setPersonal((prev) => ({
-                    ...prev,
-                    referralCode: e.target.value,
-                  }))
-                }
-                type="email"
-                className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent"
-              />
-            </div>
-            <div>
-              <Button
-                type="submit"
-                className="bg-green-400 hover:bg-green-400/80 text-black"
-              >
-                Lanjutkan Pembayaran
-              </Button>
-            </div>
-          </form>
-        </div>
-        <div className="w-full bg-white p-5 rounded-md flex flex-col">
-          <div className="flex w-full border-b border-gray-500 pb-2 flex-col">
-            <h3 className="xl:text-lg text-base font-semibold">
               Metode Pembayaran
             </h3>
           </div>
@@ -240,6 +170,7 @@ const PaymentCheckout = () => {
               type="single"
               className="flex flex-col w-full gap-4"
               collapsible
+              defaultValue="virtual-account"
             >
               <AccordionItem
                 value="virtual-account"
@@ -318,85 +249,6 @@ const PaymentCheckout = () => {
                   </RadioGroup>
                 </AccordionContent>
               </AccordionItem>
-              {/* <AccordionItem
-                value="over-counter"
-                className="border border-gray-500 rounded overflow-hidden"
-              >
-                <AccordionTrigger
-                  className={cn(
-                    "px-5",
-                    typeMethod === "overTheCounter"
-                      ? "bg-green-100"
-                      : "bg-transparent"
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    {typeMethod === "overTheCounter" ? (
-                      <CheckCircle2 className="w-4 h-4" />
-                    ) : (
-                      <Circle className="w-4 h-4" />
-                    )}
-                    <p>Over The Counter</p>
-                    <p
-                      className={cn(
-                        "bg-green-300 text-black text-xs px-3 py-0.5 rounded-full",
-                        typeMethod === "overTheCounter" &&
-                          !!method &&
-                          paymentOTC.find((item) => item.value === method)
-                            ?.label
-                          ? "flex"
-                          : "hidden"
-                      )}
-                    >
-                      {typeMethod === "overTheCounter" &&
-                      !!method &&
-                      paymentOTC.find((item) => item.value === method)?.label
-                        ? paymentOTC.find((item) => item.value === method)
-                            ?.label
-                        : null}
-                    </p>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pt-5 px-5 border-t border-gray-500">
-                  <RadioGroup
-                    className="grid grid-cols-4 w-full gap-4"
-                    value={method}
-                    onValueChange={(e) => {
-                      setMethod(e);
-                      setTypeMethod("overTheCounter");
-                    }}
-                  >
-                    {paymentOTC.map((item) => (
-                      <div key={item.id} className="flex items-center w-full">
-                        <RadioGroupItem
-                          value={item.value}
-                          id={item.value}
-                          className="hidden"
-                        />
-                        <Label
-                          htmlFor={item.value}
-                          className={cn(
-                            "h-24 w-full px-4 gap-2 flex flex-col items-center justify-center rounded",
-                            method === item.value
-                              ? "border-green-500 border-2"
-                              : "border-gray-500 border"
-                          )}
-                        >
-                          <div className="relative w-full h-8 overflow-hidden">
-                            <Image
-                              fill
-                              alt=""
-                              src={item.image}
-                              className="object-contain pointer-events-none"
-                            />
-                          </div>
-                          <p className="text-sm font-semibold">{item.label}</p>
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </AccordionContent>
-              </AccordionItem> */}
               <AccordionItem
                 value="e-wallet"
                 className="border border-gray-500 rounded overflow-hidden"
@@ -550,25 +402,25 @@ const PaymentCheckout = () => {
               Rincian Pembayaran
             </h3>
           </div>
-          <div className="mt-8 flex flex-col gap-4 border p-5 rounded border-gray-500">
-            <div className="flex justify-between items-center border-b border-black pb-2">
-              <p className="font-medium">Informasi Pembelian</p>
-              <button className="text-gray-500 text-sm dark:text-gray-700 underline">
-                Ubah Data
-              </button>
+          <div className="flex w-full gap-4 mt-8">
+            <div className="space-y-0.5 md:space-y-1 relative w-full">
+              <Label
+                className={cn(
+                  "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                  refferal.length === 0
+                    ? "translate-y-3.5 left-3 font-normal"
+                    : "-translate-y-3 left-0 font-semibold"
+                )}
+              >
+                Kode Refferal
+              </Label>
+              <Input className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full" />
             </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between">
-                <p>Email</p>
-                <p>isro@gmail.com</p>
-              </div>
-              <div className="flex justify-between">
-                <p>Kode Refferal</p>
-                <p>-</p>
-              </div>
-            </div>
+            <Button className="bg-green-400/80 hover:bg-green-400 text-black h-9">
+              Check Kode
+            </Button>
           </div>
-          <div className="mt-8 flex flex-col gap-4">
+          <div className="mt-14 flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
                 <p>Category</p>
@@ -579,10 +431,6 @@ const PaymentCheckout = () => {
               <div className="flex justify-between">
                 <p>300 Kredit</p>
                 <p>{formatRupiah(300000)}</p>
-              </div>
-              <div className="flex justify-between">
-                <p>PPN 11%</p>
-                <p>{formatRupiah(30000)}</p>
               </div>
               <div className="w-full h-[1px] bg-black my-2" />
               <div className="flex justify-between">

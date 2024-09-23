@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const CheckoutPage = () => {
   return (
     <div className="sm:px-6 sm:py-8 p-4 gap-6 flex flex-col h-full">
-      <Header title="Checkout" href="/top-up" />
+      <Header title="Checkout" href="/top-up" isAccount />
       <PaymentCheckout />
     </div>
   );
