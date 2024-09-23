@@ -299,6 +299,13 @@ export const ClientSettings = () => {
                   <div className="relative flex items-center peer w-full">
                     <Input
                       type={!isVisibleOld ? "password" : "text"}
+                      value={data.old_password}
+                      onChange={(e) =>
+                        setData((prev) => ({
+                          ...prev,
+                          old_password: e.target.value,
+                        }))
+                      }
                       className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
                     />
                     <Button
@@ -332,6 +339,13 @@ export const ClientSettings = () => {
                   <div className="relative flex items-center peer w-full">
                     <Input
                       type={!isVisible ? "password" : "text"}
+                      value={data.new_password}
+                      onChange={(e) =>
+                        setData((prev) => ({
+                          ...prev,
+                          new_password: e.target.value,
+                        }))
+                      }
                       className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
                     />
                     <Button
@@ -365,6 +379,13 @@ export const ClientSettings = () => {
                   <div className="relative flex items-center peer w-full">
                     <Input
                       type={!isVisibleConfirmation ? "password" : "text"}
+                      value={data.confirm_password}
+                      onChange={(e) =>
+                        setData((prev) => ({
+                          ...prev,
+                          confirm_password: e.target.value,
+                        }))
+                      }
                       className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
                     />
                     <Button
@@ -393,7 +414,7 @@ export const ClientSettings = () => {
                 <Button
                   type="submit"
                   onClick={() =>
-                    onOpen("edit-admin-password", {
+                    onOpen("edit-password", {
                       name: data.username,
                       email: data.email,
                       phone_number: data.whatsapp,
