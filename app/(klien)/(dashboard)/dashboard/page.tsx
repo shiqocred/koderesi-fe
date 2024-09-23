@@ -22,8 +22,8 @@ import { useCookies } from "next-client-cookies";
 import { Button } from "@/components/ui/button";
 
 interface FirstLastDateProps {
-  prev_year: number;
-  next_year: number;
+  prev_year: any;
+  next_year: any;
 }
 
 interface NewManifest {
@@ -99,6 +99,11 @@ const DashboardPage = () => {
       );
 
       console.log(res.data.data);
+      setSelectedBarData(res.data.data.bar);
+      setFirstLast({
+        prev_year: res.data.data.year.first_year,
+        next_year: res.data.data.year.next_year,
+      });
     } catch (error) {
       console.log("[ERROR_GET_MANIFEST]:", error);
     }

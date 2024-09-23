@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogoShrinkIcon } from "@/components/svg";
-import { cn } from "@/lib/utils";
+import { cn, optionToast } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useCookies } from "next-client-cookies";
 import {
@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { AlertCircle, MailCheck, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
+import { ToastError } from "@/components/toast-error";
 
 const formSchema = z
   .object({
@@ -72,35 +73,8 @@ const ForgotPasswordPage = () => {
     } catch (error: any) {
       console.log("[ERROR_FORGOT_PASSWORD]:", error);
       toast.custom(
-        (t) => (
-          <div className="flex gap-3 relative w-full items-center">
-            <div className="flex gap-3 w-full">
-              <AlertCircle className="w-4 h-4 dark:fill-white dark:text-red-800 text-red-500" />
-              <div className="flex flex-col gap-1">
-                <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
-                  Permintaan gagal.
-                </h5>
-                <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
-                  <li>{error.response.data.message}</li>
-                </ul>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => toast.dismiss(t)}
-              className="w-5 h-5 text-white flex-none bg-red-500 ml-auto flex items-center justify-center rounded-full hover:scale-110 transition-all shadow"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </div>
-        ),
-        {
-          duration: 30000,
-          classNames: {
-            toast:
-              "group-[.toaster]:dark:bg-red-800 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-300 group-[.toaster]:dark:text-white group-[.toaster]:w-full group-[.toaster]:p-4 group-[.toaster]:border group-[.toaster]:rounded-md",
-          },
-        }
+        (t) => <ToastError label="Tautan gagal dikirim." error={error} t={t} />,
+        optionToast
       );
     }
   };

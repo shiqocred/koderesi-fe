@@ -15,11 +15,11 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogoShrinkIcon } from "@/components/svg";
-import { cn } from "@/lib/utils";
+import { cn, optionToast } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useCookies } from "next-client-cookies";
 import { Eye, EyeOff, Moon, Sun } from "lucide-react";
@@ -32,6 +32,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useTheme } from "next-themes";
+import { ToastError } from "@/components/toast-error";
 
 const formSchema = z
   .object({
@@ -48,6 +49,8 @@ const ResetPasswordPage = () => {
   const [isMounted, setIsMounted] = useState(false);
   const { setTheme, theme } = useTheme();
   const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
   const [countdown, setCountdown] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleConfirmation, setIsVisibleConfirmation] = useState(false);
@@ -61,18 +64,27 @@ const ResetPasswordPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const body = {
+      token: params.token,
+      email: searchParams.get("email"),
+      password: values.password,
+      password_confirmation: values.password_confirmation,
+    };
     try {
-      const expires = new Date(Date.now() + 59 * 1000);
-      cookies.set(
-        "resetCountdown",
-        Math.floor(Date.now() / 1000 + 59).toString(),
-        { expires: expires }
+      await axios.post(
+        `https://koderesi.raventech.my.id/api/reset-password`,
+        body
       );
-      setCountdown(59);
-      toast.success("Tautan berhasil dikirim.");
+      toast.success("Password berhasil diperbarui.");
+      router.push("/auth/login");
     } catch (error) {
-      console.log("[SEND_LINK_RESET_PASS]:", error);
-      toast.error("Tautan gagal dikirim.");
+      console.log("[ERROR_RESET_PASSWORD]:", error);
+      toast.custom(
+        (t) => (
+          <ToastError label="Password gagal diperbarui" error={error} t={t} />
+        ),
+        optionToast
+      );
     }
   };
 
