@@ -19,7 +19,13 @@ export const ToastError = ({
           <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
             {label}
           </h5>
-          {error.response.data.message && (
+          {error.response.data.message.length > 0 ? (
+            <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+              {error.response.data.message.map((item: any) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          ) : (
             <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
               <li>{error.response.data.message}</li>
             </ul>

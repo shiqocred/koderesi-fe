@@ -39,7 +39,8 @@ export type ModalType =
   | "edit-personal"
   | "edit-password"
   | "edit-admin-personal"
-  | "edit-admin-password";
+  | "edit-admin-password"
+  | "update-waybill";
 
 export interface LabelProps {
   id: string;

@@ -15,6 +15,7 @@ import {
   XCircle,
   PlusCircle,
   CircleSlash,
+  TextSelect,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -266,8 +267,8 @@ export const ClientContact = () => {
                 )}
               </div>
             </div>
-            <Link href="/contacts/new">
-              <Button className="bg-green-400 hover:bg-green-500 text-black">
+            <Link href="/contacts/new" className="w-full lg:w-auto">
+              <Button className="bg-green-400 hover:bg-green-500 text-black w-full lg:w-auto">
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Tiket Baru
               </Button>
@@ -319,7 +320,12 @@ export const ClientContact = () => {
                 </li>
               ))
             ) : (
-              <li>Data Not Found</li>
+              <li className="w-full h-[300px] flex flex-col justify-center items-center border-4 border-dashed rounded-md">
+                <TextSelect className="w-16 h-16 " />
+                <h3 className="text-2xl font-bold mt-2 text-gray-500">
+                  No data viewed.
+                </h3>
+              </li>
             )}
           </ul>
         </Card>

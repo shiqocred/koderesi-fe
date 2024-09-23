@@ -5,6 +5,7 @@ import { CardPrice } from "./card-price";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
 import { useEffect, useState } from "react";
+import { TextSelect } from "lucide-react";
 
 interface PriceProps {
   id: string;
@@ -87,46 +88,73 @@ export const PriceList = () => {
         <TabsTrigger value="tahunan">Tahunan</TabsTrigger>
       </TabsList>
       <TabsContent value="sekali">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          {onceList.map((item) => (
-            <CardPrice
-              key={item.id}
-              kredit={item.total_credits}
-              perKredit={item.price_one_credit}
-              price={item.price_credit}
-              keterangan={item.descriptions}
-              isPopular={item.is_popular}
-            />
-          ))}
-        </div>
+        {onceList.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            {onceList.map((item) => (
+              <CardPrice
+                key={item.id}
+                kredit={item.total_credits}
+                perKredit={item.price_one_credit}
+                price={item.price_credit}
+                keterangan={item.descriptions}
+                isPopular={item.is_popular}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="w-full h-[300px] flex flex-col justify-center items-center border-4 border-dashed rounded-md">
+            <TextSelect className="w-16 h-16 " />
+            <h3 className="text-2xl font-bold mt-2 text-gray-500">
+              No data viewed.
+            </h3>
+          </div>
+        )}
       </TabsContent>
       <TabsContent value="bulanan">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          {monthlyList.map((item) => (
-            <CardPrice
-              key={item.id}
-              kredit={item.total_credits}
-              perKredit={item.price_one_credit}
-              price={item.price_credit}
-              keterangan={item.descriptions}
-              isPopular={item.is_popular}
-            />
-          ))}
-        </div>
+        {monthlyList.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            {monthlyList.map((item) => (
+              <CardPrice
+                key={item.id}
+                kredit={item.total_credits}
+                perKredit={item.price_one_credit}
+                price={item.price_credit}
+                keterangan={item.descriptions}
+                isPopular={item.is_popular}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="w-full h-[300px] flex flex-col justify-center items-center border-4 border-dashed rounded-md">
+            <TextSelect className="w-16 h-16 " />
+            <h3 className="text-2xl font-bold mt-2 text-gray-500">
+              No data viewed.
+            </h3>
+          </div>
+        )}
       </TabsContent>
       <TabsContent value="tahunan">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          {yearlyList.map((item) => (
-            <CardPrice
-              key={item.id}
-              kredit={item.total_credits}
-              perKredit={item.price_one_credit}
-              price={item.price_credit}
-              keterangan={item.descriptions}
-              isPopular={item.is_popular}
-            />
-          ))}
-        </div>
+        {yearlyList.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            {yearlyList.map((item) => (
+              <CardPrice
+                key={item.id}
+                kredit={item.total_credits}
+                perKredit={item.price_one_credit}
+                price={item.price_credit}
+                keterangan={item.descriptions}
+                isPopular={item.is_popular}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="w-full h-[300px] flex flex-col justify-center items-center border-4 border-dashed rounded-md">
+            <TextSelect className="w-16 h-16 " />
+            <h3 className="text-2xl font-bold mt-2 text-gray-500">
+              No data viewed.
+            </h3>
+          </div>
+        )}
       </TabsContent>
     </Tabs>
   );

@@ -33,6 +33,7 @@ import { RejectedAffiliateModal } from "@/components/modals/rejected-affiliate-m
 import { RejectedWithdrawModal } from "@/components/modals/rejected-withdraw-modal";
 import { SaveManifestModal } from "@/components/modals/save-manifest-modal";
 import { UnArchiveResiModal } from "@/components/modals/unarchive-resi-modal";
+import { UpdateWaybillModal } from "@/components/modals/update-waybill-modal";
 
 const ModalProvider = () => {
   return (
@@ -70,6 +71,7 @@ const ModalProvider = () => {
       <EditPasswordModal />
       <EditAdminPersonalModal />
       <EditAdminPasswordModal />
+      <UpdateWaybillModal />
     </>
   );
 };

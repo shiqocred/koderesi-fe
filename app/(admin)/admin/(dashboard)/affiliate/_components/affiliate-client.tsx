@@ -246,21 +246,22 @@ const AffiliateClient = () => {
     }
   }, [params.get("ca"), params.get("cw")]);
 
-  // useEffect(() => {
-  //   if (cookies.get("affiliateReq")) {
-  //     if (params.get("ca")) {
-  //       getAffiliateReqList();
-  //       getDetailReqAffiliate(params.get("ca") ?? "");
-  //     } else if (params.get("cw")) {
-  //       getAffiliateWdList();
-  //       getDetailWdAffiliate(params.get("cw") ?? "");
-  //     }
+  useEffect(() => {
+    if (cookies.get("affiliateReq")) {
+      if (params.get("ca")) {
+        getAffiliateReqList();
+        getDetailReqAffiliate(params.get("ca") ?? "");
+        console.log("affreq", "ca", true);
+      } else if (params.get("cw")) {
+        getAffiliateWdList();
+        getDetailWdAffiliate(params.get("cw") ?? "");
+        console.log("affreq", "cw", true);
+      }
 
-  //     return cookies.remove("affiliateReq");
-  //   }
-  // }, [params.get("ca"), params.get("cw"), cookies.get("affiliateReq")]);
-
-  console.log(!cookies.get("affiliateReq"), !params.get("ca"));
+      console.log("affreq", true);
+      return cookies.remove("affiliateReq");
+    }
+  }, [params.get("ca"), params.get("cw"), cookies.get("affiliateReq")]);
 
   useEffect(() => {
     getAffiliateReqList();

@@ -15,6 +15,7 @@ const TopUpPage = () => {
       <Header
         title="Kredit Koderesi"
         description="Top up untuk menjadi advance"
+        isAccount
       />
       <Card className="flex flex-col text-sm text-center p-4 shadow">
         <div className="w-full flex justify-center pt-2 pb-8 xl:py-10">

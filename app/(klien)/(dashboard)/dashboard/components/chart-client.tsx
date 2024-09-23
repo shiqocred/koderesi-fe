@@ -115,12 +115,16 @@ const ContentLegend = (props: any) => {
   );
 };
 
-export function ChartClient() {
+export function ChartClient({
+  initialData,
+}: Readonly<{
+  initialData: any[];
+}>) {
   return (
     <ResponsiveContainer width="100%">
-      <BarChart data={data}>
+      <BarChart data={initialData}>
         <XAxis
-          dataKey="name"
+          dataKey="month"
           stroke="#888888"
           fontSize={12}
           tickLine={false}
@@ -141,13 +145,13 @@ export function ChartClient() {
         />
         <Legend content={<ContentLegend />} />
         <Bar
-          dataKey="pakai"
+          dataKey="out"
           fill="currentColor"
           radius={[4, 4, 0, 0]}
           className="fill-red-400"
         />
         <Bar
-          dataKey="beli"
+          dataKey="in"
           fill="currentColor"
           radius={[4, 4, 0, 0]}
           className="fill-green-400"

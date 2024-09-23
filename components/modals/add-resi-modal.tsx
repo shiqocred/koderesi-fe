@@ -40,6 +40,8 @@ import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import { ScrollArea } from "../ui/scroll-area";
 import { useDebounce } from "@/hooks/use-debounce";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 interface ResponseProps {
   data: {
@@ -250,24 +252,11 @@ export const AddResiModal = () => {
       }
     } catch (error: any) {
       console.log("[ERROR_ADD_RESI]:", error);
-      toast(
-        <div className="flex gap-3">
-          <AlertCircle className="w-5 h-5 dark:fill-white dark:text-red-800" />
-          <div className="flex flex-col gap-1">
-            <h5 className="font-medium dark:text-white text-sm leading-tight">
-              Resi gagal ditambahkan.
-            </h5>
-            <ul className="*:before:content-['-'] *:before:pr-3 text-red-200 text-xs">
-              <li>{error.response.data.error}</li>
-            </ul>
-          </div>
-        </div>,
-        {
-          duration: 5000,
-          classNames: {
-            toast: "toast-custom",
-          },
-        }
+      toast.custom(
+        (t) => (
+          <ToastError label="Resi gagal di tambahkan" error={error} t={t} />
+        ),
+        optionToast
       );
     }
   };
@@ -283,6 +272,10 @@ export const AddResiModal = () => {
       setSearch("");
     }
   }, [isCourierOpen]);
+
+  useEffect(() => {
+    form.setValue("waybill_id", form.watch("waybill_id").toUpperCase());
+  }, [form.watch("waybill_id")]);
 
   useEffect(() => {
     if (isModalOpen && searchValue) {
