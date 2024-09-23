@@ -26,6 +26,7 @@ import { EditLabelModal } from "@/components/modals/edit-label-modal";
 import { EditPasswordModal } from "@/components/modals/edit-password-modal";
 import { EditPersonalModal } from "@/components/modals/edit-personal-modal";
 import { EditPromoModal } from "@/components/modals/edit-promo-modal";
+import { EditReasonModal } from "@/components/modals/edit-reason-modal";
 import { EditTicketModal } from "@/components/modals/edit-ticket-modal";
 import { EditUserModal } from "@/components/modals/edit-user-modal";
 import { HapusAkunModal } from "@/components/modals/hapus-akun-modal";
@@ -72,6 +73,7 @@ const ModalProvider = () => {
       <EditAdminPersonalModal />
       <EditAdminPasswordModal />
       <UpdateWaybillModal />
+      <EditReasonModal />
     </>
   );
 };

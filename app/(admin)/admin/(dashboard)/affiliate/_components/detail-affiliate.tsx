@@ -384,7 +384,7 @@ const DetailAffiliate = ({
           <Button
             className="bg-green-400 hover:bg-green-300 text-black flex-none"
             size={"icon"}
-            onClick={() => {}}
+            onClick={() => onOpen("edit-reason", reasonData)}
           >
             <Save className="w-4 h-4" />
           </Button>

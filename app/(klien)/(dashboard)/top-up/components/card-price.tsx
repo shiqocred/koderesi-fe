@@ -63,7 +63,7 @@ export const CardPrice = ({
           </div>
         ))}
       </CardContent>
-      <CardFooter className="flex-col items-start w-full">
+      <CardFooter className="flex-col items-start w-full mt-auto">
         <Separator className="mb-4 bg-gray-300" />
         <span className="text-2xl font-semibold mb-2">
           {formatRupiah(price)}
