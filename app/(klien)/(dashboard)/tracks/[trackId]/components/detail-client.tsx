@@ -6,12 +6,16 @@ import {
   formatTanggal,
   formatTanggalWaktu,
   formatWaktu,
+  optionToast,
 } from "@/lib/utils";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import {
   ArrowDown,
   ArrowLeft,
+  Check,
+  ChevronDown,
+  MoreHorizontal,
   PackageCheck,
   RefreshCcw,
   Trash2,
@@ -24,6 +28,31 @@ import { useLocalStorage } from "@/hooks/use-localstorage";
 import { mapCourier } from "@/components/modals/add-resi-modal";
 import { useModal } from "@/hooks/use-modal";
 import { useCookies } from "next-client-cookies";
+import { toast } from "sonner";
+import { ToastError } from "@/components/toast-error";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface DetailProps {
   id: string;
@@ -58,20 +87,88 @@ export const DetailClient = () => {
   const cookies = useCookies();
   const token = cookies.get("accessToken");
   const { onOpen } = useModal();
+  const [isStatus, setIsStatus] = useState(false);
 
   const getDetail = async () => {
-    const detail = await axios.get(
-      `https://koderesi.raventech.my.id/api/admin/waybill/show/${trackId}`,
-      {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    try {
+      const detail = await axios.get(
+        `https://koderesi.raventech.my.id/api/admin/waybill/show/${trackId}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    setDataDetail(detail.data.data);
+      setDataDetail(detail.data.data);
+    } catch (error: any) {
+      console.log("[ERROR_GET_DETAIL_RESI]:", error);
+    }
   };
+
+  const handleUpdate = async (e: MouseEvent) => {
+    e.preventDefault();
+    try {
+      await axios.put(
+        `https://koderesi.raventech.my.id/api/admin/waybill/update/${trackId}`,
+        {},
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Resi berhasil di perbarui");
+      cookies.set("update", "add");
+    } catch (error: any) {
+      console.log("[ERROR_UPDATE_RESI]:", error);
+      toast.custom(
+        (t) => (
+          <ToastError label="Resi gagal di perbarui" error={error} t={t} />
+        ),
+        optionToast
+      );
+    }
+  };
+  const handleUpdateLoop = async (loop: string) => {
+    try {
+      await axios.put(
+        `https://koderesi.raventech.my.id/api/admin/waybill/updateLoop/${trackId}`,
+        {
+          status_loop: loop,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Pembaruan otomatis berhasil di perbarui");
+      cookies.set("update", "new");
+    } catch (error: any) {
+      console.log("[ERROR_UPDATE_LOOP]:", error);
+      toast.custom(
+        (t) => (
+          <ToastError
+            label="Pembaruan otomatis gagal di perbarui"
+            error={error}
+            t={t}
+          />
+        ),
+        optionToast
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (cookies.get("update")) {
+      getDetail();
+      return cookies.remove("update");
+    }
+  }, [cookies.get("update")]);
 
   useEffect(() => {
     getDetail();
@@ -103,17 +200,92 @@ export const DetailClient = () => {
                   : dataDetail?.status}
               </span>
             </div>
-            <Button
-              variant={"destructive"}
-              className="w-8 h-8 md:h-10 md:w-auto p-0 md:px-4 md:py-2"
-              onClick={(e) => {
-                e.preventDefault();
-                onOpen("delete-resi");
-              }}
-            >
-              <Trash2 className="w-4 h-4 md:mr-2" />
-              <p className="hidden md:flex">Hapus</p>
-            </Button>
+            <DropdownMenu open={isStatus} onOpenChange={setIsStatus}>
+              <DropdownMenuTrigger asChild>
+                <Button className="h-8 md:h-10 w-8 md:w-10 rounded-md p-0 bg-transparent text-black border border-black hover:bg-green-200">
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuGroup>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger className="h-9">
+                      <RefreshCcw className="w-4 h-4 mr-2" />
+                      <p className="whitespace-pre-wrap mr-6">
+                        Pengecekan Otomatis
+                      </p>
+                      <button className="font-semibold flex items-center">
+                        {dataDetail?.status_loop === "none" && "None"}
+                        {dataDetail?.status_loop === "three" && "3 Jam"}
+                        {dataDetail?.status_loop === "six" && "6 Jam"}
+                      </button>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent alignOffset={-4} sideOffset={6}>
+                        <DropdownMenuItem
+                          onSelect={() => {
+                            handleUpdateLoop("none");
+                            setIsStatus(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "w-4 h-4 mr-2",
+                              dataDetail?.status_loop === "none"
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          None
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onSelect={() => {
+                            handleUpdateLoop("three");
+                            setIsStatus(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "w-4 h-4 mr-2",
+                              dataDetail?.status_loop === "three"
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          3 Jam
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onSelect={() => {
+                            handleUpdateLoop("six");
+                            setIsStatus(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "w-4 h-4 mr-2",
+                              dataDetail?.status_loop === "six"
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          6 Jam
+                        </DropdownMenuItem>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                  <DropdownMenuItem
+                    className="h-9 bg-red-100 focus:bg-red-200 text-red-700 focus:text-red-700"
+                    onSelect={() => {
+                      onOpen("delete-resi");
+                      setIsStatus(false);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Hapus Waybill
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
@@ -196,7 +368,13 @@ export const DetailClient = () => {
                 <p>Pengecekan Terakhir</p>
                 <p>3 Feb - 13.00</p>
               </div>
-              <Button className="h-8 w-8 md:h-10 px-0 py-0 md:w-10">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpen("update-waybill", trackId);
+                }}
+                className="h-8 w-8 md:h-10 px-0 py-0 md:w-10"
+              >
                 <RefreshCcw className="md:w-4 md:h-4 w-3 h-3" />
               </Button>
             </div>

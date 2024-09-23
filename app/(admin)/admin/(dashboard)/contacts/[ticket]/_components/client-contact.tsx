@@ -24,6 +24,7 @@ import {
   PlusCircle,
   RefreshCcwDot,
   Trash2,
+  X,
 } from "lucide-react";
 import {
   FormEvent,
@@ -252,11 +253,22 @@ export const ClientContact = () => {
   });
   const [dataChat, setDataChat] = useState<{
     message: string;
-    file: FileList | null;
   }>({
     message: "",
-    file: null,
   });
+  const [files, setFiles] = useState<File[]>([]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      // Mengubah FileList menjadi array File[]
+      const fileArray = Array.from(event.target.files);
+      setFiles((prevFiles) => [...prevFiles, ...fileArray]);
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
   const [chatsSupport, setChatsSupport] = useState<ChatsSupportProps[]>([
     {
       id: "",
@@ -311,10 +323,8 @@ export const ClientContact = () => {
     const body = new FormData();
 
     body.append("message", dataChat.message);
-    if (dataChat.file) {
-      for (let i = 0; i < dataChat.file.length; i++) {
-        body.append("images[]", dataChat.file[i]);
-      }
+    for (let i = 0; i < files.length; i++) {
+      body.append("images[]", files[i]);
     }
 
     try {
@@ -333,8 +343,8 @@ export const ClientContact = () => {
         cookies.set("chat updated", "1");
         setDataChat({
           message: "",
-          file: null,
         });
+        setFiles([]);
       } else {
         toast.error("Chat Gagal Terkirim");
       }
@@ -429,10 +439,26 @@ export const ClientContact = () => {
             <span className="text-gray-500 dark:text-gray-400">
               #{data.ticket_code}
             </span>
-            <Badge className="px-2 py-1 bg-green-400 hover:bg-green-400 text-black font-medium flex md:hidden">
-              <CircleDot className="w-4 h-4 mr-2" />
-              Open
-            </Badge>
+            <div className="flex items-center gap-2">
+              {data.status === "open" && (
+                <Badge className="px-2 py-1 bg-green-400 hover:bg-green-400 text-black font-medium">
+                  <CircleDot className="w-4 h-4 mr-2" />
+                  Open
+                </Badge>
+              )}
+              {data.status === "close" && (
+                <Badge className="px-2 py-1 bg-gray-300 hover:bg-gray-300 text-black font-medium">
+                  <CircleSlash className="w-4 h-4 mr-2" />
+                  Close
+                </Badge>
+              )}
+              {data.status === "solve" && (
+                <Badge className="px-2 py-1 bg-indigo-600 hover:bg-indigo-600 text-white font-medium">
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Solve
+                </Badge>
+              )}
+            </div>
           </h1>
           <div className="flex items-center gap-2">
             <Button
@@ -457,7 +483,7 @@ export const ClientContact = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col gap-2 md:hidden mt-4">
+        {/* <div className="flex flex-col gap-2 md:hidden mt-4">
           <Separator className="bg-gray-300" />
           <div className="flex items-center gap-2 mt-5">
             <p className="text-sm">Label:</p>
@@ -465,10 +491,10 @@ export const ClientContact = () => {
               bug
             </Badge>
           </div>
-        </div>
+        </div> */}
       </div>
       <Separator className="bg-gray-300" />
-      <div className="flex w-full h-full gap-6 flex-col md:flex-row">
+      <div className="flex w-full h-full gap-6 flex-col-reverse md:flex-row">
         <div className="w-full">
           <div className="border-b-2 pb-8 flex flex-col border-gray-300 dark:border-gray-700">
             <form
@@ -489,7 +515,7 @@ export const ClientContact = () => {
                 className="bg-transparent border-gray-300"
                 cols={4}
               />
-              {dataChat.file && dataChat.file.length > 0 && (
+              {files.length > 0 && (
                 <div className="flex flex-col gap-2">
                   <div className="flex w-full justify-between items-center">
                     <Label className="text-gray-700 dark:text-white text-sm">
@@ -506,58 +532,43 @@ export const ClientContact = () => {
                       Hapus
                     </Button>
                   </div>
-                  <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 w-full dark:text-white gap-3">
-                    {dataChat.file &&
-                      Array.from(
-                        { length: dataChat.file.length ?? 0 },
-                        (_, i) => (
-                          <div
-                            key={i}
-                            className="w-full aspect-square relative rounded-md overflow-hidden border border-gray-300 dark:text-white"
-                          >
-                            <Image
-                              alt=""
-                              src={
-                                dataChat.file
-                                  ? URL.createObjectURL(dataChat.file[i])
-                                  : ""
-                              }
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        )
-                      )}
+                  <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 w-full rounded-lg dark:text-white gap-3">
+                    {files.map((file, i) => (
+                      <div
+                        key={i}
+                        className="w-full aspect-square relative rounded-md overflow-hidden border border-gray-300 dark:text-white"
+                      >
+                        <Image
+                          alt=""
+                          src={URL.createObjectURL(file)}
+                          fill
+                          className="object-cover"
+                        />
+                        <button
+                          onClick={() => handleRemoveFile(i)}
+                          type={"button"}
+                          className="absolute top-1 right-1 text-white bg-red-600 rounded-full w-6 h-6 flex items-center justify-center"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
-              <div
-                className={cn(
-                  "flex w-full ",
-                  !dataChat.file || dataChat.file.length === 0
-                    ? "justify-between"
-                    : "justify-end"
-                )}
-              >
-                {(!dataChat.file || dataChat.file.length === 0) && (
-                  <div>
-                    <Label className="h-9 px-5 bg-transparent hover:bg-gray-100 text-black border gap-2 border-gray-300 hover:border-gray-300 dark:text-white dark:hover:bg-gray-900 relative flex items-center justify-center rounded-md cursor-pointer dark:border-gray-300 dark:hover:border-gray-300 transition-all">
-                      <Images className="w-4 h-4" />
-                      Tambah Lampiran
-                      <Input
-                        type="file"
-                        multiple
-                        className="absolute top-0 left-0 w-full h-full hidden"
-                        onChange={(e) =>
-                          setDataChat((prev) => ({
-                            ...prev,
-                            file: e.target.files,
-                          }))
-                        }
-                      />
-                    </Label>
-                  </div>
-                )}
+              <div className={cn("flex w-full justify-between")}>
+                <div>
+                  <Label className="h-9 px-5 bg-transparent hover:bg-gray-100 text-black border gap-2 border-gray-300 hover:border-gray-300 dark:text-white dark:hover:bg-gray-900 relative flex items-center justify-center rounded-md cursor-pointer dark:border-gray-300 dark:hover:border-gray-300 transition-all">
+                    <Images className="w-4 h-4" />
+                    Tambah Lampiran
+                    <Input
+                      type="file"
+                      multiple
+                      className="absolute top-0 left-0 w-full h-full hidden"
+                      onChange={handleFileChange}
+                    />
+                  </Label>
+                </div>
                 <Button className="h-9">Kirim</Button>
               </div>
             </form>
@@ -572,31 +583,32 @@ export const ClientContact = () => {
                 : "h-auto md:h-auto pb-[10vh] md:pb-0"
             )}
           >
-            <div ref={divRef} className="relative h-full">
+            <div className="relative h-full">
               {chatsSupport.map((item) => (
                 <BubbleChat key={item.id} {...item} />
               ))}
             </div>
-            <div className="absolute bottom-0 left-0 w-full h-[10vh] bg-gradient-to-b from-gray-50/0 via-gray-50/80 to-gray-50 dark:from-black/0 dark:via-black/80 dark:to-black flex items-center justify-center md:hidden">
-              <Button
-                type="button"
-                onClick={() => setIsExpand(!isExpand)}
-                className="bg-white hover:bg-gray-100 border border-black dark:bg-black dark:border-white text-black dark:text-white"
-              >
-                {isExpand ? "Collapse" : "Expand"}
-              </Button>
-            </div>
+            {(divHeight ?? 0) > viewportHeight && (
+              <div className="absolute bottom-0 left-0 w-full h-[10vh] bg-gradient-to-b from-gray-50/0 via-gray-50/80 to-gray-50 dark:from-black/0 dark:via-black/80 dark:to-black flex items-center justify-center md:hidden">
+                <Button
+                  type="button"
+                  onClick={() => setIsExpand(!isExpand)}
+                  className="bg-white hover:bg-gray-100 border border-black dark:bg-black dark:border-white text-black dark:text-white"
+                >
+                  {isExpand ? "Collapse" : "Expand"}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
         <div className="md:w-1/4 w-full md:flex-none md:relative">
-          <div className="md:sticky md:top-20 lg:top-10 w-full flex flex-col-reverse md:flex-col gap-4 text-xs">
+          <div className="md:sticky md:top-20 lg:top-10 w-full flex flex-col gap-4 text-xs">
             <div className="flex flex-col gap-4">
-              <Separator className="md:hidden" />
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Dibuka oleh</h5>
                 <p>{data.creator_name}</p>
               </div>
-              <Separator />
+              {/* <Separator />
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Label</h5>
                 <div className="flex justify-between w-full items-center">
@@ -621,7 +633,7 @@ export const ClientContact = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
-              </div>
+              </div> */}
               <Separator />
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Dibuka pada</h5>

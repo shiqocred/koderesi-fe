@@ -16,7 +16,7 @@ export const DeleteAccountModal = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isModalOpen = isOpen && type === "delete-account";
+  const isModalOpen = isOpen && type === "delete-label";
 
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();

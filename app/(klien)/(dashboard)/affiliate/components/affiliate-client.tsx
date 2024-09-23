@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { cn, formatRupiah } from "@/lib/utils";
+import { cn, formatRupiah, optionToast } from "@/lib/utils";
 import { TooltipProviderPage } from "@/providers/tooltip-provider-page";
 import {
   AlertTriangleIcon,
@@ -39,6 +39,7 @@ import { ChartAffiliateClient } from "./chart-affiliate-client";
 import { useCookies } from "next-client-cookies";
 import axios from "axios";
 import { toast } from "sonner";
+import { ToastError } from "@/components/toast-error";
 
 enum AffiliateProgress {
   FALSE,
@@ -137,12 +138,18 @@ export const AffiliateClient = () => {
         }
       );
       if (res.data.status) {
-        toast.success("Data berhasil diajukan");
+        toast.success("Affiliate berhasil diajukan");
+        cookies.set("affiliate", "add");
       } else {
-        toast.error("Data gagal diajukan");
+        toast.error("Affiliate gagal diajukan");
       }
     } catch (error) {
-      toast.error("Data gagal diajukan");
+      toast.custom(
+        (t) => (
+          <ToastError label="Affiliate gagal diajukan" error={error} t={t} />
+        ),
+        optionToast
+      );
       console.log("[ERROR_SUBMIT_DATA]:", error);
     }
   };
@@ -230,6 +237,12 @@ export const AffiliateClient = () => {
   useEffect(() => {
     getData();
   }, [step]);
+  useEffect(() => {
+    if (cookies.get("affiliate")) {
+      getData();
+      return cookies.remove("affiliate");
+    }
+  }, [cookies.get("affiliate")]);
   useEffect(() => {
     getData();
   }, []);

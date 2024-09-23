@@ -1,9 +1,17 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatNumber, formatRupiah } from "@/lib/utils";
-import { BadgeDollarSign, Package, PackageCheck, Truck } from "lucide-react";
+import {
+  BadgeDollarSign,
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  Package,
+  PackageCheck,
+  Truck,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { ChartClient } from "./components/chart-client";
 import { TopClientDashboard } from "./components/top-client-dashboard";
@@ -11,6 +19,12 @@ import axios from "axios";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { useCookies } from "next-client-cookies";
+import { Button } from "@/components/ui/button";
+
+interface FirstLastDateProps {
+  prev_year: number;
+  next_year: number;
+}
 
 interface NewManifest {
   date_manifest: string;
@@ -30,6 +44,11 @@ const DashboardPage = () => {
   const [newManifest, setNewManifest] = useState<NewManifest[]>([]);
   const cookies = useCookies();
   const token = cookies.get("accessToken");
+  const [selectedBar, setSelectedBar] = useState<number>(
+    new Date().getFullYear()
+  );
+  const [firstLast, setFirstLast] = useState<FirstLastDateProps>();
+  const [selectedBarData, setSelectedBarData] = useState<any[]>([]);
 
   const getStatistik = async () => {
     try {
@@ -65,10 +84,30 @@ const DashboardPage = () => {
       console.log("[ERROR_GET_MANIFEST]:", error);
     }
   };
+  const getBarKredit = async (year?: number) => {
+    try {
+      const res = await axios.get(
+        `https://koderesi.raventech.my.id/api/admin/dashboard/barUsageCredit?y=${
+          year ?? ""
+        }`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(res.data.data);
+    } catch (error) {
+      console.log("[ERROR_GET_MANIFEST]:", error);
+    }
+  };
 
   useEffect(() => {
     getStatistik();
     getNewestManifest();
+    getBarKredit();
   }, []);
 
   return (
@@ -118,9 +157,42 @@ const DashboardPage = () => {
         </div>
         <div className="flex xl:flex-row flex-col gap-4">
           <div className="w-full xl:w-7/12 ">
-            <Card className="pr-2 pt-2 md:p-2 lg:p-4 rounded-md flex flex-col gap-y-4 h-[200px] sm:h-[250px] lg:h-[350px] md:h-[300px] shadow">
-              <ChartClient />
-            </Card>
+            <div className="h-full border dark:border-gray-700/70 rounded-md">
+              <div className="flex md:justify-between md:items-center px-4 pt-4 gap-2 md:gap-0 md:px-5 mb-4 flex-col md:flex-row items-start">
+                <CardTitle>Kredit Flow</CardTitle>
+                <div className="flex border p-1.5 rounded-md text-sm font-semibold items-center gap-x-2">
+                  <Button
+                    className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
+                    variant={"ghost"}
+                    onClick={() => getBarKredit(firstLast?.prev_year)}
+                    disabled={selectedBar === firstLast?.prev_year}
+                  >
+                    <ChevronLeft className="w-3 md:w-4 h-3 md:h-4" />
+                  </Button>
+                  <span className="capitalize md:w-36 w-full select-none flex items-center justify-center text-xs md:text-sm">
+                    {selectedBar}
+                  </span>
+                  <Button
+                    className="md:h-5 md:w-5 rounded-sm p-0 w-4 h-4"
+                    variant={"ghost"}
+                    onClick={() => getBarKredit(firstLast?.next_year)}
+                    disabled={selectedBar === firstLast?.next_year}
+                  >
+                    <ChevronRight className="w-3 md:w-4 h-3 md:h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="xl:h-[350px] md:h-[300px] h-[200px] relative">
+                {/* {!isUpdating && isUpdatingBar && (
+                  <div className="w-full h-full absolute bg-gray-500/20 backdrop-blur-sm top-0 left-0 z-10 flex items-center justify-center rounded-md">
+                    <Loader2 className="w-10 h-10 animate-spin text-gray-700 dark:text-white" />
+                  </div>
+                )} */}
+                {selectedBarData && (
+                  <ChartClient initialData={selectedBarData} />
+                )}
+              </div>
+            </div>
           </div>
           <div className="w-full xl:w-5/12 ">
             <Card className="p-4 rounded-md flex flex-col gap-y-4 h-auto shadow">

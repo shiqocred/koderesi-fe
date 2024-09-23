@@ -133,13 +133,11 @@ const Promotion = () => {
               key={item.id}
               className="relative w-full aspect-[2/1] md:aspect-[4/1] rounded-md flex items-center justify-center overflow-hidden"
             >
-              <Link href={`/posters`} className="w-full h-full">
+              <Link href={`/top-up/${item.id}`} className="w-full h-full">
                 <Card className="flex items-center w-full justify-center shadow-none flex-col h-full bg-transparent">
                   <div className="w-full h-full rounded-md overflow-hidden">
                     <Image
-                      src={
-                        "https://images.unsplash.com/photo-1719937206168-f4c829152b91?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                      }
+                      src={item.banner}
                       alt={""}
                       fill
                       className="object-cover pointer-events-none"

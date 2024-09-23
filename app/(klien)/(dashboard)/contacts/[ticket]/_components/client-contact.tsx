@@ -24,6 +24,7 @@ import {
   PlusCircle,
   RefreshCcwDot,
   Trash2,
+  X,
 } from "lucide-react";
 import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { BubbleChat, ChatProps } from "./bubble-chat";
@@ -41,12 +42,13 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
+import { cn, optionToast } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
 import { toast } from "sonner";
 import Link from "next/link";
+import { ToastError } from "@/components/toast-error";
 
 // const chats: ChatProps[] = [
 //   {
@@ -245,10 +247,8 @@ export const ClientContact = () => {
   });
   const [dataChat, setDataChat] = useState<{
     message: string;
-    file: FileList | null;
   }>({
     message: "",
-    file: null,
   });
   const [chatsSupport, setChatsSupport] = useState<ChatsSupportProps[]>([
     {
@@ -273,12 +273,24 @@ export const ClientContact = () => {
   const [input, setInput] = useState<{
     judul: string;
     chat: string;
-    file: FileList | null;
   }>({
     judul: "",
     chat: "",
-    file: null,
   });
+
+  const [files, setFiles] = useState<File[]>([]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      // Mengubah FileList menjadi array File[]
+      const fileArray = Array.from(event.target.files);
+      setFiles((prevFiles) => [...prevFiles, ...fileArray]);
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault();
@@ -286,10 +298,8 @@ export const ClientContact = () => {
 
     body.append("title", input.judul);
     body.append("description", input.chat);
-    if (input.file) {
-      for (let i = 0; i < input.file.length; i++) {
-        body.append("images[]", input.file[i]);
-      }
+    for (let i = 0; i < files.length; i++) {
+      body.append("images[]", files[i]);
     }
 
     try {
@@ -307,15 +317,19 @@ export const ClientContact = () => {
         toast.success("Ticket telah dibuat.");
         setInput({
           chat: "",
-          file: null,
           judul: "",
         });
+        setFiles([]);
         router.push(`/contacts/${res.data.data}`);
       } else {
         toast.error("Ticket gagal dibuat.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("[ERROR_CREATE_TICKET]:", error);
+      toast.custom(
+        (t) => <ToastError label="Ticket gagal dibuat" error={error} t={t} />,
+        optionToast
+      );
     }
   };
   const handleUpdateStatus = async (e: MouseEvent, value: string) => {
@@ -339,11 +353,16 @@ export const ClientContact = () => {
         toast.success("Status terupdate");
         cookies.set("chat updated", "1");
       } else {
-        toast.error("Status gagal terupdate");
+        toast.error("Status gagal diperbarui");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("[ERROR_CREATE_TICKET]:", error);
-      toast.error("Status gagal terupdate");
+      toast.custom(
+        (t) => (
+          <ToastError label="Status gagal diperbarui" error={error} t={t} />
+        ),
+        optionToast
+      );
     }
   };
   const handleCreateChat = async (e: FormEvent) => {
@@ -351,10 +370,8 @@ export const ClientContact = () => {
     const body = new FormData();
 
     body.append("message", dataChat.message);
-    if (dataChat.file) {
-      for (let i = 0; i < dataChat.file.length; i++) {
-        body.append("images[]", dataChat.file[i]);
-      }
+    for (let i = 0; i < files.length; i++) {
+      body.append("images[]", files[i]);
     }
 
     try {
@@ -373,8 +390,8 @@ export const ClientContact = () => {
         cookies.set("chat updated", "1");
         setDataChat({
           message: "",
-          file: null,
         });
+        setFiles([]);
         console.log("data true");
       } else {
         toast.error("Chat Gagal Terkirim");
@@ -382,6 +399,10 @@ export const ClientContact = () => {
       }
     } catch (error) {
       console.log("[ERROR_CREATE_TICKET]:", error);
+      toast.custom(
+        (t) => <ToastError label="Chat gagal terkirim" error={error} t={t} />,
+        optionToast
+      );
     }
   };
 
@@ -455,8 +476,10 @@ export const ClientContact = () => {
 
   useEffect(() => {
     setIsMounted(true);
-    handleGetTickets();
-  }, []);
+    if (params.ticket !== "new") {
+      handleGetTickets();
+    }
+  }, [params.ticket]);
 
   if (!isMounted) {
     return null;
@@ -520,45 +543,45 @@ export const ClientContact = () => {
                 Lampiran
               </Label>
               <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 w-full gap-3">
-                {input.file &&
-                  Array.from({ length: input.file.length ?? 0 }, (_, i) => (
+                {files.length > 0 &&
+                  files.map((file, i) => (
                     <div
                       key={i}
                       className="col-span-1 w-full aspect-square relative rounded-md overflow-hidden border border-green-400"
                     >
                       <Image
                         alt=""
-                        src={
-                          input.file ? URL.createObjectURL(input.file[i]) : ""
-                        }
+                        src={URL.createObjectURL(file)}
                         fill
                         className="object-cover"
                       />
+                      <button
+                        onClick={() => handleRemoveFile(i)}
+                        type={"button"}
+                        className="absolute top-1 right-1 text-white bg-red-600 rounded-full w-6 h-6 flex items-center justify-center"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
                   ))}
 
-                {(!input.file || (input.file && input.file.length === 0)) && (
-                  <Label className="col-span-1 w-full aspect-square flex-col bg-transparent hover:bg-gray-100 text-black border gap-2 border-green-400 hover:border-green-500 dark:text-white dark:hover:bg-gray-900 relative flex items-center justify-center rounded-md cursor-pointer dark:border-green-200/40 dark:hover:border-green-400 transition-all">
-                    <PlusCircle className="w-4 h-4" />
-                    Tambah
-                    <Input
-                      type="file"
-                      className="absolute top-0 left-0 w-full h-full hidden text-xs"
-                      multiple
-                      onChange={(e) =>
-                        setInput((prev) => ({
-                          ...prev,
-                          file: e.target.files,
-                        }))
-                      }
-                    />
-                  </Label>
-                )}
+                {/* {(!input.file || (input.file && input.file.length === 0)) && ( */}
+                <Label className="col-span-1 w-full aspect-square flex-col bg-transparent hover:bg-gray-100 text-black border gap-2 border-green-400 hover:border-green-500 dark:text-white dark:hover:bg-gray-900 relative flex items-center justify-center rounded-md cursor-pointer dark:border-green-200/40 dark:hover:border-green-400 transition-all">
+                  <PlusCircle className="w-4 h-4" />
+                  Tambah
+                  <Input
+                    type="file"
+                    className="absolute top-0 left-0 w-full h-full hidden text-xs"
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                </Label>
+                {/* )} */}
               </div>
             </div>
             <div className="w-full relative flex lg:hidden border p-2 rounded-md border-green-400 py-4">
               <div className="md:sticky md:top-10 w-full flex flex-col-reverse md:flex-col gap-4 text-xs">
-                <div className="flex flex-col gap-1.5">
+                {/* <div className="flex flex-col gap-1.5">
                   <h5 className="font-semibold text-gray-500">Label</h5>
                   <div className="flex justify-between w-full items-center">
                     <p>Tidak ada</p>
@@ -583,21 +606,19 @@ export const ClientContact = () => {
                     </Popover>
                   </div>
                 </div>
-                <Separator className="bg-gray-300 dark:bg-gray-700" />
+                <Separator className="bg-gray-300 dark:bg-gray-700" /> */}
                 <div className="flex flex-col gap-1.5">
                   <h5 className="font-semibold text-gray-500">
                     Total Lampiran
                   </h5>
                   <div className="flex items-center justify-between">
                     <p className="flex items-center gap-2">
-                      {input.file?.length ?? 0} Lampiran
+                      {files.length ?? 0} Lampiran
                     </p>
-                    {input.file && input.file.length > 0 && (
+                    {files.length > 0 && (
                       <button
                         className="hover:underline text-red-500 dark:text-red-500 flex items-center"
-                        onClick={() =>
-                          setInput((prev) => ({ ...prev, file: null }))
-                        }
+                        onClick={() => setFiles([])}
                       >
                         <Trash2 className="w-3 h-3 mr-1" />
                         Hapus
@@ -616,7 +637,7 @@ export const ClientContact = () => {
           </form>
           <div className="w-1/4 flex-none relative hidden lg:flex">
             <div className="md:sticky md:top-10 w-full flex flex-col-reverse md:flex-col gap-4 text-xs">
-              <div className="flex flex-col gap-1.5">
+              {/* <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Label</h5>
                 <div className="flex justify-between w-full items-center">
                   <p>Tidak ada</p>
@@ -641,19 +662,17 @@ export const ClientContact = () => {
                   </Popover>
                 </div>
               </div>
-              <Separator className="bg-gray-300 dark:bg-gray-700" />
+              <Separator className="bg-gray-300 dark:bg-gray-700" /> */}
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Total Lampiran</h5>
                 <div className="flex items-center justify-between">
                   <p className="flex items-center gap-2">
-                    {input.file?.length ?? 0} Lampiran
+                    {files.length ?? 0} Lampiran
                   </p>
-                  {input.file && input.file.length > 0 && (
+                  {files.length > 0 && (
                     <button
                       className="hover:underline text-red-500 dark:text-red-500 flex items-center"
-                      onClick={() =>
-                        setInput((prev) => ({ ...prev, file: null }))
-                      }
+                      onClick={() => setFiles([])}
                     >
                       <Trash2 className="w-3 h-3 mr-1" />
                       Hapus
@@ -677,10 +696,26 @@ export const ClientContact = () => {
             <span className="text-gray-500 dark:text-gray-400">
               #{data.ticket_code}
             </span>
-            <Badge className="px-2 py-1 bg-green-400 hover:bg-green-400 text-black font-medium flex md:hidden">
-              <CircleDot className="w-4 h-4 mr-2" />
-              Open
-            </Badge>
+            <div className="flex items-center gap-2">
+              {data.status === "open" && (
+                <Badge className="px-2 py-1 bg-green-400 hover:bg-green-400 text-black font-medium">
+                  <CircleDot className="w-4 h-4 mr-2" />
+                  Open
+                </Badge>
+              )}
+              {data.status === "close" && (
+                <Badge className="px-2 py-1 bg-gray-300 hover:bg-gray-300 text-black font-medium">
+                  <CircleSlash className="w-4 h-4 mr-2" />
+                  Close
+                </Badge>
+              )}
+              {data.status === "solve" && (
+                <Badge className="px-2 py-1 bg-indigo-600 hover:bg-indigo-600 text-white font-medium">
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Solve
+                </Badge>
+              )}
+            </div>
           </h1>
           <div className="flex items-center gap-2">
             <Button
@@ -711,7 +746,7 @@ export const ClientContact = () => {
             </Button> */}
           </div>
         </div>
-        <div className="flex flex-col gap-2 md:hidden mt-4">
+        {/* <div className="flex flex-col gap-2 md:hidden mt-4">
           <Separator className="bg-gray-300" />
           <div className="flex items-center gap-2 mt-5">
             <p className="text-sm">Label:</p>
@@ -719,10 +754,10 @@ export const ClientContact = () => {
               bug
             </Badge>
           </div>
-        </div>
+        </div> */}
       </div>
       <Separator className="bg-gray-300" />
-      <div className="flex w-full h-full gap-6 flex-col md:flex-row">
+      <div className="flex w-full h-full gap-6 flex-col-reverse md:flex-row">
         <div className="w-full">
           <div className="border-b-2 pb-8 flex flex-col border-gray-300 dark:border-gray-700">
             <form
@@ -743,7 +778,7 @@ export const ClientContact = () => {
                 className="bg-transparent border-gray-300"
                 cols={4}
               />
-              {dataChat.file && dataChat.file.length > 0 && (
+              {files.length > 0 && (
                 <div className="flex flex-col gap-2">
                   <div className="flex w-full justify-between items-center">
                     <Label className="text-gray-700 dark:text-white text-sm">
@@ -760,58 +795,43 @@ export const ClientContact = () => {
                       Hapus
                     </Button>
                   </div>
-                  <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 w-full p-3 border rounded-lg border-gray-300 dark:text-white gap-3">
-                    {dataChat.file &&
-                      Array.from(
-                        { length: dataChat.file.length ?? 0 },
-                        (_, i) => (
-                          <div
-                            key={i}
-                            className="w-full aspect-square relative rounded-md overflow-hidden border border-gray-300 dark:text-white"
-                          >
-                            <Image
-                              alt=""
-                              src={
-                                dataChat.file
-                                  ? URL.createObjectURL(dataChat.file[i])
-                                  : ""
-                              }
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        )
-                      )}
+                  <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 w-full rounded-lg dark:text-white gap-3">
+                    {files.map((file, i) => (
+                      <div
+                        key={i}
+                        className="w-full aspect-square relative rounded-md overflow-hidden border border-gray-300 dark:text-white"
+                      >
+                        <Image
+                          alt=""
+                          src={URL.createObjectURL(file)}
+                          fill
+                          className="object-cover"
+                        />
+                        <button
+                          onClick={() => handleRemoveFile(i)}
+                          type={"button"}
+                          className="absolute top-1 right-1 text-white bg-red-600 rounded-full w-6 h-6 flex items-center justify-center"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
-              <div
-                className={cn(
-                  "flex w-full ",
-                  !dataChat.file || dataChat.file.length === 0
-                    ? "justify-between"
-                    : "justify-end"
-                )}
-              >
-                {(!dataChat.file || dataChat.file.length === 0) && (
-                  <div>
-                    <Label className="h-9 px-5 bg-transparent hover:bg-gray-100 text-black border gap-2 border-gray-300 hover:border-gray-300 dark:text-white dark:hover:bg-gray-900 relative flex items-center justify-center rounded-md cursor-pointer dark:border-gray-300 dark:hover:border-gray-300 transition-all">
-                      <Images className="w-4 h-4" />
-                      Tambah Lampiran
-                      <Input
-                        type="file"
-                        multiple
-                        className="absolute top-0 left-0 w-full h-full hidden"
-                        onChange={(e) =>
-                          setDataChat((prev) => ({
-                            ...prev,
-                            file: e.target.files,
-                          }))
-                        }
-                      />
-                    </Label>
-                  </div>
-                )}
+              <div className={cn("flex w-full justify-between")}>
+                <div>
+                  <Label className="h-9 px-5 bg-transparent hover:bg-gray-100 text-black border gap-2 border-gray-300 hover:border-gray-300 dark:text-white dark:hover:bg-gray-900 relative flex items-center justify-center rounded-md cursor-pointer dark:border-gray-300 dark:hover:border-gray-300 transition-all">
+                    <Images className="w-4 h-4" />
+                    Tambah Lampiran
+                    <Input
+                      type="file"
+                      multiple
+                      className="absolute top-0 left-0 w-full h-full hidden"
+                      onChange={handleFileChange}
+                    />
+                  </Label>
+                </div>
                 <Button className="h-9">Kirim</Button>
               </div>
             </form>
@@ -845,14 +865,13 @@ export const ClientContact = () => {
           </div>
         </div>
         <div className="md:w-1/4 w-full md:flex-none md:relative">
-          <div className="md:sticky md:top-20 lg:top-10 w-full flex flex-col-reverse md:flex-col gap-4 text-xs">
+          <div className="md:sticky md:top-20 lg:top-10 w-full flex flex-col gap-4 text-xs">
             <div className="flex flex-col gap-4">
-              <Separator className="md:hidden" />
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Dibuka oleh</h5>
                 <p>{data.creator_name}</p>
               </div>
-              <Separator />
+              {/* <Separator />
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Label</h5>
                 <div className="flex justify-between w-full items-center">
@@ -877,7 +896,7 @@ export const ClientContact = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
-              </div>
+              </div> */}
               <Separator />
               <div className="flex flex-col gap-1.5">
                 <h5 className="font-semibold text-gray-500">Dibuka pada</h5>

@@ -173,7 +173,7 @@ const DetailAffiliate = ({
         {(url.ig || url.fb || url.x || url.yt) && (
           <div className="w-full flex flex-col gap-3">
             {(url.ig || url.fb) && (
-              <div className="grid w-full grid-cols-2">
+              <div className="grid w-full grid-cols-2 gap-3">
                 {url.ig && (
                   <Card
                     className={cn(
@@ -424,7 +424,7 @@ const DetailAffiliate = ({
       {(url.ig || url.fb || url.x || url.yt) && (
         <div className="w-full flex flex-col gap-3">
           {(url.ig || url.fb) && (
-            <div className="grid w-full grid-cols-2">
+            <div className="grid w-full grid-cols-2 gap-3">
               {url.ig && (
                 <Card
                   className={cn(
