@@ -21,7 +21,7 @@ import {
   Youtube,
 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChartAffiliate } from "./chart-affiliate";
 import { Separator } from "@/components/ui/separator";
 
@@ -76,6 +76,7 @@ const DetailAffiliate = ({
 }: DataProps) => {
   const [mth, setMth] = useState<number>(0);
   const { onOpen } = useModal();
+  const [reasonData, setReasonData] = useState("");
 
   const month = [
     {
@@ -135,6 +136,12 @@ const DetailAffiliate = ({
       setMth(mth !== month.length - 1 ? mth + 1 : month.length - 1);
     }
   };
+
+  useEffect(() => {
+    if (reason) {
+      setReasonData(reason);
+    }
+  }, [reason]);
 
   if (status === "approved") {
     return (
@@ -355,9 +362,6 @@ const DetailAffiliate = ({
     return (
       <>
         <Card className="flex items-center px-3 py-1.5 md:px-4 md:py-2 gap-2 md:gap-4 bg-gray-100 dark:border dark:border-gray-700/70">
-          <div className="h-10 aspect-square overflow-hidden rounded relative flex-none">
-            <Image alt="" src={"/avatar.webp"} fill />
-          </div>
           <div className="flex items-center gap-1 md:gap-4 w-full justify-between">
             <p className="font-semibold">{nama}</p>
             <div className="flex items-center">
@@ -373,7 +377,8 @@ const DetailAffiliate = ({
         </Card>
         <div className="flex w-full gap-4">
           <Textarea
-            value="Akun anda terdeteksi melakukan pelanggaran"
+            value={reasonData}
+            onChange={(e) => setReasonData(e.target.value)}
             className="bg-transparent disabled:opacity-100 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-200 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-400 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400"
           />
           <Button
