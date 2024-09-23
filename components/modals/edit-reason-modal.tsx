@@ -73,7 +73,7 @@ export const EditReasonModal = () => {
             type="submit"
             className="w-full bg-green-400 hover:bg-green-300 text-black"
           >
-            Approve
+            Update
           </Button>
         </div>
       </form>
