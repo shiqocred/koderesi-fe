@@ -22,7 +22,7 @@ export const ToastError = ({
           {error.response.data.message.length > 0 ? (
             <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
               {error.response.data.message.map((item: any) => (
-                <li>{item}</li>
+                <li key={item}>{item}</li>
               ))}
             </ul>
           ) : (
