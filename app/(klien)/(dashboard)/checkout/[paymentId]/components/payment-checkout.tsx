@@ -186,6 +186,7 @@ const PaymentCheckout = () => {
       );
     }
     body.append("channel", typeMethod);
+    body.append("method", "_put");
     try {
       const res = await axios.put(
         `https://koderesi.raventech.my.id/api/admin/transaction/checkout/${data.id}`,

@@ -371,7 +371,7 @@ export const ClientContact = () => {
               </li>
             )}
           </ul>
-          <div className="flex w-full items-center justify-between">
+          <div className="flex w-full items-center justify-between mt-5">
             <div className="flex gap-5 items-center">
               <p className="text-sm">Total Ticket: {page.total}</p>
             </div>
