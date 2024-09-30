@@ -16,6 +16,8 @@ import {
   PlusCircle,
   CircleSlash,
   TextSelect,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -61,6 +63,13 @@ export const ClientContact = () => {
   const token = cookies.get("accessToken");
   const [isFilter, setIsFilter] = useState(false);
   const [data, setData] = useState<SupportListProps[] | undefined>(undefined);
+  const [page, setPage] = useState({
+    current: parseFloat(params.get("q") ?? "1") ?? 1,
+    last: 1,
+    prev: 1,
+    next: 1,
+    total: 1,
+  });
 
   const handleGetTickets = async () => {
     setIsGetList(true);
@@ -78,7 +87,17 @@ export const ClientContact = () => {
           },
         }
       );
-      setData(res.data.data);
+      const data = res.data.data;
+      setData(data.data);
+      setPage({
+        current: data.current_page,
+        last: data.last_page,
+        prev: data.links[0].active && data.links[0].label,
+        next:
+          data.links[data.data.length - 1].active &&
+          data.links[data.data.length - 1].label,
+        total: data.total,
+      });
     } catch (error) {
       console.log("[ERROR_GET_TICKET_LIST]:", error);
     } finally {
@@ -87,7 +106,7 @@ export const ClientContact = () => {
   };
 
   const handleCurrentId = useCallback(
-    (q: string, f: string) => {
+    (q: string, f: string, p: number) => {
       setFilter(f);
       let currentQuery = {};
 
@@ -99,6 +118,7 @@ export const ClientContact = () => {
         ...currentQuery,
         q: q,
         f: f,
+        page: p,
       };
 
       if (!q || q === "") {
@@ -107,6 +127,9 @@ export const ClientContact = () => {
       if (!f || f === "") {
         delete updateQuery.f;
         setFilter("");
+      }
+      if (!p || p === 0) {
+        delete updateQuery.page;
       }
 
       const url = qs.stringifyUrl(
@@ -117,13 +140,13 @@ export const ClientContact = () => {
         { skipNull: true }
       );
 
-      router.push(url);
+      router.push(url, { scroll: false });
     },
     [params, router]
   );
 
   useEffect(() => {
-    handleCurrentId(searchValue, filter);
+    handleCurrentId(searchValue, filter, page.current);
   }, [searchValue]);
 
   useEffect(() => {
@@ -199,7 +222,7 @@ export const ClientContact = () => {
                         <CommandList>
                           <CommandItem
                             onSelect={() => {
-                              handleCurrentId(dataSearch, "open");
+                              handleCurrentId(dataSearch, "open", page.current);
                               setIsFilter(false);
                             }}
                           >
@@ -207,7 +230,11 @@ export const ClientContact = () => {
                               className="w-4 h-4 mr-2"
                               checked={filter === "open"}
                               onCheckedChange={() => {
-                                handleCurrentId(dataSearch, "open");
+                                handleCurrentId(
+                                  dataSearch,
+                                  "open",
+                                  page.current
+                                );
                                 setIsFilter(false);
                               }}
                             />
@@ -216,7 +243,11 @@ export const ClientContact = () => {
                           </CommandItem>
                           <CommandItem
                             onSelect={() => {
-                              handleCurrentId(dataSearch, "solve");
+                              handleCurrentId(
+                                dataSearch,
+                                "solve",
+                                page.current
+                              );
                               setIsFilter(false);
                             }}
                           >
@@ -224,7 +255,11 @@ export const ClientContact = () => {
                               className="w-4 h-4 mr-2"
                               checked={filter === "solve"}
                               onCheckedChange={() => {
-                                handleCurrentId(dataSearch, "solve");
+                                handleCurrentId(
+                                  dataSearch,
+                                  "solve",
+                                  page.current
+                                );
                                 setIsFilter(false);
                               }}
                             />
@@ -233,7 +268,11 @@ export const ClientContact = () => {
                           </CommandItem>
                           <CommandItem
                             onSelect={() => {
-                              handleCurrentId(dataSearch, "close");
+                              handleCurrentId(
+                                dataSearch,
+                                "close",
+                                page.current
+                              );
                               setIsFilter(false);
                             }}
                           >
@@ -241,7 +280,11 @@ export const ClientContact = () => {
                               className="w-4 h-4 mr-2"
                               checked={filter === "close"}
                               onCheckedChange={() => {
-                                handleCurrentId(dataSearch, "close");
+                                handleCurrentId(
+                                  dataSearch,
+                                  "close",
+                                  page.current
+                                );
                                 setIsFilter(false);
                               }}
                             />
@@ -258,7 +301,7 @@ export const ClientContact = () => {
                     variant={"ghost"}
                     className="flex px-3"
                     onClick={() => {
-                      handleCurrentId(dataSearch, "");
+                      handleCurrentId(dataSearch, "", page.current);
                     }}
                   >
                     Reset
@@ -328,6 +371,32 @@ export const ClientContact = () => {
               </li>
             )}
           </ul>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex gap-5 items-center">
+              <p className="text-sm">Total Ticket: {page.total}</p>
+            </div>
+            <div className="flex gap-5 items-center">
+              <p className="text-sm">
+                Page {page.current} of {page.last}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+                  onClick={() => handleCurrentId(dataSearch, filter, page.prev)}
+                  disabled={page.prev === page.current}
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+                <Button
+                  className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+                  onClick={() => handleCurrentId(dataSearch, filter, page.next)}
+                  disabled={page.next === page.current}
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+          </div>
         </Card>
       </div>
     </div>

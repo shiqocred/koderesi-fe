@@ -161,7 +161,6 @@ export const UsersClient = () => {
       );
       const data = res.data.data;
       setUserList(data.data);
-      console.log(data);
       setPage({
         current: data.current_page,
         last: data.last_page,
