@@ -447,6 +447,7 @@ const PaymentCheckout = () => {
                               <CommandList>
                                 {dialPhone.map((item) => (
                                   <CommandItem
+                                    key={item.code}
                                     className="justify-between gap-3"
                                     onSelect={() => {
                                       setCountry(item.code);
