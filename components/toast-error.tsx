@@ -19,15 +19,21 @@ export const ToastError = ({
           <h5 className="font-medium dark:text-white text-sm leading-none text-red-500">
             {label}
           </h5>
-          {Array.isArray(error.response.data.message) ? (
-            <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
-              {error.response.data.message.map((item: any) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+          {error.response?.data ? (
+            Array.isArray(error.response?.data.message) ? (
+              <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                {error.response?.data?.message.map((item: any) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
+                <li>{error.response?.data?.message}</li>
+              </ul>
+            )
           ) : (
             <ul className="*:before:content-['-'] *:before:pr-3 dark:text-red-200 text-xs text-red-400">
-              <li>{error.response.data.message}</li>
+              <li>Terjadi kesalahan di server</li>
             </ul>
           )}
         </div>

@@ -8,6 +8,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 export const DeletePromoModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -33,7 +35,10 @@ export const DeletePromoModal = () => {
       cookies.set("promo updated", "1");
       onClose();
     } catch (error) {
-      toast.success("Promo Gagal Dihapus");
+      toast.custom(
+        (t) => <ToastError label="Promo Gagal Dihapus" error={error} t={t} />,
+        optionToast
+      );
       console.log("[ERROR_PROMO_DELETE]:", error);
     }
   };

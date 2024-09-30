@@ -15,12 +15,10 @@ import {
   Facebook,
   Instagram,
   Save,
-  Slash,
   Twitter,
   XCircle,
   Youtube,
 } from "lucide-react";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { ChartAffiliate } from "./chart-affiliate";
 import { Separator } from "@/components/ui/separator";
@@ -143,7 +141,7 @@ const DetailAffiliate = ({
     }
   }, [reason]);
 
-  if (status === "approved") {
+  if (status === "pending") {
     return (
       <>
         <Card className="flex items-center px-3 py-1.5 md:px-4 md:py-2 gap-2 md:gap-4 bg-gray-100 dark:border dark:border-gray-700/70 border shadow rounded">

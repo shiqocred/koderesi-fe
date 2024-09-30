@@ -22,6 +22,7 @@ import { KreditSettings } from "./kredit-settings";
 import { LabelSettings } from "./label-settings";
 import { PromoSettings } from "./promo-settings";
 import { useModal } from "@/hooks/use-modal";
+import { CostSettings } from "./cost-settings";
 
 const formSchema = z
   .object({
@@ -82,7 +83,8 @@ export const ClientSettings = () => {
     <div className="flex h-full gap-4 md:gap-6 flex-col w-full max-w-7xl mx-auto">
       <KreditSettings />
       <PromoSettings />
-      <LabelSettings />
+      {/* <LabelSettings /> */}
+      <CostSettings />
     </div>
   );
 };

@@ -8,6 +8,8 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 export const EditPasswordModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -20,7 +22,7 @@ export const EditPasswordModal = () => {
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(
+      await axios.put(
         `https://koderesi.raventech.my.id/api/admin/profile/update-profile`,
         data,
         {
@@ -30,12 +32,17 @@ export const EditPasswordModal = () => {
           },
         }
       );
-      toast.success("Data diri berhasil diupdate");
+      toast.success("Password berhasil diupdate");
       cookies.set("update profile", "1");
       onClose();
     } catch (error) {
       console.log("[ERROR_EDITED_PROFILE]:", error);
-      toast.error("Data diri gagal diupdate");
+      toast.custom(
+        (t) => (
+          <ToastError label="Password gagal diupdate" error={error} t={t} />
+        ),
+        optionToast
+      );
     }
   };
 

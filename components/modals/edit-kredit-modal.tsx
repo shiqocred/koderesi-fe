@@ -109,7 +109,7 @@ export const EditKreditModal = () => {
     body.append("total_credits", inputNew.kredit?.toString() ?? "");
     body.append("price_credit", inputNew.harga?.toString() ?? "");
     body.append("price_one_credit", inputNew.hargaSatuan?.toString() ?? "");
-    body.append("type", inputNew.jenis);
+    body.append("is_popular", `${inputNew.isPopular}`);
 
     try {
       const res = await axios.put(

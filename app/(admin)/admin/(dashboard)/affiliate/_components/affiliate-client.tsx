@@ -134,7 +134,7 @@ const AffiliateClient = () => {
           },
         }
       );
-      setAffiliateReqList(res.data.data ?? []);
+      setAffiliateReqList(res.data.data.data ?? []);
     } catch (error) {
       console.log("[ERROR_GET_AFFILIATE_LIST]:", error);
     } finally {
@@ -173,7 +173,7 @@ const AffiliateClient = () => {
           },
         }
       );
-      setAffiliateWdList(res.data.data ?? []);
+      setAffiliateWdList(res.data.data.data ?? []);
     } catch (error) {
       console.log("[ERROR_GET_AFFILIATE_LIST]:", error);
     } finally {

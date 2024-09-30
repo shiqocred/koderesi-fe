@@ -8,6 +8,8 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 export const DeleteChatModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -38,7 +40,10 @@ export const DeleteChatModal = () => {
       router.refresh();
     } catch (error) {
       console.log("[ERROR_DELETE_Chat]:", error);
-      toast.error("Chat gagal dihapus");
+      toast.custom(
+        (t) => <ToastError label="Chat gagal dihapus" error={error} t={t} />,
+        optionToast
+      );
     }
   };
 

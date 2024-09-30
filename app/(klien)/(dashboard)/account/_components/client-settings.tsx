@@ -266,6 +266,9 @@ export const ClientSettings = () => {
                       name: data.username,
                       email: data.email,
                       phone_number: data.whatsapp,
+                      old_password: data.old_password,
+                      password: data.new_password,
+                      password_confirmation: data.confirm_password,
                     })
                   }
                   className="bg-transparent hover:bg-transparent dark:text-green-400 hover:underline font-normal text-green-700 border dark:border-gray-700 border-gray-400"
@@ -404,6 +407,12 @@ export const ClientSettings = () => {
                       )}
                     </Button>
                   </div>
+                  {data.confirm_password.length > 0 &&
+                    data.new_password !== data.confirm_password && (
+                      <p className="text-red-500 text-xs">
+                        Konfirmasi Password tidak sesuai
+                      </p>
+                    )}
                 </div>
               </div>
 
@@ -413,11 +422,15 @@ export const ClientSettings = () => {
                 </p>
                 <Button
                   type="submit"
+                  disabled={data.new_password !== data.confirm_password}
                   onClick={() =>
                     onOpen("edit-password", {
                       name: data.username,
                       email: data.email,
                       phone_number: data.whatsapp,
+                      old_password: data.old_password,
+                      password: data.new_password,
+                      password_confirmation: data.confirm_password,
                     })
                   }
                   className="bg-transparent hover:bg-transparent dark:text-green-400 hover:underline font-normal text-green-700 border dark:border-gray-700 border-gray-400"

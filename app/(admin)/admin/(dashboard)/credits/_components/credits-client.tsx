@@ -83,8 +83,16 @@ export const CreditsClient = () => {
   const [search, setSearch] = useState(params.get("q") ?? "");
   const searchValue = useDebounce(search);
 
+  const [page, setPage] = useState({
+    current: parseFloat(params.get("page") ?? "1") ?? 1,
+    last: 1,
+    prev: 1,
+    next: 1,
+    total: 1,
+  });
+
   const handleCurrentId = useCallback(
-    (id: string, q: string) => {
+    (id: string, q: string, page: number) => {
       let currentQuery = {};
 
       if (params) {
@@ -95,6 +103,7 @@ export const CreditsClient = () => {
         ...currentQuery,
         q: q,
         currentId: id,
+        page: page,
       };
 
       if (!q || q === "") {
@@ -103,6 +112,10 @@ export const CreditsClient = () => {
 
       if (!id || id === "") {
         delete updateQuery.currentId;
+      }
+
+      if (!page || page === 0) {
+        delete updateQuery.page;
       }
 
       const url = qs.stringifyUrl(
@@ -197,6 +210,15 @@ export const CreditsClient = () => {
         }
       );
       setUserList(res.data.data.data ?? []);
+      setPage({
+        current: res.data.data.current_page,
+        last: res.data.data.last_page,
+        prev: res.data.data.links[0].active ? res.data.data.links[0].label : 1,
+        next: res.data.data.links[res.data.data.data.length - 1].active
+          ? res.data.data.links[res.data.data.data.length - 1].label
+          : 1,
+        total: res.data.data.total,
+      });
     } catch (error) {
       console.log("[ERROR_GET_KREDIT_LIST]:", error);
     } finally {
@@ -264,12 +286,12 @@ export const CreditsClient = () => {
   };
 
   const handleChangeCurrent = (dataId: string) => {
-    handleCurrentId(dataId, search);
+    handleCurrentId(dataId, search, page.current);
     setEditedKredit(false);
   };
 
   useEffect(() => {
-    handleCurrentId(params.get("currentId") ?? "", searchValue);
+    handleCurrentId(params.get("currentId") ?? "", searchValue, page.current);
   }, [searchValue]);
 
   useEffect(() => {
@@ -296,7 +318,11 @@ export const CreditsClient = () => {
 
   useEffect(() => {
     getKreditList();
-    handleCurrentId(params.get("currentId") ?? "", params.get("q") ?? "");
+    handleCurrentId(
+      params.get("currentId") ?? "",
+      params.get("q") ?? "",
+      page.current
+    );
     setIsMounted(true);
   }, []);
 
@@ -360,7 +386,8 @@ export const CreditsClient = () => {
                         className=" hover:bg-gray-200 dark:hover:bg-gray-700 h-6 w-6"
                         variant={"ghost"}
                         onClick={() => {
-                          current.id === item.id && handleCurrentId("", search);
+                          current.id === item.id &&
+                            handleCurrentId("", search, page.current);
                         }}
                       >
                         {current.id === item.id ? (
@@ -393,6 +420,44 @@ export const CreditsClient = () => {
             </div>
           )}
         </Card>
+        <div className="flex w-full items-center justify-between">
+          <div className="flex gap-5 items-center">
+            <p className="text-sm">Total User: {page.total}</p>
+          </div>
+          <div className="flex gap-5 items-center">
+            <p className="text-sm">
+              Page {page.current} of {page.last}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+                onClick={() =>
+                  handleCurrentId(
+                    params.get("currentId") ?? "",
+                    searchValue,
+                    page.prev
+                  )
+                }
+                disabled={page.prev === page.current}
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </Button>
+              <Button
+                className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+                onClick={() =>
+                  handleCurrentId(
+                    params.get("currentId") ?? "",
+                    searchValue,
+                    page.next
+                  )
+                }
+                disabled={page.next === page.current}
+              >
+                <ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="h-full w-full lg:w-1/2 xl:w-3/5 lg:flex-1 xl:flex-auto relative">
         {isUpdating && (

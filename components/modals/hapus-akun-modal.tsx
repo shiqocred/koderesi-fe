@@ -54,15 +54,17 @@ export const HapusAkunModal = () => {
       onClose={onClose}
     >
       <form onSubmit={onDelete} className="flex flex-col">
-        <div className="flex flex-col gap-1">
-          <p>Apakah anda yakin ingin menghapus label ini?</p>
+        <div className="flex flex-col gap-1 mt-4 mb-6">
+          <p className="font-semibold">
+            Apakah anda yakin ingin menghapus label ini?
+          </p>
           <p className="text-sm text-gray-700">
             <span className="font-bold">Data Pribadi</span> dan{" "}
-            <span className="font-bold">sisa Kredit</span> akan dihapus secara
+            <span className="font-bold">Sisa Kredit</span> akan dihapus secara
             permanen
           </p>
         </div>
-        <div className="flex gap-2 mt-10">
+        <div className="flex gap-2">
           <Button
             className="w-full"
             variant={"outline"}

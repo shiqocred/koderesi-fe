@@ -8,6 +8,8 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { optionToast } from "@/lib/utils";
+import { ToastError } from "../toast-error";
 
 export const EditAdminPasswordModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -30,12 +32,17 @@ export const EditAdminPasswordModal = () => {
           },
         }
       );
-      toast.success("Data diri berhasil diupdate");
+      toast.success("Password berhasil diupdate");
       cookies.set("update profile", "1");
       onClose();
     } catch (error) {
       console.log("[ERROR_EDITED_PROFILE]:", error);
-      toast.error("Data diri gagal diupdate");
+      toast.custom(
+        (t) => (
+          <ToastError label="Password gagal diupdate" error={error} t={t} />
+        ),
+        optionToast
+      );
     }
   };
 

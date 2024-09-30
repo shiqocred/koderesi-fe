@@ -1,5 +1,6 @@
 "use client";
 
+import { ToastError } from "@/components/toast-error";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,11 +11,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { cn, formatRupiah } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { cn, formatRupiah, optionToast } from "@/lib/utils";
+import axios from "axios";
+import { AlertCircle, Check, CheckCircle2, Loader } from "lucide-react";
+import { useCookies } from "next-client-cookies";
+import { useRouter } from "next/navigation";
+import { MouseEvent } from "react";
+import { toast } from "sonner";
 
 interface CardPriceProps {
   kredit: number;
+  id: any;
   perKredit: number;
   price: number;
   keterangan: string[];
@@ -23,11 +30,76 @@ interface CardPriceProps {
 
 export const CardPrice = ({
   kredit,
+  id,
   perKredit,
   price,
   keterangan,
   isPopular,
 }: CardPriceProps) => {
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
+  const router = useRouter();
+
+  const handleCheckout = async (e: MouseEvent, id: any) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        `https://koderesi.raventech.my.id/api/admin/transaction/payment`,
+        {
+          package_id: id,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      router.push(`/checkout/${res.data.data.code_transaction}`);
+      toast.promise(
+        new Promise((resolve) =>
+          setTimeout(() => resolve({ name: "Sonner" }), 2000)
+        ),
+        {
+          loading: (
+            <div className="flex items-center gap-2">
+              <Loader className="w-5 h-5 animate-spin" />
+              <div className="text-xs font-semibold">
+                <p>Paket berhasil dipilih,</p>
+                <p>halaman segera dialihkan...</p>
+              </div>
+            </div>
+          ),
+          success: (data) => {
+            return (
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-white fill-green-400" />
+                <div className="text-xs font-semibold">
+                  <p>Paket berhasil diproses,</p>
+                  <p>halaman berhasil dialihkan</p>
+                </div>
+              </div>
+            );
+          },
+          error: (
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-white fill-red-400" />
+              <div className="text-xs font-semibold">
+                <p>Paket gagal diproses,</p>
+                <p>halaman gagal dialihkan</p>
+              </div>
+            </div>
+          ),
+        }
+      );
+    } catch (error) {
+      console.log("[ERROR_PRICE_POST]:", error);
+      toast.custom(
+        (t) => <ToastError label="Paket gagal dipilih" error={error} t={t} />,
+        optionToast
+      );
+    }
+  };
   return (
     <Card
       className={cn(
@@ -69,6 +141,7 @@ export const CardPrice = ({
           {formatRupiah(price)}
         </span>
         <Button
+          onClick={(e) => handleCheckout(e, id)}
           className={cn(
             "w-full transition-all",
             isPopular
