@@ -42,6 +42,7 @@ import { useCookies } from "next-client-cookies";
 import axios from "axios";
 import { toast } from "sonner";
 import { ToastError } from "@/components/toast-error";
+import { useModal } from "@/hooks/use-modal";
 
 enum AffiliateProgress {
   FALSE,
@@ -86,6 +87,7 @@ export const AffiliateClient = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [step, setStep] = useState<string>("false");
   const [data, setData] = useState<any>();
+  const { onOpen } = useModal();
 
   const cookies = useCookies();
   const token = cookies.get("accessToken");
@@ -292,22 +294,22 @@ export const AffiliateClient = () => {
           <Card className="flex flex-col text-sm text-center p-4 space-y-4 w-full">
             <div className="flex flex-col gap-y-1 items-start">
               <Label>Kode affiliasi</Label>
-              <div className="border p-2 rounded-md flex justify-center w-full items-center h-10 tracking-widest font-semibold">
-                AFFILIATEDEWE
+              <div className="border p-2 rounded-md flex justify-center w-full items-center h-10 tracking-widest font-semibold uppercase">
+                {data.referral_code}
               </div>
             </div>
             <Separator className="bg-gray-500 dark:bg-gray-700" />
             <div className="flex flex-col gap-y-1 text-start">
               <div className="border p-2 rounded-md flex justify-between items-center w-full h-10 px-4 font-semibold">
                 <Label>Pendapatan:</Label>
-                <p>{formatRupiah(300000)}</p>
+                <p>{formatRupiah(data.affiliate_earnings)}</p>
               </div>
               <p className="text-xs text-muted-foreground">
                 *Minimum withdraw {formatRupiah(300000)}
               </p>
             </div>
             <Button
-              onClick={onNextStep}
+              onClick={() => onOpen}
               className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-full"
             >
               Withdraw

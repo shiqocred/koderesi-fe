@@ -176,14 +176,10 @@ const PaymentCheckout = () => {
   const handleCheckout = async (e: MouseEvent) => {
     e.preventDefault();
     const body = new FormData();
-    if (
-      method === "ID_DANA" ||
-      method === "ID_SHOPEEPAY" ||
-      method === "ID_OVO"
-    ) {
+    if (method !== "qrcode") {
       body.append("methode_payment", method);
     }
-    if (method === "ID_DANA") {
+    if (method === "ID_OVO") {
       body.append(
         "mobile_number",
         dialPhone.find((item) => item.code === country)?.dial_code + numberPhone
@@ -396,7 +392,7 @@ const PaymentCheckout = () => {
                       </div>
                     ))}
                   </RadioGroup>
-                  {typeMethod === "ewallet" && method === "ID_DANA" && (
+                  {typeMethod === "ewallet" && method === "ID_OVO" && (
                     <div className="space-y-0.5 md:space-y-1 relative w-full md:w-1/2 mt-10">
                       <Label
                         className={cn(
@@ -482,17 +478,17 @@ const PaymentCheckout = () => {
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem
-                value="qris"
+                value="qrcode"
                 className="border border-gray-500 rounded overflow-hidden"
               >
                 <AccordionTrigger
                   className={cn(
                     "px-5",
-                    typeMethod === "qris" ? "bg-green-100" : "bg-transparent"
+                    typeMethod === "qrcode" ? "bg-green-100" : "bg-transparent"
                   )}
                 >
                   <div className="flex items-center gap-2">
-                    {typeMethod === "qris" ? (
+                    {typeMethod === "qrcode" ? (
                       <CheckCircle2 className="w-4 h-4" />
                     ) : (
                       <Circle className="w-4 h-4" />
@@ -506,7 +502,7 @@ const PaymentCheckout = () => {
                     value={method}
                     onValueChange={(e) => {
                       setMethod(e);
-                      setTypeMethod("qris");
+                      setTypeMethod("qrcode");
                     }}
                   >
                     <div className="flex items-center w-full">

@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
+  ChevronLeft,
+  ChevronRight,
   DatabaseBackupIcon,
   LayoutGrid,
   LayoutList,
@@ -51,27 +53,26 @@ const TracksAdminClient = () => {
   const [layout, setLayout] = useState(params.get("view") ?? "list");
   const [dataSearch, setDataSearch] = useState("");
   const searchValue = useDebounce(dataSearch);
+  const [page, setPage] = useState({
+    current: parseFloat(params.get("q") ?? "1") ?? 1,
+    last: 1,
+    prev: 1,
+    next: 1,
+    total: 1,
+  });
   const [isUpdateList, setIsUpdateList] = useState<boolean>(false);
 
   const getResiList = async () => {
     try {
       setIsUpdateList(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/waybill${
-          filter
-            ? filter !== "semua"
-              ? filter === "on_progress"
-                ? "?f=on-progress"
-                : filter === "delivered"
-                ? "?f=delivered"
-                : ""
-              : ""
+        `https://koderesi.raventech.my.id/api/admin/waybill?filter=${
+          filter === "on_progress"
+            ? "?f=on-progress"
+            : filter === "delivered"
+            ? "?f=delivered"
             : ""
-        }${search && (!filter || filter === "semua") ? "?q=" + search : ""}${
-          search && (filter === "on_progress" || filter === "delivered")
-            ? "&q=" + search
-            : ""
-        }`,
+        }&q=${search}&page=${page.current}`,
         {
           headers: {
             Accept: "application/json",
@@ -79,7 +80,17 @@ const TracksAdminClient = () => {
           },
         }
       );
-      setListResi(res.data.data);
+      const data = res.data.data;
+      setListResi(data.data);
+      setPage({
+        current: data.current_page,
+        last: data.last_page,
+        prev: data.links[0].active && data.links[0].label,
+        next:
+          data.links[data.data.length - 1].active &&
+          data.links[data.data.length - 1].label,
+        total: data.total,
+      });
     } catch (error) {
       console.log("[ERROR_GET_NEWUSER_DASHBOARD]:", error);
     } finally {
@@ -88,7 +99,7 @@ const TracksAdminClient = () => {
   };
 
   const handleSetParams = useCallback(
-    (f: string, s: string, l: string) => {
+    (f: string, s: string, l: string, p: number) => {
       setSearch(s);
       setLayout(l);
       let currentQuery = {};
@@ -102,6 +113,7 @@ const TracksAdminClient = () => {
         view: l,
         filter: f,
         search: s,
+        page: p,
       };
 
       if (!s) {
@@ -112,6 +124,9 @@ const TracksAdminClient = () => {
       }
       if (!l || l === "list") {
         delete updateQuery.view;
+      }
+      if (!p || p === 0) {
+        delete updateQuery.page;
       }
 
       const url = qs.stringifyUrl(
@@ -128,7 +143,7 @@ const TracksAdminClient = () => {
   );
 
   useEffect(() => {
-    handleSetParams(filter, searchValue, layout);
+    handleSetParams(filter, searchValue, layout, page.current);
   }, [searchValue]);
 
   useEffect(() => {
@@ -140,7 +155,8 @@ const TracksAdminClient = () => {
     handleSetParams(
       params.get("filter") ?? "",
       params.get("search") ?? "",
-      params.get("view") ?? "list"
+      params.get("view") ?? "list",
+      parseFloat(params.get("page") ?? "1") ?? 1
     );
     setDataSearch(params.get("search") ?? "");
   }, []);
@@ -169,7 +185,7 @@ const TracksAdminClient = () => {
           <div className="flex w-full lg:w-auto border-green-200 dark:border-green-200/40 border rounded-md hover:border-green-400 dark:hover:border-green-400">
             <Button
               onClick={(e) => {
-                handleSetParams("semua", search, layout);
+                handleSetParams("semua", search, layout, page.current);
                 setFilter("semua");
               }}
               className={cn(
@@ -183,7 +199,7 @@ const TracksAdminClient = () => {
             </Button>
             <Button
               onClick={(e) => {
-                handleSetParams("on_progress", search, layout);
+                handleSetParams("on_progress", search, layout, page.current);
                 setFilter("on_progress");
               }}
               className={cn(
@@ -197,7 +213,7 @@ const TracksAdminClient = () => {
             </Button>
             <Button
               onClick={(e) => {
-                handleSetParams("delivered", search, layout);
+                handleSetParams("delivered", search, layout, page.current);
                 setFilter("delivered");
               }}
               className={cn(
@@ -213,7 +229,7 @@ const TracksAdminClient = () => {
           <div className="md:flex hidden border-green-200 border rounded-md hover:border-green-400">
             <Button
               onClick={(e) => {
-                handleSetParams(filter, search, "list");
+                handleSetParams(filter, search, "list", page.current);
                 setLayout("list");
               }}
               className={cn(
@@ -227,7 +243,7 @@ const TracksAdminClient = () => {
             </Button>
             <Button
               onClick={(e) => {
-                handleSetParams(filter, search, "grid");
+                handleSetParams(filter, search, "grid", page.current);
                 setLayout("grid");
               }}
               className={cn(
@@ -280,6 +296,36 @@ const TracksAdminClient = () => {
           No Data Found.
         </Card>
       )}
+      <div className="flex w-full items-center justify-between">
+        <div className="flex gap-5 items-center">
+          <p className="text-sm">Total Waybill: {page.total}</p>
+        </div>
+        <div className="flex gap-5 items-center">
+          <p className="text-sm">
+            Page {page.current} of {page.last}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+              onClick={() =>
+                handleSetParams(filter, searchValue, layout, page.prev)
+              }
+              disabled={page.prev === page.current}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+            <Button
+              className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+              onClick={() =>
+                handleSetParams(filter, searchValue, layout, page.next)
+              }
+              disabled={page.next === page.current}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 };
