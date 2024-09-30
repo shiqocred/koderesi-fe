@@ -8,6 +8,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import {
   InputOTP,
@@ -16,78 +23,52 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useDebounce } from "@/hooks/use-debounce";
+import { dialPhone } from "@/lib/dial";
 import { cn, formatRupiah } from "@/lib/utils";
+import axios from "axios";
 import { CheckCircle2, ChevronDown, Circle, QrCode, Slash } from "lucide-react";
+import { useCookies } from "next-client-cookies";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import React, { FormEvent, MouseEvent, useEffect, useState } from "react";
 
 const paymentVA = [
   {
     id: 1,
-    label: "Bank BCA",
-    value: "bca",
-    image: "/images/payment-method/bca.png",
-  },
-  {
-    id: 2,
     label: "Bank BNI",
-    value: "bni",
+    value: "BNI",
     image: "/images/payment-method/bni.png",
   },
   {
-    id: 3,
+    id: 2,
     label: "Bank BRI",
-    value: "bri",
+    value: "BRI",
     image: "/images/payment-method/bri.png",
   },
   {
-    id: 4,
+    id: 3,
     label: "Bank BSI",
-    value: "bsi",
+    value: "BSI",
     image: "/images/payment-method/bsi.png",
   },
   {
-    id: 5,
+    id: 4,
     label: "Bank Mandiri",
-    value: "mandiri",
+    value: "MANDIRI",
     image: "/images/payment-method/mandiri.png",
   },
   {
-    id: 6,
-    label: "Bank BJB",
-    value: "bjb",
-    image: "/images/payment-method/bjb.png",
-  },
-  {
-    id: 7,
-    label: "Bank CIMB Niaga",
-    value: "cimbniaga",
-    image: "/images/payment-method/cimbniaga.png",
-  },
-  {
-    id: 8,
-    label: "Bank DBS",
-    value: "dbs",
-    image: "/images/payment-method/dbs.png",
-  },
-  {
-    id: 9,
-    label: "Bank Neobank",
-    value: "neobank",
-    image: "/images/payment-method/neobank.png",
-  },
-  {
-    id: 10,
+    id: 5,
     label: "Bank Permata",
-    value: "permatabank",
+    value: "PERMATA",
     image: "/images/payment-method/permatabank.png",
-  },
-  {
-    id: 11,
-    label: "Bank Sampoerna",
-    value: "bss",
-    image: "/images/payment-method/bss.png",
   },
 ];
 const paymentOTC = [
@@ -114,43 +95,133 @@ const paymentEWallet = [
   {
     id: 1,
     label: "Dana",
-    value: "dana",
+    value: "ID_DANA",
     image: "/images/payment-method/dana.png",
   },
   {
     id: 2,
     label: "OVO",
-    value: "ovo",
+    value: "ID_OVO",
     image: "/images/payment-method/ovo.png",
   },
   {
     id: 3,
     label: "ShopeePay",
-    value: "shopeePay",
+    value: "ID_SHOPEEPAY",
     image: "/images/payment-method/shopee-pay.png",
-  },
-  {
-    id: 5,
-    label: "LinkAja",
-    value: "linkaja",
-    image: "/images/payment-method/linkaja.png",
   },
 ];
 
 const PaymentCheckout = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const [refferal, setRefferal] = useState("");
-  const [creditCard, setCreditCard] = useState({
-    name: "",
-    numberCard: "",
-    expDate: "",
-    cvv: "",
-  });
+  const [isCountry, setIsCountry] = useState(false);
+  const { paymentId } = useParams();
+  const [numberPhone, setNumberPhone] = useState("");
+  const [country, setCountry] = useState("ID");
+  const cookies = useCookies();
+  const token = cookies.get("accessToken");
   const [method, setMethod] = useState("");
+  const value = useDebounce(numberPhone);
   const [typeMethod, setTypeMethod] = useState("");
+  const [data, setData] = useState<{
+    id: string;
+    code_transaction: string;
+    amount_bill: number;
+    amount_credit: number;
+    referral_code: string;
+    category: string;
+  }>({
+    id: "",
+    code_transaction: "",
+    amount_bill: 0,
+    amount_credit: 0,
+    referral_code: "",
+    category: "",
+  });
+
+  const handleGetPromo = async () => {
+    try {
+      const res = await axios.get(
+        `https://koderesi.raventech.my.id/api/admin/transaction/show/${paymentId}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setData(res.data.data);
+    } catch (error) {
+      console.log("[ERROR_CHECKOUT_GET]:", error);
+    }
+  };
+  const handleCekRefferal = async (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        `https://koderesi.raventech.my.id/api/admin/transaction/checkAffiliate`,
+        { referral_code: data.referral_code },
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log("[ERROR_REFFERAL_CHECK]:", error);
+    }
+  };
+  const handleCheckout = async (e: MouseEvent) => {
+    e.preventDefault();
+    const body = new FormData();
+    if (
+      method === "ID_DANA" ||
+      method === "ID_SHOPEEPAY" ||
+      method === "ID_OVO"
+    ) {
+      body.append("methode_payment", method);
+    }
+    if (method === "ID_DANA") {
+      body.append(
+        "mobile_number",
+        dialPhone.find((item) => item.code === country)?.dial_code + numberPhone
+      );
+    }
+    body.append("channel", typeMethod);
+    try {
+      const res = await axios.put(
+        `https://koderesi.raventech.my.id/api/admin/transaction/checkout/${data.id}`,
+        body,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log("[ERROR_CHECKOUT]:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (paymentId) {
+      handleGetPromo();
+    }
+  }, [paymentId]);
+
+  useEffect(() => {
+    if (value.startsWith("0")) {
+      setNumberPhone((prev) => prev.replace(/^0+/, ""));
+    }
+  }, [value]);
 
   useEffect(() => {
     setIsMounted(true);
+    handleGetPromo();
   }, []);
 
   if (!isMounted) {
@@ -165,7 +236,7 @@ const PaymentCheckout = () => {
               Metode Pembayaran
             </h3>
           </div>
-          <form className="flex flex-col gap-6 mt-8">
+          <div className="flex flex-col gap-6 mt-8">
             <Accordion
               type="single"
               className="flex flex-col w-full gap-4"
@@ -256,11 +327,11 @@ const PaymentCheckout = () => {
                 <AccordionTrigger
                   className={cn(
                     "px-5",
-                    typeMethod === "eWallet" ? "bg-green-100" : "bg-transparent"
+                    typeMethod === "ewallet" ? "bg-green-100" : "bg-transparent"
                   )}
                 >
                   <div className="flex items-center gap-2">
-                    {typeMethod === "eWallet" ? (
+                    {typeMethod === "ewallet" ? (
                       <CheckCircle2 className="w-4 h-4" />
                     ) : (
                       <Circle className="w-4 h-4" />
@@ -269,7 +340,7 @@ const PaymentCheckout = () => {
                     <p
                       className={cn(
                         "bg-green-300 text-black text-xs px-3 py-0.5 rounded-full",
-                        typeMethod === "eWallet" &&
+                        typeMethod === "ewallet" &&
                           !!method &&
                           paymentEWallet.find((item) => item.value === method)
                             ?.label
@@ -293,7 +364,7 @@ const PaymentCheckout = () => {
                     value={method}
                     onValueChange={(e) => {
                       setMethod(e);
-                      setTypeMethod("eWallet");
+                      setTypeMethod("ewallet");
                     }}
                   >
                     {paymentEWallet.map((item) => (
@@ -325,6 +396,89 @@ const PaymentCheckout = () => {
                       </div>
                     ))}
                   </RadioGroup>
+                  {typeMethod === "ewallet" && method === "ID_DANA" && (
+                    <div className="space-y-0.5 md:space-y-1 relative w-full md:w-1/2 mt-10">
+                      <Label
+                        className={cn(
+                          "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
+                          numberPhone.length === 0
+                            ? "translate-y-3.5 left-[120px] font-normal"
+                            : "-translate-y-3 left-28 font-semibold"
+                        )}
+                        htmlFor={"number_phone"}
+                      >
+                        Number Phone
+                      </Label>
+                      <Input
+                        value={numberPhone}
+                        onChange={(e) => setNumberPhone(e.target.value)}
+                        type="number"
+                        id={"number_phone"}
+                        className="peer-hover:border-green-400 pl-28 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+                      />
+                      <Popover open={isCountry} onOpenChange={setIsCountry}>
+                        <PopoverTrigger asChild>
+                          <button className="absolute bottom-2 flex items-center gap-2 px-2 w-28 justify-between">
+                            <div className="flex gap-1 items-center">
+                              <div className="w-8 aspect-[3/2] rounded overflow-hidden relative border shadow">
+                                <Image
+                                  src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${
+                                    dialPhone.find(
+                                      (item) => item.code === country
+                                    )?.code ?? "ID"
+                                  }.svg`}
+                                  alt="Country"
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <p className="text-xs font-medium">
+                                {dialPhone.find((item) => item.code === country)
+                                  ?.dial_code ?? "+62"}
+                              </p>
+                            </div>
+                            <ChevronDown className="w-3 h-3" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-0" align={"start"}>
+                          <Command>
+                            <CommandInput />
+                            <CommandGroup>
+                              <CommandList>
+                                {dialPhone.map((item) => (
+                                  <CommandItem
+                                    key={item.code}
+                                    className="justify-between gap-3"
+                                    onSelect={() => {
+                                      setCountry(item.code);
+                                      setIsCountry(false);
+                                    }}
+                                  >
+                                    <div className="flex items-center gap-2 overflow-hidden w-full">
+                                      <div className="w-8 aspect-[3/2] rounded overflow-hidden relative">
+                                        <Image
+                                          src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${item.code}.svg`}
+                                          alt="Country"
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      </div>
+                                      <p className="overflow-hidden text-xs w-full text-ellipsis whitespace-nowrap">
+                                        {item.name}
+                                      </p>
+                                    </div>
+                                    <p className="flex-none text-xs font-semibold">
+                                      {item.dial_code}
+                                    </p>
+                                  </CommandItem>
+                                ))}
+                              </CommandList>
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  )}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem
@@ -384,15 +538,7 @@ const PaymentCheckout = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <div>
-              <Button
-                type="submit"
-                className="bg-green-400 hover:bg-green-400/80 text-black"
-              >
-                Lanjutkan Pembayaran
-              </Button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
       <div className="w-full">
@@ -402,43 +548,63 @@ const PaymentCheckout = () => {
               Rincian Pembayaran
             </h3>
           </div>
-          <div className="flex w-full gap-4 mt-8">
+          <form onSubmit={handleCekRefferal} className="flex w-full gap-4 mt-8">
             <div className="space-y-0.5 md:space-y-1 relative w-full">
               <Label
                 className={cn(
                   "absolute transition-all text-gray-700 dark:text-white/70 text-sm",
-                  refferal.length === 0
+                  !data.referral_code ||
+                    (data.referral_code && data.referral_code.length === 0)
                     ? "translate-y-3.5 left-3 font-normal"
                     : "-translate-y-3 left-0 font-semibold"
                 )}
               >
                 Kode Refferal
               </Label>
-              <Input className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full" />
+              <Input
+                value={data.referral_code}
+                onChange={(e) =>
+                  setData((prev) => ({
+                    ...prev,
+                    referral_code: e.target.value,
+                  }))
+                }
+                className="peer-hover:border-green-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 border-green-400 focus-visible:border-green-400 placeholder:text-gray-500 hover:border-green-500 dark:border-green-200/40 dark:focus-visible:border-green-400 dark:hover:border-green-400 border-0 rounded-none border-b bg-transparent dark:bg-transparent w-full"
+              />
             </div>
-            <Button className="bg-green-400/80 hover:bg-green-400 text-black h-9">
+            <Button
+              type="submit"
+              className="bg-green-400/80 hover:bg-green-400 text-black h-9"
+            >
               Check Kode
             </Button>
-          </div>
+          </form>
           <div className="mt-14 flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
                 <p>Category</p>
-                <p className="bg-gray-300 px-5 rounded-full py-0.5 text-sm">
-                  Promo
+                <p className="bg-gray-300 px-5 rounded-full py-0.5 text-sm capitalize">
+                  {data.category}
                 </p>
               </div>
               <div className="flex justify-between">
-                <p>300 Kredit</p>
-                <p>{formatRupiah(300000)}</p>
+                <p>{data.amount_credit} Kredit</p>
+                <p>{formatRupiah(data.amount_bill)}</p>
               </div>
               <div className="w-full h-[1px] bg-black my-2" />
               <div className="flex justify-between">
                 <p className="font-bold uppercase">Total</p>
-                <p className="font-bold">{formatRupiah(330000)}</p>
+                <p className="font-bold">{formatRupiah(data.amount_bill)}</p>
               </div>
             </div>
           </div>
+          <Button
+            type="button"
+            onClick={handleCheckout}
+            className="bg-green-400 hover:bg-green-400/80 text-black w-full mt-8"
+          >
+            Lanjutkan Pembayaran
+          </Button>
         </div>
       </div>
     </div>

@@ -41,7 +41,7 @@ export const ClientSettings = () => {
   const handleGetProfile = async () => {
     try {
       const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/admin/profile",
+        "https://koderesi.raventech.my.id/api/superadmin/profile",
         {
           headers: {
             Accept: "application/json",
@@ -55,7 +55,7 @@ export const ClientSettings = () => {
         email: res.data.data.email ?? "",
         whatsapp: res.data.data.phone_number ?? "",
       }));
-      setImageUrl(res.data.data.image_url);
+      setImageUrl(res.data.data.image);
     } catch (error) {
       console.log("[ERROR_GET_Profile]:", error);
     }
@@ -69,7 +69,7 @@ export const ClientSettings = () => {
     }
     try {
       const res = await axios.post(
-        "https://koderesi.raventech.my.id/api/admin/profile/update-image",
+        "https://koderesi.raventech.my.id/api/superadmin/profile/update-image",
         body,
         {
           headers: {
@@ -129,7 +129,12 @@ export const ClientSettings = () => {
               )}
               {imageUrl && !image && (
                 <div className="relative aspect-square overflow-hidden rounded-md w-20">
-                  <Image src={imageUrl} className="object-cover" fill alt="" />
+                  <Image
+                    src={`https://koderesi.raventech.my.id/${imageUrl}`}
+                    className="object-cover"
+                    fill
+                    alt=""
+                  />
                 </div>
               )}
               {(imageUrl || !imageUrl) && image && (
@@ -414,7 +419,7 @@ export const ClientSettings = () => {
                 <Button
                   type="submit"
                   onClick={() =>
-                    onOpen("edit-password", {
+                    onOpen("edit-admin-password", {
                       name: data.username,
                       email: data.email,
                       phone_number: data.whatsapp,

@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  ChevronLeft,
+  ChevronRight,
   DatabaseBackupIcon,
   LayoutGrid,
   LayoutList,
@@ -70,6 +72,13 @@ const TracksClient = () => {
   const [dataSearch, setDataSearch] = useState("");
   const searchValue = useDebounce(dataSearch);
   const [isUpdateList, setIsUpdateList] = useState<boolean>(false);
+  const [page, setPage] = useState({
+    current: parseFloat(params.get("page") ?? "1") ?? 1,
+    last: 1,
+    prev: 1,
+    next: 1,
+    total: 1,
+  });
 
   const getResiList = async () => {
     try {
@@ -97,8 +106,21 @@ const TracksClient = () => {
           },
         }
       );
-      setListResi(res.data.data.waybill);
+      setListResi(res.data.data.waybill.data);
       setTotal(res.data.data.total);
+      setPage({
+        current: res.data.data.waybill.current_page,
+        last: res.data.data.waybill.last_page,
+        prev: res.data.data.waybill.links[0].active
+          ? res.data.data.waybill.links[0].label
+          : 1,
+        next: res.data.data.waybill.links[res.data.data.waybill.data.length - 1]
+          .active
+          ? res.data.data.waybill.links[res.data.data.waybill.data.length - 1]
+              .label
+          : 1,
+        total: res.data.data.waybill.total,
+      });
     } catch (error) {
       console.log("[ERROR_GET_NEWUSER_DASHBOARD]:", error);
     } finally {
@@ -107,7 +129,7 @@ const TracksClient = () => {
   };
 
   const handleSetParams = useCallback(
-    (f: string, s: string, l: string) => {
+    (f: string, s: string, l: string, page: number) => {
       setSearch(s);
       setLayout(l);
       let currentQuery = {};
@@ -121,6 +143,7 @@ const TracksClient = () => {
         view: l,
         filter: f,
         search: s,
+        page: page,
       };
 
       if (!s) {
@@ -132,6 +155,9 @@ const TracksClient = () => {
       if (!l || l === "list") {
         delete updateQuery.view;
       }
+      if (!page || page === 0) {
+        delete updateQuery.page;
+      }
 
       const url = qs.stringifyUrl(
         {
@@ -141,13 +167,13 @@ const TracksClient = () => {
         { skipNull: true }
       );
 
-      router.push(url);
+      router.push(url, { scroll: false });
     },
     [params, router]
   );
 
   useEffect(() => {
-    handleSetParams(filter, searchValue, layout);
+    handleSetParams(filter, searchValue, layout, page.current);
   }, [searchValue]);
 
   useEffect(() => {
@@ -159,7 +185,8 @@ const TracksClient = () => {
     handleSetParams(
       params.get("filter") ?? "",
       params.get("search") ?? "",
-      params.get("view") ?? "list"
+      params.get("view") ?? "list",
+      parseFloat(params.get("page") ?? "1") ?? 1
     );
     setDataSearch(params.get("search") ?? "");
   }, []);
@@ -221,7 +248,7 @@ const TracksClient = () => {
             <div className="flex w-full lg:w-auto border-green-200 dark:border-green-200/40 border rounded-md hover:border-green-400 dark:hover:border-green-400">
               <Button
                 onClick={(e) => {
-                  handleSetParams("semua", search, layout);
+                  handleSetParams("semua", search, layout, page.current);
                   setFilter("semua");
                 }}
                 className={cn(
@@ -235,7 +262,7 @@ const TracksClient = () => {
               </Button>
               <Button
                 onClick={(e) => {
-                  handleSetParams("on_progress", search, layout);
+                  handleSetParams("on_progress", search, layout, page.current);
                   setFilter("on_progress");
                 }}
                 className={cn(
@@ -249,7 +276,7 @@ const TracksClient = () => {
               </Button>
               <Button
                 onClick={(e) => {
-                  handleSetParams("delivered", search, layout);
+                  handleSetParams("delivered", search, layout, page.current);
                   setFilter("delivered");
                 }}
                 className={cn(
@@ -265,7 +292,7 @@ const TracksClient = () => {
             <div className="md:flex hidden border-green-200 border rounded-md hover:border-green-400">
               <Button
                 onClick={(e) => {
-                  handleSetParams(filter, search, "list");
+                  handleSetParams(filter, search, "list", page.current);
                   setLayout("list");
                 }}
                 className={cn(
@@ -279,7 +306,7 @@ const TracksClient = () => {
               </Button>
               <Button
                 onClick={(e) => {
-                  handleSetParams(filter, search, "grid");
+                  handleSetParams(filter, search, "grid", page.current);
                   setLayout("grid");
                 }}
                 className={cn(
@@ -334,6 +361,36 @@ const TracksClient = () => {
             No Data Found.
           </Card>
         )}
+        <div className="flex w-full items-center justify-between">
+          <div className="flex gap-5 items-center">
+            <p className="text-sm">Total Waybill: {page.total}</p>
+          </div>
+          <div className="flex gap-5 items-center">
+            <p className="text-sm">
+              Page {page.current} of {page.last}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+                onClick={() =>
+                  handleSetParams(filter, searchValue, layout, page.prev)
+                }
+                disabled={page.prev === page.current}
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </Button>
+              <Button
+                className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+                onClick={() =>
+                  handleSetParams(filter, searchValue, layout, page.next)
+                }
+                disabled={page.next === page.current}
+              >
+                <ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
       </Card>
     </>
   );

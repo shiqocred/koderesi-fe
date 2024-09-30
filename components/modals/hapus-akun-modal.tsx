@@ -53,22 +53,31 @@ export const HapusAkunModal = () => {
       isOpen={isModalOpen}
       onClose={onClose}
     >
-      <div className="flex gap-2 flex-col">
-        <div className="flex flex-col">
-          <p>Apakah andayakin ingin menghapus label ini?</p>
+      <form onSubmit={onDelete} className="flex flex-col">
+        <div className="flex flex-col gap-1 mt-4 mb-6">
+          <p className="font-semibold">
+            Apakah anda yakin ingin menghapus label ini?
+          </p>
           <p className="text-sm text-gray-700">
-            Data Pribadi dan sisa Kredit akan dihapus secara permanen
+            <span className="font-bold">Data Pribadi</span> dan{" "}
+            <span className="font-bold">Sisa Kredit</span> akan dihapus secara
+            permanen
           </p>
         </div>
         <div className="flex gap-2">
-          <Button className="w-full" variant={"outline"} onClick={onClose}>
+          <Button
+            className="w-full"
+            variant={"outline"}
+            type="button"
+            onClick={onClose}
+          >
             Batal
           </Button>
-          <Button variant={"destructive"} onClick={onClose}>
+          <Button variant={"destructive"} type="submit">
             Hapus
           </Button>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 };

@@ -19,11 +19,15 @@ import { useModal } from "@/hooks/use-modal";
 import { cn, formatTanggalWaktu } from "@/lib/utils";
 import axios from "axios";
 import {
+  ArrowUpDown,
   Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   DatabaseBackupIcon,
   Edit,
   Eye,
+  Filter,
   ListFilter,
   MoreHorizontal,
   Search,
@@ -55,12 +59,21 @@ export interface UserListProps {
 export const UsersClient = () => {
   const { onOpen } = useModal();
   const [open, setOpen] = useState(false);
+  const [openFilter, setOpenFilter] = useState(false);
   const params = useSearchParams();
   const router = useRouter();
   const [search, setSearch] = useState(params.get("q") ?? "");
-  const [sort, setSort] = useState(params.get("f") ?? "date");
+  const [sort, setSort] = useState(params.get("s") ?? "date");
+  const [filter, setFilter] = useState(params.get("f") ?? "");
   const debounceValue = useDebounce(search);
   const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [page, setPage] = useState({
+    current: parseFloat(params.get("q") ?? "1") ?? 1,
+    last: 1,
+    prev: 1,
+    next: 1,
+    total: 1,
+  });
 
   const [userList, setUserList] = useState<UserListProps[]>([
     {
@@ -82,8 +95,7 @@ export const UsersClient = () => {
   const token = cookies.get("accessToken");
 
   const handleCurrentId = useCallback(
-    (q: string, f: string) => {
-      // setFilter(f);
+    (q: string, s: string, f: string, page: number) => {
       let currentQuery = {};
 
       if (params) {
@@ -93,14 +105,22 @@ export const UsersClient = () => {
       const updateQuery: any = {
         ...currentQuery,
         q: q,
+        s: s,
         f: f,
+        page: page,
       };
 
       if (!q || q === "") {
         delete updateQuery.q;
       }
+      if (!s || s === "") {
+        delete updateQuery.s;
+      }
       if (!f || f === "") {
         delete updateQuery.f;
+      }
+      if (!page || page === 0) {
+        delete updateQuery.page;
       }
 
       const url = qs.stringifyUrl(
@@ -111,7 +131,7 @@ export const UsersClient = () => {
         { skipNull: true }
       );
 
-      router.push(url);
+      router.push(url, { scroll: false });
     },
     [params, router]
   );
@@ -139,14 +159,25 @@ export const UsersClient = () => {
           },
         }
       );
-      setUserList(res.data.data.data);
+      const data = res.data.data;
+      setUserList(data.data);
+      console.log(data);
+      setPage({
+        current: data.current_page,
+        last: data.last_page,
+        prev: data.links[0].active && data.links[0].label,
+        next:
+          data.links[data.data.length - 1].active &&
+          data.links[data.data.length - 1].label,
+        total: data.total,
+      });
     } catch (error) {
       console.log("[ERROR_GET_NEWUSER_DASHBOARD]:", error);
     }
   };
 
   useEffect(() => {
-    handleCurrentId(debounceValue, sort);
+    handleCurrentId(debounceValue, sort, filter, page.current);
   }, [debounceValue, sort]);
 
   useEffect(() => {
@@ -181,17 +212,61 @@ export const UsersClient = () => {
           />
         </div>
         <div className="flex gap-2 md:gap-4 w-full md:w-auto">
+          <Popover open={openFilter} onOpenChange={setOpenFilter}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className="capitalize justify-between bg-transparent border-green-200 border dark:border-green-200/40 hover:border-green-400 dark:hover:border-green-400 hover:bg-transparent"
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filter
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="p-0 w-48" align="start">
+              <Command>
+                <CommandList>
+                  <CommandGroup>
+                    <CommandItem
+                      onSelect={() => {
+                        setFilter("");
+                        setOpenFilter(!openFilter);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "w-4 h-4 mr-2 opacity-0",
+                          filter === "" && "opacity-100"
+                        )}
+                      />
+                      Default
+                    </CommandItem>
+                    <CommandItem
+                      onSelect={() => {
+                        setFilter("affiliate");
+                        setOpenFilter(!openFilter);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "w-4 h-4 mr-2 opacity-0",
+                          filter === "affiliate" && "opacity-100"
+                        )}
+                      />
+                      Affiliate
+                    </CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
-                className="w-full md:w-52 capitalize justify-between bg-transparent border-green-200 border dark:border-green-200/40 hover:border-green-400 dark:hover:border-green-400 hover:bg-transparent"
+                className="capitalize justify-between bg-transparent border-green-200 border dark:border-green-200/40 hover:border-green-400 dark:hover:border-green-400 hover:bg-transparent"
               >
-                <div className="flex items-center">
-                  <ListFilter className="w-5 h-5 mr-2" />
-                  {sort === "date" ? `Menurut Tanggal` : "Menurut Nama"}
-                </div>
-                <ChevronDown className="w-4 h-4 ml-2" />
+                <ArrowUpDown className="w-4 h-4 mr-2" />
+                Urutkan
               </Button>
             </PopoverTrigger>
             <PopoverContent className="p-0 w-48" align="start">
@@ -210,7 +285,7 @@ export const UsersClient = () => {
                           sort === "name" && "opacity-100"
                         )}
                       />
-                      Menurut name
+                      Menurut nama
                     </CommandItem>
                     <CommandItem
                       onSelect={() => {
@@ -254,6 +329,36 @@ export const UsersClient = () => {
           No Data Found.
         </Card>
       )}
+      <div className="flex w-full items-center justify-between">
+        <div className="flex gap-5 items-center">
+          <p className="text-sm">Total User: {page.total}</p>
+        </div>
+        <div className="flex gap-5 items-center">
+          <p className="text-sm">
+            Page {page.current} of {page.last}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+              onClick={() =>
+                handleCurrentId(debounceValue, sort, filter, page.prev)
+              }
+              disabled={page.prev === page.current}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+            <Button
+              className="p-0 h-9 w-9 bg-green-400/80 hover:bg-green-400 text-black"
+              onClick={() =>
+                handleCurrentId(debounceValue, sort, filter, page.next)
+              }
+              disabled={page.next === page.current}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 };

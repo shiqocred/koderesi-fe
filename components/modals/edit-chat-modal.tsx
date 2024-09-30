@@ -11,8 +11,9 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { cn } from "@/lib/utils";
+import { cn, optionToast } from "@/lib/utils";
 import { Textarea } from "../ui/textarea";
+import { ToastError } from "../toast-error";
 
 export const EditChatModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -46,12 +47,15 @@ export const EditChatModal = () => {
           },
         }
       );
-      toast.success("Chat edited successed.");
+      toast.success("Chat berhasil di edit.");
       cookies.set("chat updated", "1");
       onClose();
       router.refresh();
     } catch (error) {
-      toast.success("Chat edited failed.");
+      toast.custom(
+        (t) => <ToastError label="Chat gagal di edit" error={error} t={t} />,
+        optionToast
+      );
       console.log("[ERROR_EDITED_CHAT]:", error);
     }
   };

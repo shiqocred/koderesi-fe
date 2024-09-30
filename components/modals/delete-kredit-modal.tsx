@@ -8,6 +8,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 export const DeleteKreditModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -33,7 +35,12 @@ export const DeleteKreditModal = () => {
       cookies.set("kredit updated", "1");
       onClose();
     } catch (error) {
-      toast.success("Harga Kredit Gagal Dihapus");
+      toast.custom(
+        (t) => (
+          <ToastError label="Harga Kredit Gagal Dihapus" error={error} t={t} />
+        ),
+        optionToast
+      );
       console.log("[ERROR_KREDIT_DELETE]:", error);
     }
   };

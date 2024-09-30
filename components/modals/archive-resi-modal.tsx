@@ -8,6 +8,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 export const ArchiveResiModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -36,7 +38,10 @@ export const ArchiveResiModal = () => {
       router.push("/archives");
     } catch (error) {
       console.log("[ERROR_ARCHIVE_RESI]:", error);
-      toast.error("Resi gagal diarsipkan");
+      toast.custom(
+        (t) => <ToastError label="Resi gagal diarsipkan" error={error} t={t} />,
+        optionToast
+      );
     }
   };
 

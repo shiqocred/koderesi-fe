@@ -8,6 +8,8 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 export const EditPersonalModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -20,7 +22,7 @@ export const EditPersonalModal = () => {
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(
+      await axios.put(
         `https://koderesi.raventech.my.id/api/admin/profile/update-profile`,
         data,
         {
@@ -35,7 +37,12 @@ export const EditPersonalModal = () => {
       onClose();
     } catch (error) {
       console.log("[ERROR_EDITED_PROFILE]:", error);
-      toast.error("Data diri gagal diupdate");
+      toast.custom(
+        (t) => (
+          <ToastError label="Data diri gagal diupdate" error={error} t={t} />
+        ),
+        optionToast
+      );
     }
   };
 

@@ -8,6 +8,8 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { ToastError } from "../toast-error";
+import { optionToast } from "@/lib/utils";
 
 export const DeleteTicketModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -34,7 +36,10 @@ export const DeleteTicketModal = () => {
       router.push("/admin/contacts");
     } catch (error) {
       console.log("[ERROR_DELETE_TICKET]:", error);
-      toast.error("Ticket gagal dihapus");
+      toast.custom(
+        (t) => <ToastError label="Ticket gagal dihapus" error={error} t={t} />,
+        optionToast
+      );
     }
   };
 

@@ -194,7 +194,7 @@ const ResetPasswordPage = () => {
                           : "-translate-y-3 left-0 font-semibold"
                       )}
                     >
-                      Paswword Baru
+                      Password Baru
                     </FormLabel>
                     <FormControl>
                       <div className="relative flex items-center peer">
@@ -237,7 +237,7 @@ const ResetPasswordPage = () => {
                           : "-translate-y-3 left-0 font-semibold"
                       )}
                     >
-                      Konfirmasi Paswword Baru
+                      Konfirmasi Password Baru
                     </FormLabel>
                     <FormControl>
                       <div className="relative flex items-center peer">
