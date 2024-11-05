@@ -9,6 +9,7 @@ import { BadgePercent, TextSelect } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { baseUrl } from "@/lib/utils";
 
 interface PriceProps {
   id: string;
@@ -57,15 +58,12 @@ export const PriceList = () => {
 
   const handleGetPrice = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/price`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/admin/price`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setOnceList(res.data.data.once);
       setMonthlyList(res.data.data.monthly);
       setYearlyList(res.data.data.yearly);

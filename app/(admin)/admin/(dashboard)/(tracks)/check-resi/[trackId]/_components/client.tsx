@@ -11,6 +11,7 @@ import { useModal } from "@/hooks/use-modal";
 import {
   ArchiveDataProps,
   archives,
+  baseUrl,
   data,
   formatTanggal,
   formatTanggalWaktu,
@@ -104,7 +105,7 @@ export const CheckResiIdClient = () => {
   const getCourier = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/list-courier?page=${page}&q=${searchValue}`,
+        `${baseUrl}/list-courier?page=${page}&q=${searchValue}`,
         {
           headers: {
             Accept: "application/json",
@@ -129,7 +130,7 @@ export const CheckResiIdClient = () => {
     };
     try {
       const res = await axios.post(
-        `https://koderesi.raventech.my.id/api/superadmin/waybill/check-resi`,
+        `${baseUrl}/superadmin/waybill/check-resi`,
         body,
         {
           headers: {

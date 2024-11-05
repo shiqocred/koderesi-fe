@@ -32,6 +32,7 @@ import { EditUserModal } from "@/components/modals/edit-user-modal";
 import { HapusAkunModal } from "@/components/modals/hapus-akun-modal";
 import { RejectedAffiliateModal } from "@/components/modals/rejected-affiliate-modal";
 import { RejectedWithdrawModal } from "@/components/modals/rejected-withdraw-modal";
+import { RequestWithdrawModal } from "@/components/modals/request-withdraw-modal";
 import { SaveManifestModal } from "@/components/modals/save-manifest-modal";
 import { UnArchiveResiModal } from "@/components/modals/unarchive-resi-modal";
 import { UpdateWaybillModal } from "@/components/modals/update-waybill-modal";
@@ -74,6 +75,7 @@ const ModalProvider = () => {
       <EditAdminPasswordModal />
       <UpdateWaybillModal />
       <EditReasonModal />
+      <RequestWithdrawModal />
     </>
   );
 };

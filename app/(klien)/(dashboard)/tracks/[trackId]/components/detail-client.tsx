@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  baseUrl,
   cn,
   formatTanggal,
   formatTanggalWaktu,
@@ -92,7 +93,7 @@ export const DetailClient = () => {
   const getDetail = async () => {
     try {
       const detail = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/waybill/show/${trackId}`,
+        `${baseUrl}/admin/waybill/show/${trackId}`,
         {
           headers: {
             Accept: "application/json",
@@ -111,7 +112,7 @@ export const DetailClient = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/admin/waybill/update/${trackId}`,
+        `${baseUrl}/admin/waybill/update/${trackId}`,
         {},
         {
           headers: {
@@ -135,7 +136,7 @@ export const DetailClient = () => {
   const handleUpdateLoop = async (loop: string) => {
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/admin/waybill/updateLoop/${trackId}`,
+        `${baseUrl}/admin/waybill/updateLoop/${trackId}`,
         {
           status_loop: loop,
         },

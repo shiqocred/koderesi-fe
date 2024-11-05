@@ -38,7 +38,12 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import qs from "query-string";
 import { toast } from "sonner";
-import { formatTanggal, formatTanggalWaktu, formatWaktu } from "@/lib/utils";
+import {
+  baseUrl,
+  formatTanggal,
+  formatTanggalWaktu,
+  formatWaktu,
+} from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useModal } from "@/hooks/use-modal";
 
@@ -98,7 +103,7 @@ export const CheckResiClient = () => {
   const getCourier = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/list-courier?page=${page}&q=${searchValue}`,
+        `${baseUrl}/list-courier?page=${page}&q=${searchValue}`,
         {
           headers: {
             Accept: "application/json",
@@ -164,7 +169,7 @@ export const CheckResiClient = () => {
     };
     try {
       const res = await axios.post(
-        `https://koderesi.raventech.my.id/api/superadmin/waybill/check-resi`,
+        `${baseUrl}/superadmin/waybill/check-resi`,
         body,
         {
           headers: {

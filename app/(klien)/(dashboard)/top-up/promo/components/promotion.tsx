@@ -24,7 +24,7 @@ import { useCookies } from "next-client-cookies";
 import { CardPromo } from "./card-promo";
 import { toast } from "sonner";
 import { ToastError } from "@/components/toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 interface BannerProps {
   id: string;
@@ -71,15 +71,12 @@ const Promotion = () => {
 
   const handleGetPromo = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/promo`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/admin/promo`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPromoList(res.data.data.promo);
       setBannerList(res.data.data.banner);
     } catch (error) {
@@ -90,7 +87,7 @@ const Promotion = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `https://koderesi.raventech.my.id/api/admin/transaction/payment`,
+        `${baseUrl}/admin/transaction/payment`,
         {
           package_id: id,
         },

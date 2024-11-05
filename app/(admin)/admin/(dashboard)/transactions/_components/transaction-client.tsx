@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { cn, formatNumber, formatRupiah, month } from "@/lib/utils";
+import { baseUrl, cn, formatNumber, formatRupiah, month } from "@/lib/utils";
 import { useModal } from "@/hooks/use-modal";
 import qs from "query-string";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -130,10 +130,12 @@ export const CreditsClient = () => {
     try {
       setIsGetList(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/transaksi${
+        `${baseUrl}/superadmin/transaksi${
           searchValue !== ""
             ? search !== ""
-              ? "?q=" + searchValue ?? search
+              ? "?q=" + searchValue
+                ? search
+                : ""
               : ""
             : ""
         }`,
@@ -155,15 +157,12 @@ export const CreditsClient = () => {
   const getDetailTransaction = async (dataId: string) => {
     try {
       setIsUpdating(true);
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/transaksi/${dataId}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/superadmin/transaksi/${dataId}`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = res.data.data;
       setCurrent({
         id: data.detail.id,
@@ -188,7 +187,7 @@ export const CreditsClient = () => {
     try {
       setIsUpdatingBar(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/transaksi/bar/${dataId}${
+        `${baseUrl}/superadmin/transaksi/bar/${dataId}${
           method === "prev" ? "?m=" + prevMonth + "&y=" + prevYear : ""
         }${method === "next" ? "?m=" + nextMonth + "&y=" + nextYear : ""}`,
         {

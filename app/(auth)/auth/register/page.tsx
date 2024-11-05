@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { LogoShrinkIcon } from "@/components/svg";
-import { cn } from "@/lib/utils";
+import { baseUrl, cn } from "@/lib/utils";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -63,10 +63,7 @@ const RegisterPage = () => {
     e.preventDefault();
     const body = input;
     try {
-      await axios.post(
-        `https://koderesi.raventech.my.id/api/auth/registerFromAdmin`,
-        body
-      );
+      await axios.post(`${baseUrl}/auth/registerFromAdmin`, body);
       toast.success("Register berhasil.");
       router.push("/auth/login");
     } catch (error: any) {
@@ -110,9 +107,7 @@ const RegisterPage = () => {
     setIsValid("load");
     try {
       await axios
-        .get(
-          `https://koderesi.raventech.my.id/api/verifyEmail?email=${debounceEmail}`
-        )
+        .get(`${baseUrl}/verifyEmail?email=${debounceEmail}`)
         .then((res: any) => {
           console.log(res);
           if (res.data.success) {

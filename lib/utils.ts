@@ -9,6 +9,8 @@ export const formatNumber = (number: number) => {
   return formatter.format(number);
 };
 
+export const baseUrl = "https://koderesi.presensindo.my.id/api";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

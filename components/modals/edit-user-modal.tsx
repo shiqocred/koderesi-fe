@@ -11,7 +11,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { cn } from "@/lib/utils";
+import { baseUrl, cn } from "@/lib/utils";
 import { AlertCircle, X } from "lucide-react";
 
 export const EditUserModal = () => {
@@ -40,7 +40,7 @@ export const EditUserModal = () => {
   const getDetail = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/show/${data}`,
+        `${baseUrl}/superadmin/pengguna/show/${data}`,
         {
           headers: {
             Accept: "application/json",
@@ -62,16 +62,12 @@ export const EditUserModal = () => {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/update/${data}`,
-        input,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${baseUrl}/superadmin/pengguna/update/${data}`, input, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("User edited.");
       cookies.set("new", "added");
       onClose();

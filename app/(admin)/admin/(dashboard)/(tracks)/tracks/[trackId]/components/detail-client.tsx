@@ -13,6 +13,7 @@ import {
   formatWaktu,
   formatTanggal,
   formatTanggalWaktu,
+  baseUrl,
 } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { useModal } from "@/hooks/use-modal";
@@ -61,7 +62,7 @@ export const DetailClient = () => {
   const getResiDetail = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/waybill/show/${trackId}`,
+        `${baseUrl}/superadmin/waybill/show/${trackId}`,
         {
           headers: {
             Accept: "application/json",

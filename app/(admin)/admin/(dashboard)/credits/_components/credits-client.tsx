@@ -20,7 +20,7 @@ import {
   X,
 } from "lucide-react";
 
-import { cn, formatNumber, month } from "@/lib/utils";
+import { baseUrl, cn, formatNumber, month } from "@/lib/utils";
 import { useDebounce } from "@/hooks/use-debounce";
 
 import { Card, CardTitle } from "@/components/ui/card";
@@ -139,7 +139,7 @@ export const CreditsClient = () => {
     try {
       setIsUpdatingList(true);
       await axios.post(
-        `https://koderesi.raventech.my.id/api/superadmin/kredit/updatekredit/${dataId}`,
+        `${baseUrl}/superadmin/kredit/updatekredit/${dataId}`,
         body,
         {
           headers: {
@@ -195,10 +195,12 @@ export const CreditsClient = () => {
     try {
       setIsGetList(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/kredit${
+        `${baseUrl}/superadmin/kredit${
           searchValue !== ""
             ? search !== ""
-              ? "?q=" + searchValue ?? search
+              ? "?q=" + searchValue
+                ? search
+                : ""
               : ""
             : ""
         }`,
@@ -229,15 +231,12 @@ export const CreditsClient = () => {
   const getDetailKredit = async (dataId: string) => {
     try {
       setIsUpdating(true);
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/kredit/${dataId}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/superadmin/kredit/${dataId}`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCurrent(res.data.data.detail);
     } catch (error) {
       console.log("[ERROR_GET_KREDIT_DETAIL]:", error);
@@ -256,7 +255,7 @@ export const CreditsClient = () => {
     try {
       setIsUpdatingBar(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/kredit/bar/${dataId}${
+        `${baseUrl}/superadmin/kredit/bar/${dataId}${
           method === "prev" ? "?m=" + prevMonth + "&y=" + prevYear : ""
         }${method === "next" ? "?m=" + nextMonth + "&y=" + nextYear : ""}`,
         {

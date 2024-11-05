@@ -41,7 +41,7 @@ import { useCookies } from "next-client-cookies";
 import { ScrollArea } from "../ui/scroll-area";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 interface ResponseProps {
   data: {
@@ -192,7 +192,7 @@ export const AddResiModal = () => {
   const getCourier = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/list-courier?page=${page}&q=${searchValue}`,
+        `${baseUrl}/list-courier?page=${page}&q=${searchValue}`,
         {
           headers: {
             Accept: "application/json",
@@ -214,7 +214,7 @@ export const AddResiModal = () => {
   const onSubmit = async (values: FormSchema) => {
     try {
       const res: ResponseProps = await axios.post(
-        "https://koderesi.raventech.my.id/api/admin/waybill/store",
+        `${baseUrl}/admin/waybill/store`,
         values,
         {
           headers: {

@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
 import { useSearchParams } from "next/navigation";
 import { ToastError } from "../toast-error";
-import { cn, optionToast } from "@/lib/utils";
+import { baseUrl, cn, optionToast } from "@/lib/utils";
 
 export const ApproveWithdrawModal = () => {
   const { isOpen, onClose, type } = useModal();
@@ -34,9 +34,7 @@ export const ApproveWithdrawModal = () => {
     };
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/affiliate/withdrawAccept/${params.get(
-          "cw"
-        )}`,
+        `${baseUrl}/superadmin/affiliate/withdrawAccept/${params.get("cw")}`,
         body,
         {
           headers: {

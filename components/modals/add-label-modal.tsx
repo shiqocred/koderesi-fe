@@ -10,7 +10,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { cn, generateRandomHex } from "@/lib/utils";
+import { baseUrl, cn, generateRandomHex } from "@/lib/utils";
 import { RefreshCcw } from "lucide-react";
 import { useTheme } from "next-themes";
 import {
@@ -74,16 +74,12 @@ export const AddLabelModal = () => {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "https://koderesi.raventech.my.id/api/superadmin/pengguna/store",
-        input,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post(`${baseUrl}/superadmin/pengguna/store`, input, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("User added.");
       onClose();
       cookies.set("new", "added");

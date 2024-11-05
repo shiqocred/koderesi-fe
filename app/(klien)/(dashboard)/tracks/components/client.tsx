@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { baseUrl, cn } from "@/lib/utils";
 import {
   ChevronLeft,
   ChevronRight,
@@ -66,7 +66,7 @@ const TracksAdminClient = () => {
     try {
       setIsUpdateList(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/waybill?filter=${
+        `${baseUrl}/admin/waybill?filter=${
           filter === "on_progress"
             ? "?f=on-progress"
             : filter === "delivered"

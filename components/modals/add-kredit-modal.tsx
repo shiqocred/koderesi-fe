@@ -10,7 +10,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { cn, formatRupiah } from "@/lib/utils";
+import { baseUrl, cn, formatRupiah } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -109,16 +109,12 @@ export const AddKreditModal = () => {
     body.append("type", inputNew.jenis);
 
     try {
-      const res = await axios.post(
-        `https://koderesi.raventech.my.id/api/superadmin/price/store`,
-        body,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.post(`${baseUrl}/superadmin/price/store`, body, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.data.success) {
         toast.success("Kredit Dibuat");
         cookies.set("kredit updated", "1");

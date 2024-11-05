@@ -21,7 +21,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { formatRupiah } from "@/lib/utils";
+import { baseUrl, formatRupiah } from "@/lib/utils";
 
 interface PriceCreditProps {
   id: string;
@@ -70,15 +70,12 @@ export const KreditSettings = () => {
 
   const handleGetPrice = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/price`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/superadmin/price`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setOnceList(res.data.data.once);
       setMonthlyList(res.data.data.monthly);
       setYearlyList(res.data.data.yearly);

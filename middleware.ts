@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { baseUrl } from "./lib/utils";
 
 const AUTH_PAGES = ["/auth"];
 const ADMIN_PAGES = ["/admin"];
@@ -18,7 +19,7 @@ export async function middleware(request: NextRequest) {
   const isAdminPageRequested = isAdminPages(nextUrl.pathname);
 
   const res = await fetch(
-    new URL("https://koderesi.raventech.my.id/api/auth/page").href,
+    new URL(`https://koderesi.presensindo.my.id/api/auth/page`).href,
     {
       method: "GET",
       headers: { Accept: "application/json", Authorization: `Bearer ${token}` },

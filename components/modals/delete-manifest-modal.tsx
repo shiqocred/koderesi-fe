@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 export const DeleteManifestModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -22,15 +22,12 @@ export const DeleteManifestModal = () => {
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.delete(
-        `https://koderesi.raventech.my.id/api/superadmin/manifest/destroy/${data}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${baseUrl}/superadmin/manifest/destroy/${data}`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Manifest berhasil dihapus");
       router.refresh();
       onClose();

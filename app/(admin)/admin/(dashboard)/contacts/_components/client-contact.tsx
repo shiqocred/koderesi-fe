@@ -19,7 +19,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { baseUrl, cn } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -62,7 +62,7 @@ export const ClientContact = () => {
     setIsGetList(true);
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/support${
+        `${baseUrl}/superadmin/support${
           filter && searchValue ? "?f=" + filter + "&q=" + searchValue : ""
         }${filter && !searchValue ? "?f=" + filter : ""}${
           !filter && searchValue ? "?q=" + searchValue : ""

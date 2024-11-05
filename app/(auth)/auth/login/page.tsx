@@ -10,7 +10,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useCookies } from "next-client-cookies";
 import Link from "next/link";
 import { LogoShrinkIcon } from "@/components/svg";
-import { cn, optionToast } from "@/lib/utils";
+import { baseUrl, cn, optionToast } from "@/lib/utils";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -38,17 +38,15 @@ const Loginpage = () => {
     e.preventDefault();
     const body = input;
     try {
-      await axios
-        .post(`https://koderesi.raventech.my.id/api/auth/login`, body)
-        .then((res: any) => {
-          toast.success("Login berhasil.");
-          cookies.set("accessToken", res.data.access_token);
-          if (res.data.role === "superadmin") {
-            router.push("/admin");
-          } else {
-            router.push("/");
-          }
-        });
+      await axios.post(`${baseUrl}/auth/login`, body).then((res: any) => {
+        toast.success("Login berhasil.");
+        cookies.set("accessToken", res.data.access_token);
+        if (res.data.role === "superadmin") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
+      });
     } catch (error: any) {
       console.log("[ERROR_LOGIN]:", error);
       setInput((prev) => ({ ...prev, password: "" }));

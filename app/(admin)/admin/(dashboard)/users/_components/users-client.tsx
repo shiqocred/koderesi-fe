@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { useLocalStorage } from "@/hooks/use-localstorage";
 import { useModal } from "@/hooks/use-modal";
-import { cn, formatTanggalWaktu } from "@/lib/utils";
+import { baseUrl, cn, formatTanggalWaktu } from "@/lib/utils";
 import axios from "axios";
 import {
   ArrowUpDown,
@@ -139,10 +139,12 @@ export const UsersClient = () => {
   const getUserList = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna${
+        `${baseUrl}/superadmin/pengguna${
           debounceValue !== ""
             ? search !== ""
-              ? "?q=" + debounceValue ?? search
+              ? "?q=" + debounceValue
+                ? search
+                : ""
               : ""
             : ""
         }${

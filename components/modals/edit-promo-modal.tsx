@@ -10,7 +10,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { cn, formatRupiah } from "@/lib/utils";
+import { baseUrl, cn, formatRupiah } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -143,7 +143,7 @@ export const EditPromoModal = () => {
 
     try {
       const res = await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/promo/update/${data.id}`,
+        `${baseUrl}/superadmin/promo/update/${data.id}`,
         body,
         {
           headers: {

@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
 import { AlertCircle, X } from "lucide-react";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 export const DeleteResiModal = () => {
   const { isOpen, onClose, type } = useModal();
@@ -26,7 +26,7 @@ export const DeleteResiModal = () => {
     e.preventDefault();
     try {
       await axios.delete(
-        `https://koderesi.raventech.my.id/api/${
+        `${baseUrl}/${
           pathname.includes("admin") ? "superadmin" : "admin"
         }/waybill/destroy/${trackId}`,
         {

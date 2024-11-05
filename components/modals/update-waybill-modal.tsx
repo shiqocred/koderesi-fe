@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 export const UpdateWaybillModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -23,7 +23,7 @@ export const UpdateWaybillModal = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/admin/waybill/update/${data}`,
+        `${baseUrl}/admin/waybill/update/${data}`,
         {},
         {
           headers: {

@@ -38,7 +38,7 @@ import {
   X,
 } from "lucide-react";
 
-import { cn, formatTanggal } from "@/lib/utils";
+import { baseUrl, cn, formatTanggal } from "@/lib/utils";
 import { useModal } from "@/hooks/use-modal";
 import { DetailProps } from "../../components/detail-client";
 import { DateTimePicker } from "./date-time-picker";
@@ -89,7 +89,7 @@ const EditClient = () => {
     setIsUpdating(true);
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/waybill/show/${trackId}`,
+        `${baseUrl}/superadmin/waybill/show/${trackId}`,
         {
           headers: {
             Accept: "application/json",
@@ -121,16 +121,12 @@ const EditClient = () => {
 
     setIsUpdatingManifest(true);
     try {
-      await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/waybill/update/${trackId}`,
-        data,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${baseUrl}/superadmin/waybill/update/${trackId}`, data, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Data Resi Diperbarui");
       cookies.set("new", "1");
     } catch (error: any) {
@@ -181,16 +177,12 @@ const EditClient = () => {
     };
     setIsUpdatingManifest(true);
     try {
-      await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/manifest/update/${id}`,
-        data,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${baseUrl}/superadmin/manifest/update/${id}`, data, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setIsUpdatingManifest(true);
       toast.success("Manifest Resi Diperbarui");
       cookies.set("new", "1");
