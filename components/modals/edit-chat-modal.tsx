@@ -11,7 +11,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { cn, optionToast } from "@/lib/utils";
+import { baseUrl, cn, optionToast } from "@/lib/utils";
 import { Textarea } from "../ui/textarea";
 import { ToastError } from "../toast-error";
 
@@ -36,7 +36,7 @@ export const EditChatModal = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/${
+        `${baseUrl}/${
           data.isAdmin ? "superadmin" : "admin"
         }/support/updateChat/${data.id}`,
         input,

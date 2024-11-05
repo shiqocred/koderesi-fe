@@ -11,7 +11,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { cn } from "@/lib/utils";
+import { baseUrl, cn } from "@/lib/utils";
 
 export const EditTicketModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -34,7 +34,7 @@ export const EditTicketModal = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/${
+        `${baseUrl}/${
           data.isAdmin ? "superadmin" : "admin"
         }/support/updateTitle/${data.id}`,
         input,

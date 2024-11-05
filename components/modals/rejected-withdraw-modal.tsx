@@ -12,7 +12,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { AlertCircle, X } from "lucide-react";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 export const RejectedWithdrawModal = () => {
   const { isOpen, onClose, type } = useModal();
@@ -32,9 +32,7 @@ export const RejectedWithdrawModal = () => {
     };
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/affiliate/update/${params.get(
-          "ca"
-        )}`,
+        `${baseUrl}/superadmin/affiliate/update/${params.get("ca")}`,
         body,
         {
           headers: {

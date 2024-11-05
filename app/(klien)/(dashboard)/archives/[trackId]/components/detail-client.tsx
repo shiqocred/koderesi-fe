@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  baseUrl,
   cn,
   formatTanggal,
   formatTanggalWaktu,
@@ -60,15 +61,12 @@ export const DetailClient = () => {
   const { onOpen } = useModal();
 
   const getDetail = async () => {
-    const detail = await axios.get(
-      `https://koderesi.raventech.my.id/api/admin/waybill/show/${trackId}`,
-      {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const detail = await axios.get(`${baseUrl}/admin/waybill/show/${trackId}`, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     setDataDetail(detail.data.data);
   };

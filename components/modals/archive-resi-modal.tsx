@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 export const ArchiveResiModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -23,7 +23,7 @@ export const ArchiveResiModal = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/admin/waybill/archive/${data}`,
+        `${baseUrl}/admin/waybill/archive/${data}`,
         {},
         {
           headers: {

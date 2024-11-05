@@ -14,6 +14,7 @@ import { TopDashboard } from "./_components/top-dashboard";
 import { ResiCurrentCard } from "./_components/resi-current-card";
 import { UserCurrentCard } from "./_components/user-current-card";
 import { TransactionCurrentCard } from "./_components/transaction-current-card";
+import { baseUrl } from "@/lib/utils";
 
 export interface TotalDashboard {
   total_user: number;
@@ -184,15 +185,12 @@ const AdminDashboardpage = () => {
 
   const getTotal = async () => {
     try {
-      const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/superadmin/dashboard/total",
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/superadmin/dashboard/total`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setTotal(res.data.data);
     } catch (error) {
       console.log("[ERROR_GET_TOTAL_DASHBOARD]:", error);
@@ -201,7 +199,7 @@ const AdminDashboardpage = () => {
   const getNewestUser = async () => {
     try {
       const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/superadmin/dashboard/newestuser",
+        `${baseUrl}/superadmin/dashboard/newestuser`,
         {
           headers: {
             Accept: "application/json",
@@ -217,7 +215,7 @@ const AdminDashboardpage = () => {
   const getNewestTransaction = async () => {
     try {
       const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/superadmin/dashboard/newesttransaction",
+        `${baseUrl}/superadmin/dashboard/newesttransaction`,
         {
           headers: {
             Accept: "application/json",
@@ -233,7 +231,7 @@ const AdminDashboardpage = () => {
   const getNewestWaybill = async () => {
     try {
       const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/superadmin/dashboard/newestwaybill",
+        `${baseUrl}/superadmin/dashboard/newestwaybill`,
         {
           headers: {
             Accept: "application/json",

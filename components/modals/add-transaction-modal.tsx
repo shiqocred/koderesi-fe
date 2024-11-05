@@ -23,7 +23,7 @@ import { useCookies } from "next-client-cookies";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { AlertCircle, CalendarIcon, Clock, X } from "lucide-react";
 import { Command, CommandGroup, CommandItem, CommandList } from "../ui/command";
-import { cn, formatTanggal } from "@/lib/utils";
+import { baseUrl, cn, formatTanggal } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
@@ -97,9 +97,7 @@ export const AddTransactionModal = () => {
   const onSubmit = async (values: FormSchema) => {
     try {
       await axios.post(
-        `https://koderesi.raventech.my.id/api/superadmin/transaksi/store/${params.get(
-          "currentId"
-        )}`,
+        `${baseUrl}/superadmin/transaksi/store/${params.get("currentId")}`,
         values,
         {
           headers: {

@@ -42,7 +42,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { cn, optionToast } from "@/lib/utils";
+import { baseUrl, cn, optionToast } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
@@ -303,16 +303,12 @@ export const ClientContact = () => {
     }
 
     try {
-      const res = await axios.post(
-        "https://koderesi.raventech.my.id/api/admin/support/store",
-        body,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.post(`${baseUrl}/admin/support/store`, body, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.data.success) {
         toast.success("Ticket telah dibuat.");
         setInput({
@@ -340,7 +336,7 @@ export const ClientContact = () => {
 
     try {
       const res = await axios.put(
-        `https://koderesi.raventech.my.id/api/admin/support/updateStatus/${data.ticket_code}`,
+        `${baseUrl}/admin/support/updateStatus/${data.ticket_code}`,
         body,
         {
           headers: {
@@ -376,7 +372,7 @@ export const ClientContact = () => {
 
     try {
       const res = await axios.post(
-        `https://koderesi.raventech.my.id/api/admin/support/storeChat/${data.id}`,
+        `${baseUrl}/admin/support/storeChat/${data.id}`,
         body,
         {
           headers: {
@@ -409,7 +405,7 @@ export const ClientContact = () => {
   const handleGetTickets = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/support/show/${params.ticket}`,
+        `${baseUrl}/admin/support/show/${params.ticket}`,
         {
           headers: {
             Accept: "application/json",

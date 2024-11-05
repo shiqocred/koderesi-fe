@@ -10,7 +10,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { cn, formatRupiah } from "@/lib/utils";
+import { baseUrl, cn, formatRupiah } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -113,7 +113,7 @@ export const EditKreditModal = () => {
 
     try {
       const res = await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/price/update/${data.id}`,
+        `${baseUrl}/superadmin/price/update/${data.id}`,
         body,
         {
           headers: {

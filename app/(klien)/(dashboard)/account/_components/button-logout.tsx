@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { baseUrl } from "@/lib/utils";
 import axios from "axios";
 import { LogOut } from "lucide-react";
 import { useCookies } from "next-client-cookies";
@@ -16,7 +17,7 @@ export const ButtonLogout = () => {
   const handleLogOut = async () => {
     try {
       await axios.post(
-        "https://koderesi.raventech.my.id/api/auth/logout",
+        `${baseUrl}/auth/logout`,
         {},
         {
           headers: {

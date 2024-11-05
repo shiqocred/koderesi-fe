@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Edit3, Eye, EyeOff, Save, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { cn, optionToast } from "@/lib/utils";
+import { baseUrl, cn, optionToast } from "@/lib/utils";
 import { useModal } from "@/hooks/use-modal";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
@@ -40,15 +40,12 @@ export const ClientSettings = () => {
 
   const handleGetProfile = async () => {
     try {
-      const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/superadmin/profile",
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/superadmin/profile`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setData((prev) => ({
         ...prev,
         username: res.data.data.name ?? "",
@@ -69,7 +66,7 @@ export const ClientSettings = () => {
     }
     try {
       const res = await axios.post(
-        "https://koderesi.raventech.my.id/api/superadmin/profile/update-image",
+        `${baseUrl}/superadmin/profile/update-image`,
         body,
         {
           headers: {

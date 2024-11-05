@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogoShrinkIcon } from "@/components/svg";
-import { cn, optionToast } from "@/lib/utils";
+import { baseUrl, cn, optionToast } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useCookies } from "next-client-cookies";
 import {
@@ -56,10 +56,7 @@ const ForgotPasswordPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post(
-        `https://koderesi.raventech.my.id/api/forgot-password`,
-        values
-      );
+      await axios.post(`${baseUrl}/forgot-password`, values);
       const expires = new Date(Date.now() + 59 * 1000);
       cookies.set(
         "resetCountdown",

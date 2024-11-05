@@ -13,7 +13,7 @@ import {
   TextSelect,
 } from "lucide-react";
 
-import { cn, formatRupiah } from "@/lib/utils";
+import { baseUrl, cn, formatRupiah } from "@/lib/utils";
 
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -125,15 +125,12 @@ const AffiliateClient = () => {
   const getAffiliateReqList = async () => {
     try {
       setIsGetList(true);
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/affiliate`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/superadmin/affiliate`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setAffiliateReqList(res.data.data.data ?? []);
     } catch (error) {
       console.log("[ERROR_GET_AFFILIATE_LIST]:", error);
@@ -146,7 +143,7 @@ const AffiliateClient = () => {
     try {
       setIsUpdating(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/affiliate/show/${dataId}`,
+        `${baseUrl}/superadmin/affiliate/show/${dataId}`,
         {
           headers: {
             Accept: "application/json",
@@ -165,7 +162,7 @@ const AffiliateClient = () => {
     try {
       setIsGetList(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/affiliate/withdrawList`,
+        `${baseUrl}/superadmin/affiliate/withdrawList`,
         {
           headers: {
             Accept: "application/json",
@@ -187,7 +184,7 @@ const AffiliateClient = () => {
     try {
       setIsUpdating(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/affiliate/withdrawDetail/${dataId}`,
+        `${baseUrl}/superadmin/affiliate/withdrawDetail/${dataId}`,
         {
           headers: {
             Accept: "application/json",

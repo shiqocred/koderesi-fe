@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 export const HapusAkunModal = () => {
   const { isOpen, onClose, type } = useModal();
@@ -24,15 +24,12 @@ export const HapusAkunModal = () => {
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.delete(
-        `https://koderesi.raventech.my.id/api/admin/profile/destroy-profile`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${baseUrl}/admin/profile/destroy-profile`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Account berhasil dihapus");
       onClose();
       router.refresh();

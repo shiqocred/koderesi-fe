@@ -17,6 +17,7 @@ import { CardPrice } from "./card-price";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
 import { CardPromo } from "./card-promo";
+import { baseUrl } from "@/lib/utils";
 
 interface BannerProps {
   id: string;
@@ -63,15 +64,12 @@ const Promotion = () => {
 
   const handleGetPromo = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/promo`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/admin/promo`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPromoList(res.data.data.promo);
       setBannerList(res.data.data.banner);
     } catch (error) {

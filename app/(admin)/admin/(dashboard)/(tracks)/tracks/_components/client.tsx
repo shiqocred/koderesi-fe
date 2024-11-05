@@ -16,7 +16,7 @@ import { useCookies } from "next-client-cookies";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { baseUrl, cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -84,7 +84,7 @@ const TracksClient = () => {
     try {
       setIsUpdateList(true);
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/waybill${
+        `${baseUrl}/superadmin/waybill${
           filter
             ? filter !== "semua"
               ? filter === "on_progress"

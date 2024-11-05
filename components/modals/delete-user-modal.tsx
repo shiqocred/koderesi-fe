@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
 import { AlertCircle, X } from "lucide-react";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 export const DeleteUserModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -23,15 +23,12 @@ export const DeleteUserModal = () => {
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.delete(
-        `https://koderesi.raventech.my.id/api/superadmin/pengguna/destroy/${data}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${baseUrl}/superadmin/pengguna/destroy/${data}`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("User berhasil dihapus");
       cookies.set("new", "added");
       onClose();

@@ -6,7 +6,7 @@ import { ManifestProps, useModal } from "@/hooks/use-modal";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { data, formatTanggal, formatWaktu } from "@/lib/utils";
+import { baseUrl, data, formatTanggal, formatWaktu } from "@/lib/utils";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ export const SaveManifestModal = () => {
     e.preventDefault();
     try {
       const res = await axios.get(
-        `/api/superadmin/waybill/check-resi/${kode}`,
+        `${baseUrl}/api/superadmin/waybill/check-resi/${kode}`,
         {
           headers: {
             Accept: "application/json",

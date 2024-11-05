@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { cn, formatRupiah, optionToast } from "@/lib/utils";
+import { baseUrl, cn, formatRupiah, optionToast } from "@/lib/utils";
 import { TooltipProviderPage } from "@/providers/tooltip-provider-page";
 import {
   AlertTriangleIcon,
@@ -102,15 +102,12 @@ export const AffiliateClient = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/affiliate`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/admin/affiliate`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setStep(res.data.status ? (res.data.status as string) : "");
       setData(res.data.data);
     } catch (error) {
@@ -133,7 +130,7 @@ export const AffiliateClient = () => {
     };
     try {
       const res: any = await axios.post(
-        `https://koderesi.raventech.my.id/api/admin/affiliate/store`,
+        `${baseUrl}/admin/affiliate/store`,
         body,
         {
           headers: {
@@ -309,7 +306,8 @@ export const AffiliateClient = () => {
               </p>
             </div>
             <Button
-              onClick={() => onOpen}
+              onClick={() => onOpen("req-withdraw", data.affiliate_earnings)}
+              disabled={parseFloat(data.affiliate_earnings) < 300000}
               className="bg-green-400 hover:bg-green-500 dark:text-gray-900 text-gray-900 w-full"
             >
               Withdraw

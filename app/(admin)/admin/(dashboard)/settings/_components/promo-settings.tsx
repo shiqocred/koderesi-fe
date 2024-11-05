@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Edit3, Percent, PlusCircle, TextSelect, Trash2 } from "lucide-react";
-import { cn, formatRupiah } from "@/lib/utils";
+import { baseUrl, cn, formatRupiah } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
@@ -64,15 +64,12 @@ export const PromoSettings = () => {
 
   const handleGetPromo = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/promo`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/superadmin/promo`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPromoActiveList(res.data.data.active);
       setPromoInactiveList(res.data.data.inactive);
     } catch (error) {

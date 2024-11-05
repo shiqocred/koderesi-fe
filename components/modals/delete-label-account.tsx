@@ -8,6 +8,7 @@ import axios from "axios";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { baseUrl } from "@/lib/utils";
 
 export const DeleteAccountModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -21,15 +22,12 @@ export const DeleteAccountModal = () => {
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.delete(
-        `https://koderesi.raventech.my.id/api/admin/profile/destroy-profile`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${baseUrl}/admin/profile/destroy-profile`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Account berhasil dihapus");
       onClose();
       router.refresh();

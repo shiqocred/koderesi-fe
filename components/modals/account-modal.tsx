@@ -14,7 +14,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { cn, formatNumber } from "@/lib/utils";
+import { baseUrl, cn, formatNumber } from "@/lib/utils";
 import { useCookies } from "next-client-cookies";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -62,15 +62,12 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
 
   const getDataAuth = async () => {
     try {
-      const response = await axios.get(
-        "https://koderesi.raventech.my.id/api/auth/page",
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${baseUrl}/auth/page`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setDetailAuth(response.data.data);
       if (response.data.data.name) {
         cookies.set("nameProfile", response.data.data.name);
@@ -98,7 +95,7 @@ const AccountModal = ({ isExpand }: { isExpand?: boolean }) => {
   const handleLogOut = async () => {
     try {
       await axios.post(
-        "https://koderesi.raventech.my.id/api/auth/logout",
+        `${baseUrl}/auth/logout`,
         {},
         {
           headers: {

@@ -19,7 +19,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogoShrinkIcon } from "@/components/svg";
-import { cn, optionToast } from "@/lib/utils";
+import { baseUrl, cn, optionToast } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useCookies } from "next-client-cookies";
 import { Eye, EyeOff, Moon, Sun } from "lucide-react";
@@ -71,10 +71,7 @@ const ResetPasswordPage = () => {
       password_confirmation: values.password_confirmation,
     };
     try {
-      await axios.post(
-        `https://koderesi.raventech.my.id/api/reset-password`,
-        body
-      );
+      await axios.post(`${baseUrl}/reset-password`, body);
       toast.success("Password berhasil diperbarui.");
       router.push("/auth/login");
     } catch (error) {

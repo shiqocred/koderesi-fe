@@ -31,7 +31,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useDebounce } from "@/hooks/use-debounce";
 import { dialPhone } from "@/lib/dial";
-import { cn, formatRupiah } from "@/lib/utils";
+import { baseUrl, cn, formatRupiah } from "@/lib/utils";
 import axios from "axios";
 import { CheckCircle2, ChevronDown, Circle, QrCode, Slash } from "lucide-react";
 import { useCookies } from "next-client-cookies";
@@ -114,10 +114,10 @@ const paymentEWallet = [
 
 const PaymentCheckout = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const [isCountry, setIsCountry] = useState(false);
   const { paymentId } = useParams();
-  const [numberPhone, setNumberPhone] = useState("");
+  const [isCountry, setIsCountry] = useState(false);
   const [country, setCountry] = useState("ID");
+  const [numberPhone, setNumberPhone] = useState("");
   const cookies = useCookies();
   const token = cookies.get("accessToken");
   const [method, setMethod] = useState("");
@@ -142,7 +142,7 @@ const PaymentCheckout = () => {
   const handleGetPromo = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/transaction/show/${paymentId}`,
+        `${baseUrl}/admin/transaction/show/${paymentId}`,
         {
           headers: {
             Accept: "application/json",
@@ -159,7 +159,7 @@ const PaymentCheckout = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `https://koderesi.raventech.my.id/api/admin/transaction/checkAffiliate`,
+        `${baseUrl}/admin/transaction/checkAffiliate`,
         { referral_code: data.referral_code },
         {
           headers: {
@@ -175,21 +175,18 @@ const PaymentCheckout = () => {
   };
   const handleCheckout = async (e: MouseEvent) => {
     e.preventDefault();
-    const body = new FormData();
-    if (method !== "qrcode") {
-      body.append("methode_payment", method);
-    }
-    if (method === "ID_OVO") {
-      body.append(
-        "mobile_number",
-        dialPhone.find((item) => item.code === country)?.dial_code + numberPhone
-      );
-    }
-    body.append("channel", typeMethod);
-    body.append("method", "_put");
+    const body = {
+      channel: typeMethod,
+      methode_payment: method !== "qrcode" ? method : "",
+      mobile_number:
+        method === "ID_OVO"
+          ? dialPhone.find((item) => item.code === country)?.dial_code +
+            numberPhone
+          : "",
+    };
     try {
       const res = await axios.put(
-        `https://koderesi.raventech.my.id/api/admin/transaction/checkout/${data.id}`,
+        `${baseUrl}/admin/transaction/checkout/${data.id}`,
         body,
         {
           headers: {
@@ -227,7 +224,7 @@ const PaymentCheckout = () => {
   return (
     <div className="flex flex-col md:flex-row gap-y-2 md:gap-x-4 w-full">
       <div className="w-full">
-        <div className="w-full bg-white p-5 rounded-md flex flex-col">
+        <div className="w-full bg-white dark:bg-gray-900 p-5 rounded-md flex flex-col">
           <div className="flex w-full border-b border-gray-500 pb-2 flex-col">
             <h3 className="xl:text-lg text-base font-semibold">
               Metode Pembayaran
@@ -248,7 +245,7 @@ const PaymentCheckout = () => {
                   className={cn(
                     "px-5",
                     typeMethod === "virtualAccount"
-                      ? "bg-green-100"
+                      ? "bg-green-100 dark:bg-green-800"
                       : "bg-transparent"
                   )}
                 >
@@ -261,7 +258,7 @@ const PaymentCheckout = () => {
                     <p>Virtual Account</p>
                     <p
                       className={cn(
-                        "bg-green-300 text-black text-xs px-3 py-0.5 rounded-full",
+                        "bg-green-300 dark:bg-green-100 text-black text-xs px-3 py-0.5 rounded-full",
                         typeMethod === "virtualAccount" &&
                           !!method &&
                           paymentVA.find((item) => item.value === method)?.label
@@ -324,7 +321,9 @@ const PaymentCheckout = () => {
                 <AccordionTrigger
                   className={cn(
                     "px-5",
-                    typeMethod === "ewallet" ? "bg-green-100" : "bg-transparent"
+                    typeMethod === "ewallet"
+                      ? "bg-green-100 dark:bg-green-800"
+                      : "bg-transparent"
                   )}
                 >
                   <div className="flex items-center gap-2">
@@ -336,7 +335,7 @@ const PaymentCheckout = () => {
                     <p>E-Wallet</p>
                     <p
                       className={cn(
-                        "bg-green-300 text-black text-xs px-3 py-0.5 rounded-full",
+                        "bg-green-300 dark:bg-green-100 text-black text-xs px-3 py-0.5 rounded-full",
                         typeMethod === "ewallet" &&
                           !!method &&
                           paymentEWallet.find((item) => item.value === method)
@@ -345,7 +344,7 @@ const PaymentCheckout = () => {
                           : "hidden"
                       )}
                     >
-                      {typeMethod === "eWallet" &&
+                      {typeMethod === "ewallet" &&
                       !!method &&
                       paymentEWallet.find((item) => item.value === method)
                         ?.label
@@ -485,7 +484,9 @@ const PaymentCheckout = () => {
                 <AccordionTrigger
                   className={cn(
                     "px-5",
-                    typeMethod === "qrcode" ? "bg-green-100" : "bg-transparent"
+                    typeMethod === "qrcode"
+                      ? "bg-green-100 dark:bg-green-800"
+                      : "bg-transparent"
                   )}
                 >
                   <div className="flex items-center gap-2">
@@ -539,7 +540,7 @@ const PaymentCheckout = () => {
         </div>
       </div>
       <div className="w-full">
-        <div className="w-full bg-white p-5 rounded-md flex flex-col">
+        <div className="w-full bg-white dark:bg-gray-900 p-5 rounded-md flex flex-col">
           <div className="flex w-full border-b border-gray-500 pb-2 flex-col">
             <h3 className="xl:text-lg text-base font-semibold">
               Rincian Pembayaran
@@ -580,7 +581,7 @@ const PaymentCheckout = () => {
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
                 <p>Category</p>
-                <p className="bg-gray-300 px-5 rounded-full py-0.5 text-sm capitalize">
+                <p className="bg-gray-300 dark:bg-gray-700 px-5 rounded-full py-0.5 text-sm capitalize">
                   {data.category}
                 </p>
               </div>
@@ -588,7 +589,7 @@ const PaymentCheckout = () => {
                 <p>{data.amount_credit} Kredit</p>
                 <p>{formatRupiah(data.amount_bill)}</p>
               </div>
-              <div className="w-full h-[1px] bg-black my-2" />
+              <div className="w-full h-[1px] bg-black dark:bg-gray-700 my-2" />
               <div className="flex justify-between">
                 <p className="font-bold uppercase">Total</p>
                 <p className="font-bold">{formatRupiah(data.amount_bill)}</p>

@@ -8,6 +8,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
+import { baseUrl } from "@/lib/utils";
 
 export const UnArchiveResiModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -21,7 +22,7 @@ export const UnArchiveResiModal = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://koderesi.raventech.my.id/api/admin/archive/unarchive/${data}`,
+        `${baseUrl}/admin/archive/unarchive/${data}`,
         {},
         {
           headers: {

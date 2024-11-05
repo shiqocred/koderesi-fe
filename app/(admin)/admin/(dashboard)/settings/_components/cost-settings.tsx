@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useModal } from "@/hooks/use-modal";
-import { cn } from "@/lib/utils";
+import { baseUrl, cn } from "@/lib/utils";
 import axios from "axios";
 import { Save } from "lucide-react";
 import { useCookies } from "next-client-cookies";
@@ -23,15 +23,12 @@ export const CostSettings = () => {
 
   const handleGetCost = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/credit`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/superadmin/credit`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setWaybill(res.data.data);
     } catch (error) {
       console.log("[ERROR_COST_GET]:", error);

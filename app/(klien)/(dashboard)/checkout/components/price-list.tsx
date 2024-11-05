@@ -6,6 +6,7 @@ import axios from "axios";
 import { useCookies } from "next-client-cookies";
 import { useEffect, useState } from "react";
 import { TextSelect } from "lucide-react";
+import { baseUrl } from "@/lib/utils";
 
 interface PriceProps {
   id: string;
@@ -53,15 +54,12 @@ export const PriceList = () => {
 
   const handleGetPrice = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/price`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/admin/price`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setOnceList(res.data.data.once);
       setMonthlyList(res.data.data.monthly);
       setYearlyList(res.data.data.yearly);

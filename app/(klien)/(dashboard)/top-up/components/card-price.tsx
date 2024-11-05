@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { cn, formatRupiah, optionToast } from "@/lib/utils";
+import { baseUrl, cn, formatRupiah, optionToast } from "@/lib/utils";
 import axios from "axios";
 import { AlertCircle, Check, CheckCircle2, Loader } from "lucide-react";
 import { useCookies } from "next-client-cookies";
@@ -44,7 +44,7 @@ export const CardPrice = ({
     e.preventDefault();
     try {
       const res = await axios.post(
-        `https://koderesi.raventech.my.id/api/admin/transaction/payment`,
+        `${baseUrl}/admin/transaction/payment`,
         {
           package_id: id,
         },

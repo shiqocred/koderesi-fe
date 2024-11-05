@@ -49,7 +49,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
+import { baseUrl, cn } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { useCookies } from "next-client-cookies";
@@ -297,7 +297,7 @@ export const ClientContact = () => {
 
     try {
       const res = await axios.put(
-        `https://koderesi.raventech.my.id/api/superadmin/support/updateStatus/${data.ticket_code}`,
+        `${baseUrl}/superadmin/support/updateStatus/${data.ticket_code}`,
         body,
         {
           headers: {
@@ -329,7 +329,7 @@ export const ClientContact = () => {
 
     try {
       const res = await axios.post(
-        `https://koderesi.raventech.my.id/api/superadmin/support/storeChat/${data.id}`,
+        `${baseUrl}/superadmin/support/storeChat/${data.id}`,
         body,
         {
           headers: {
@@ -356,7 +356,7 @@ export const ClientContact = () => {
   const handleGetTickets = async () => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/superadmin/support/show/${params.ticket}`,
+        `${baseUrl}/superadmin/support/show/${params.ticket}`,
         {
           headers: {
             Accept: "application/json",

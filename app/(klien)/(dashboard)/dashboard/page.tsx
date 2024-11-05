@@ -2,7 +2,7 @@
 
 import { Card, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { formatNumber, formatRupiah } from "@/lib/utils";
+import { baseUrl, formatNumber, formatRupiah } from "@/lib/utils";
 import {
   BadgeDollarSign,
   ChevronLeft,
@@ -52,15 +52,12 @@ const DashboardPage = () => {
 
   const getStatistik = async () => {
     try {
-      const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/admin/dashboard/statistic",
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/admin/dashboard/statistic`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setStatistik(res.data.data);
     } catch (error) {
@@ -69,15 +66,12 @@ const DashboardPage = () => {
   };
   const getNewestManifest = async () => {
     try {
-      const res = await axios.get(
-        "https://koderesi.raventech.my.id/api/admin/dashboard",
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/admin/dashboard`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setNewManifest(res.data.data);
     } catch (error) {
@@ -87,9 +81,7 @@ const DashboardPage = () => {
   const getBarKredit = async (year?: number) => {
     try {
       const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/dashboard/barUsageCredit?y=${
-          year ?? ""
-        }`,
+        `${baseUrl}/admin/dashboard/barUsageCredit?y=${year ?? ""}`,
         {
           headers: {
             Accept: "application/json",

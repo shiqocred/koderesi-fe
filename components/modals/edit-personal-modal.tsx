@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookies } from "next-client-cookies";
 import { ToastError } from "../toast-error";
-import { optionToast } from "@/lib/utils";
+import { baseUrl, optionToast } from "@/lib/utils";
 
 export const EditPersonalModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -22,16 +22,12 @@ export const EditPersonalModal = () => {
   const onDelete = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(
-        `https://koderesi.raventech.my.id/api/admin/profile/update-profile`,
-        data,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${baseUrl}/admin/profile/update-profile`, data, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Data diri berhasil diupdate");
       cookies.set("update profile", "1");
       onClose();

@@ -4,7 +4,7 @@ import { DataTable } from "@/components/data-tabel";
 import { Card } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import { columns } from "./colums";
-import { archives } from "@/lib/utils";
+import { archives, baseUrl } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useLocalStorage } from "@/hooks/use-localstorage";
 import axios from "axios";
@@ -46,15 +46,12 @@ export const ArchiveClient = () => {
 
   const getArchive = async () => {
     try {
-      const res = await axios.get(
-        `https://koderesi.raventech.my.id/api/admin/archive`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${baseUrl}/admin/archive`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setDataArchive(res.data.data);
     } catch (error) {
       console.log("[ERROR_GET_ARCHIVE]:", error);
